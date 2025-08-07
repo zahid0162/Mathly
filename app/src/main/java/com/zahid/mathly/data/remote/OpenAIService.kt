@@ -2,6 +2,7 @@ package com.zahid.mathly.data.remote
 
 import com.zahid.mathly.domain.model.Solution
 import com.zahid.mathly.domain.model.SolutionStep
+import com.zahid.mathly.domain.model.SolutionType
 import com.zahid.mathly.domain.model.WordProblem
 import javax.inject.Inject
 
@@ -37,7 +38,7 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
         """.trimIndent()
 
         val request = ChatCompletionRequest(
-            model = "gpt-3.5-turbo",
+            model = "gpt-4.1-mini",
             messages = listOf(
                 Message(role = "user", content = prompt)
             ),
@@ -54,6 +55,8 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
             // Fallback: create a basic solution
             Solution(
                 equationId = equation,
+                originalProblem = equation,
+                type = SolutionType.EQUATION,
                 steps = listOf(
                     SolutionStep(
                         stepNumber = 1,
@@ -105,7 +108,7 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
         """.trimIndent()
 
         val request = ChatCompletionRequest(
-            model = "gpt-3.5-turbo",
+            model = "gpt-4.1-mini",
             messages = listOf(
                 Message(role = "user", content = prompt)
             ),
@@ -142,14 +145,20 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
             val solutionResponse = gson.fromJson(jsonString, SolutionResponse::class.java)
             
             Solution(
-                equationId = solutionResponse.equationId ?: originalEquation,
-                steps = solutionResponse.steps ?: emptyList(),
-                finalAnswer = solutionResponse.finalAnswer ?: ""
+                equationId = solutionResponse.equationId?.takeIf { it.isNotBlank() } ?: originalEquation,
+                originalProblem = originalEquation,
+                type = SolutionType.EQUATION,
+                steps = solutionResponse.steps?.filter { step ->
+                    step.description.isNotBlank() || step.calculation.isNotBlank() || step.result.isNotBlank()
+                } ?: emptyList(),
+                finalAnswer = solutionResponse.finalAnswer?.takeIf { it.isNotBlank() } ?: ""
             )
         } catch (e: Exception) {
             // Fallback: create a basic solution
             Solution(
                 equationId = originalEquation,
+                originalProblem = originalEquation,
+                type = SolutionType.EQUATION,
                 steps = listOf(
                     SolutionStep(
                         stepNumber = 1,
@@ -177,10 +186,21 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
             val gson = com.google.gson.Gson()
             val wordProblemResponse = gson.fromJson(jsonString, WordProblemResponse::class.java)
             
+            val extractedEquation = wordProblemResponse.extractedEquation?.takeIf { it.isNotBlank() }
+            val solution = wordProblemResponse.solution?.let { sol ->
+                // Ensure solution has valid data and set the correct type and original problem
+                if (sol.equationId.isNotBlank() || sol.steps.isNotEmpty() || sol.finalAnswer.isNotBlank()) {
+                    sol.copy(
+                        originalProblem = originalProblem,
+                        type = SolutionType.WORD_PROBLEM
+                    )
+                } else null
+            }
+            
             WordProblem(
                 problem = originalProblem,
-                extractedEquation = wordProblemResponse.extractedEquation,
-                solution = wordProblemResponse.solution
+                extractedEquation = extractedEquation,
+                solution = solution
             )
         } catch (e: Exception) {
             // Fallback: create a basic word problem

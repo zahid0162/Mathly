@@ -55,18 +55,12 @@ fun MathlyNavigation() {
             )
         }
 
-        composable("history") {
-            HistoryScreen(
-                navController = navController,
-                viewModel = sharedViewModel
-            )
-        }
-
         // Word Problem Routes
         composable("wordProblemInput") {
             WordProblemInputScreen(
                 navController = navController,
-                viewModel = wordProblemViewModel
+                viewModel = wordProblemViewModel,
+                sharedViewModel = sharedViewModel
             )
         }
 

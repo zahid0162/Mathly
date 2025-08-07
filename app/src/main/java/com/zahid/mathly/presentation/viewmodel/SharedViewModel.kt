@@ -91,6 +91,10 @@ class SharedViewModel @Inject constructor(
             }
         }
     }
+
+    fun reloadHistory() {
+        loadHistory()
+    }
     
     fun clearError() {
         _state.value = _state.value.copy(error = null)
