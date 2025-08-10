@@ -18,6 +18,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.zahid.mathly.domain.model.SolutionStep
+import com.zahid.mathly.domain.model.SolutionType
+import com.zahid.mathly.presentation.ui.components.EquationGraph
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -114,6 +116,15 @@ fun ResultScreen(
                             finalAnswer = solution.finalAnswer
                         )
                     }
+
+                    // Show graph for equations that can be plotted
+                    if (solution.type == SolutionType.EQUATION && canPlotEquation(solution.equationId)) {
+                        item {
+                            EquationGraph(
+                                equation = extractFunctionFromEquation(solution.equationId)
+                            )
+                        }
+                    }
                 } ?: run {
                     // Show placeholder if no solution available
                     item {
@@ -197,6 +208,45 @@ private fun shareSolution(context: android.content.Context, solution: com.zahid.
     
     val chooser = Intent.createChooser(shareIntent, "Share Solution")
     context.startActivity(chooser)
+}
+
+// Helper functions for graph plotting
+private fun canPlotEquation(equation: String): Boolean {
+    val cleanEquation = equation.lowercase().replace(" ", "")
+    
+    // Check if it's a simple function of x (y = f(x))
+    return cleanEquation.contains("x") && (
+        cleanEquation.startsWith("y=") || 
+        cleanEquation.startsWith("f(x)=") ||
+        cleanEquation.matches(Regex(".*[a-z]\\s*=\\s*.*x.*")) ||
+        cleanEquation.matches(Regex(".*x.*[+\\-*/^]"))
+    )
+}
+
+private fun extractFunctionFromEquation(equation: String): String {
+    val cleanEquation = equation.replace(" ", "")
+    
+    return when {
+        cleanEquation.startsWith("y=") -> cleanEquation.substring(2)
+        cleanEquation.startsWith("f(x)=") -> cleanEquation.substring(5)
+        cleanEquation.contains("=") -> {
+            val parts = cleanEquation.split("=")
+            if (parts.size == 2) {
+                // Try to extract the function part
+                val left = parts[0]
+                val right = parts[1]
+                
+                when {
+                    left.contains("x") -> left
+                    right.contains("x") -> right
+                    else -> right // Default to right side
+                }
+            } else {
+                cleanEquation
+            }
+        }
+        else -> cleanEquation
+    }
 }
 
 @Composable

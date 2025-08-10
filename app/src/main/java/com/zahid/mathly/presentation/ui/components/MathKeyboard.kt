@@ -98,9 +98,9 @@ fun NumbersKeyboard(
     onBackspace: () -> Unit
 ) {
     val numbers = listOf(
-        "7", "8", "9",
-        "4", "5", "6",
-        "1", "2", "3",
+        "9", "8", "7",
+        "6", "5", "4",
+        "3", "2", "1",
         "0", ".", "="
     )
     
@@ -234,10 +234,10 @@ fun OperatorsKeyboard(
     onBackspace: () -> Unit
 ) {
     val operators = listOf(
-        "+", "-", "×", "÷",
+        "+", "-", "*", "/",
         "(", ")", "^", "√",
         "<", ">", "≤", "≥",
-        "≠", "≈", "±", "∞"
+        "≠", "≈", "±", "∞","="
     )
     
     LazyVerticalGrid(

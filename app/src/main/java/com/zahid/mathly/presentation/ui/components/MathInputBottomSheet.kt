@@ -3,25 +3,35 @@ package com.zahid.mathly.presentation.ui.components
 import android.content.ClipboardManager
 import android.content.Context
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.ContentPaste
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.DialogProperties
+import androidx.compose.ui.zIndex
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +40,9 @@ fun MathInputBottomSheet(
     onTextSubmit: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var inputText by remember { mutableStateOf(initialText) }
+    var inputValue by remember { 
+        mutableStateOf(TextFieldValue(initialText, TextRange(initialText.length)))
+    }
     val focusRequester = remember { FocusRequester() }
     val context = LocalContext.current
     
@@ -77,35 +89,37 @@ fun MathInputBottomSheet(
                             val clipData = clipboard.primaryClip
                             if (clipData != null && clipData.itemCount > 0) {
                                 val pasteData = clipData.getItemAt(0).text.toString()
-                                inputText += pasteData
+                                inputValue = TextFieldValue(inputValue.text + pasteData, TextRange(inputValue.text.length + pasteData.length))
                             }
                         }
                     ) {
                         Icon(
                             imageVector = Icons.Default.ContentPaste,
-                            contentDescription = "Paste"
+                            contentDescription = "Paste from clipboard"
                         )
                     }
                     
+                    // Close Button
                     IconButton(onClick = onDismiss) {
                         Icon(
                             imageVector = Icons.Default.Close,
-                            contentDescription = "Close"
+                            contentDescription = "Close without saving"
                         )
                     }
                     
+                    // Done Button
                     IconButton(
                         onClick = {
-                            if (inputText.isNotBlank()) {
-                                onTextSubmit(inputText)
+                            if (inputValue.text.isNotBlank()) {
+                                onTextSubmit(inputValue.text)
                                 onDismiss()
                             }
                         },
-                        enabled = inputText.isNotBlank()
+                        enabled = inputValue.text.isNotBlank()
                     ) {
                         Icon(
                             imageVector = Icons.Default.Done,
-                            contentDescription = "Done"
+                            contentDescription = "Save and close"
                         )
                     }
                 }
@@ -122,38 +136,122 @@ fun MathInputBottomSheet(
                     modifier = Modifier.padding(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Text(
-                        text = "Equation:",
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+                    // Title with cursor controls
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Equation:",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        
+                        // Cursor movement buttons
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(4.dp)
+                        ) {
+                            // Left arrow
+                            IconButton(
+                                onClick = {
+                                    val currentSelection = inputValue.selection
+                                    if (currentSelection.start > 0) {
+                                        val newCursorPosition = currentSelection.start - 1
+                                        inputValue = TextFieldValue(inputValue.text, TextRange(newCursorPosition))
+                                    }
+                                },
+                                modifier = Modifier.size(32.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowLeft,
+                                    contentDescription = "Move cursor left",
+                                    modifier = Modifier.size(16.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                            
+                            // Right arrow
+                            IconButton(
+                                onClick = {
+                                    val currentSelection = inputValue.selection
+                                    if (currentSelection.start < inputValue.text.length) {
+                                        val newCursorPosition = currentSelection.start + 1
+                                        inputValue = TextFieldValue(inputValue.text, TextRange(newCursorPosition))
+                                    }
+                                },
+                                modifier = Modifier.size(32.dp)
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.KeyboardArrowRight,
+                                    contentDescription = "Move cursor right",
+                                    modifier = Modifier.size(16.dp),
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                    }
                     
-                    OutlinedTextField(
-                        value = inputText,
-                        onValueChange = { inputText = it },
+                    // Custom Text Field with Visible Cursor
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .focusRequester(focusRequester),
-                        placeholder = {
-                            Text("Enter your equation...")
-                        },
-                        colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = MaterialTheme.colorScheme.primary,
-                            unfocusedBorderColor = MaterialTheme.colorScheme.outline
-                        ),
-                        textStyle = androidx.compose.ui.text.TextStyle(
+                            .background(
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.outline,
+                                shape = RoundedCornerShape(4.dp)
+                            )
+                            .padding(16.dp)
+                            .focusRequester(focusRequester)
+                            .clickable { focusRequester.requestFocus() }
+                    ) {
+                        val text = inputValue.text
+                        val cursorPosition = inputValue.selection.start
+                        
+                        Text(
+                            text = text,
                             fontSize = 16.sp,
-                            lineHeight = 20.sp
-                        ),
-                        minLines = 2,
-                        maxLines = 4,
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Done
-                        ),
-                        readOnly = true // Disable system keyboard
-                    )
+                            lineHeight = 20.sp,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                        
+                        // Simple blinking cursor at the current position
+                        var showCursor by remember { mutableStateOf(true) }
+                        
+                        LaunchedEffect(Unit) {
+                            while (true) {
+                                delay(500)
+                                showCursor = !showCursor
+                            }
+                        }
+                        
+                        if (showCursor) {
+                            // Calculate cursor position based on text length
+                            val cursorOffset = if (cursorPosition <= text.length) {
+                                cursorPosition * 10 // Approximate character width
+                            } else {
+                                text.length * 10
+                            }
+                            
+                            Box(
+                                modifier = Modifier
+                                    .offset(x = cursorOffset.dp)
+                                    .width(2.dp)
+                                    .height(20.dp)
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        shape = RoundedCornerShape(1.dp)
+                                    )
+                                    .zIndex(1f)
+                            )
+                        }
+                    }
                 }
             }
             
@@ -171,11 +269,19 @@ fun MathInputBottomSheet(
 
                     MathKeyboard(
                         onKeyPress = { key ->
-                            inputText += key
+                            val currentText = inputValue.text
+                            val currentSelection = inputValue.selection
+                            val newText = currentText.substring(0, currentSelection.start) + key + currentText.substring(currentSelection.end)
+                            val newCursorPosition = currentSelection.start + key.length
+                            inputValue = TextFieldValue(newText, TextRange(newCursorPosition))
                         },
                         onBackspace = {
-                            if (inputText.isNotEmpty()) {
-                                inputText = inputText.dropLast(1)
+                            val currentText = inputValue.text
+                            val currentSelection = inputValue.selection
+                            if (currentText.isNotEmpty() && currentSelection.start > 0) {
+                                val newText = currentText.substring(0, currentSelection.start - 1) + currentText.substring(currentSelection.end)
+                                val newCursorPosition = currentSelection.start - 1
+                                inputValue = TextFieldValue(newText, TextRange(newCursorPosition))
                             }
                         },
                         modifier = Modifier.fillMaxWidth()
@@ -183,10 +289,5 @@ fun MathInputBottomSheet(
                 }
             }
         }
-    }
-    
-    // Focus the text field when the bottom sheet opens
-    LaunchedEffect(Unit) {
-        focusRequester.requestFocus()
     }
 } 

@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.*
@@ -15,32 +14,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 import com.zahid.mathly.presentation.viewmodel.WordProblemViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WordProblemInputScreen(
     navController: NavController,
-    viewModel: WordProblemViewModel,
-    sharedViewModel: SharedViewModel
+    viewModel: WordProblemViewModel
 ) {
     val state by viewModel.state.collectAsState()
-    val onSolutionSaved by viewModel.onSolutionSaved.collectAsState()
     var problemText by remember { mutableStateOf("") }
 
     // Navigate to result screen when word problem is solved
     LaunchedEffect(state.currentWordProblem) {
         state.currentWordProblem?.let {
             navController.navigate("wordProblemResult")
-        }
-    }
-
-    // Reload history when solution is saved
-    LaunchedEffect(onSolutionSaved) {
-        if (onSolutionSaved) {
-            sharedViewModel.reloadHistory()
-            viewModel.resetSolutionSaved()
         }
     }
 
@@ -51,16 +39,14 @@ fun WordProblemInputScreen(
                     Text(
                         text = "Word Problem Solver",
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = MaterialTheme.colorScheme.onPrimary
+                        fontWeight = FontWeight.Medium
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.navigateUp() }) {
                         Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.onPrimary
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back"
                         )
                     }
                 },
@@ -80,7 +66,7 @@ fun WordProblemInputScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
                 )
             )
         }

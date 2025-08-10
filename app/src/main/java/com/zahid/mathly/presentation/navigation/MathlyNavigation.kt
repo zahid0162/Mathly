@@ -60,7 +60,6 @@ fun MathlyNavigation() {
             WordProblemInputScreen(
                 navController = navController,
                 viewModel = wordProblemViewModel,
-                sharedViewModel = sharedViewModel
             )
         }
 

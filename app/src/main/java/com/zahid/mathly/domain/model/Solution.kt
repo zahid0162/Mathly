@@ -8,7 +8,7 @@ enum class SolutionType {
 data class Solution(
     val id: String = "",
     val equationId: String = "",
-    val originalProblem: String = "", // For word problems, store the original problem text
+    val originalProblem: String = "",
     val type: SolutionType = SolutionType.EQUATION,
     val steps: List<SolutionStep> = emptyList(),
     val finalAnswer: String = "",
@@ -20,4 +20,4 @@ data class SolutionStep(
     val description: String = "",
     val calculation: String = "",
     val result: String = ""
-) 
+)

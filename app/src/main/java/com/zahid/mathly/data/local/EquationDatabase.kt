@@ -20,10 +20,10 @@ abstract class EquationDatabase : RoomDatabase() {
         private var INSTANCE: EquationDatabase? = null
         
         private val MIGRATION_1_2 = object : Migration(1, 2) {
-            override fun migrate(database: SupportSQLiteDatabase) {
+            override fun migrate(db: SupportSQLiteDatabase) {
                 // Add new columns to solutions table
-                database.execSQL("ALTER TABLE solutions ADD COLUMN originalProblem TEXT NOT NULL DEFAULT ''")
-                database.execSQL("ALTER TABLE solutions ADD COLUMN type TEXT NOT NULL DEFAULT 'EQUATION'")
+                db.execSQL("ALTER TABLE solutions ADD COLUMN originalProblem TEXT NOT NULL DEFAULT ''")
+                db.execSQL("ALTER TABLE solutions ADD COLUMN type TEXT NOT NULL DEFAULT 'EQUATION'")
             }
         }
         

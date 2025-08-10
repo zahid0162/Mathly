@@ -2,9 +2,11 @@ package com.zahid.mathly.presentation.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ShowChart
 import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.TextFields
+import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.text.font.Font
@@ -69,6 +71,12 @@ fun MainScreen(
                         selectedTab = 2
                     }
                 )
+                NavigationBarItem(
+                    icon = { Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = "Graph") },
+                    label = { Text("Graph") },
+                    selected = selectedTab == 3,
+                    onClick = { selectedTab = 3 }
+                )
             }
         }
     ) { paddingValues ->
@@ -87,6 +95,9 @@ fun MainScreen(
             2 -> HistoryTab(
                 navController = navController,
                 viewModel = viewModel,
+                paddingValues = paddingValues
+            )
+            3 -> GraphTab(
                 paddingValues = paddingValues
             )
         }
