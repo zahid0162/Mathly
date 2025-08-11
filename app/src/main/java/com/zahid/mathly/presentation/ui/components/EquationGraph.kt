@@ -5,7 +5,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -17,7 +16,6 @@ import ir.ehsannarmani.compose_charts.models.AnimationMode
 import ir.ehsannarmani.compose_charts.models.DotProperties
 import ir.ehsannarmani.compose_charts.models.DrawStyle
 import ir.ehsannarmani.compose_charts.models.Line
-import ir.ehsannarmani.compose_charts.models.LineProperties
 import ir.ehsannarmani.compose_charts.models.ZeroLineProperties
 import kotlin.math.*
 

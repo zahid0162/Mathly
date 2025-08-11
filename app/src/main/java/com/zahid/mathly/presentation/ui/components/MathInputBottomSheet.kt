@@ -45,6 +45,7 @@ fun MathInputBottomSheet(
     }
     val focusRequester = remember { FocusRequester() }
     val context = LocalContext.current
+    var showTooltip by remember { mutableStateOf(true) }
     
     // Create a custom sheet state that prevents drag-to-dismiss
     val sheetState = rememberModalBottomSheetState(
@@ -189,6 +190,46 @@ fun MathInputBottomSheet(
                                     modifier = Modifier.size(16.dp),
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
+                            }
+                        }
+                    }
+                    
+                    // Floating Tooltip for cursor guidance
+                    if (showTooltip) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                            ),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(12.dp),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = "💡 Use these arrows to move cursor position",
+                                    fontSize = 14.sp,
+                                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                    modifier = Modifier.weight(1f)
+                                )
+                                
+                                IconButton(
+                                    onClick = { showTooltip = false },
+                                    modifier = Modifier.size(24.dp)
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Default.Close,
+                                        contentDescription = "Close tooltip",
+                                        modifier = Modifier.size(16.dp),
+                                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                                    )
+                                }
                             }
                         }
                     }
