@@ -14,7 +14,7 @@ android {
         applicationId = "com.zahid.mathly"
         minSdk = 24
         targetSdk = 36
-        versionCode = 3
+        versionCode = 4
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -95,7 +95,8 @@ dependencies {
     implementation(libs.room.runtime)
     implementation(libs.room.ktx)
     ksp(libs.room.compiler)
-
+    implementation("org.mariuszgromada.math:MathParser.org-mXparser:5.0.6")
+    implementation("com.jjoe64:graphview:4.2.2")
     // Gson for JSON parsing
     implementation(libs.gson)
     

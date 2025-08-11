@@ -31,8 +31,10 @@ fun ResultScreen(
     val state by viewModel.state.collectAsState()
     val currentSolution by viewModel.currentSolution.collectAsState()
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
     
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = {
@@ -121,7 +123,9 @@ fun ResultScreen(
                     if (solution.type == SolutionType.EQUATION && canPlotEquation(solution.equationId)) {
                         item {
                             EquationGraph(
-                                equation = extractFunctionFromEquation(solution.equationId)
+                                equation = extractFunctionFromEquation(solution.equationId),
+                                modifier = Modifier.fillMaxWidth(),
+                                snackbarHostState
                             )
                         }
                     }

@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
@@ -30,11 +31,12 @@ fun MainScreen(
     val state by viewModel.state.collectAsState()
     val history by viewModel.history.collectAsState()
     var selectedTab by remember { mutableStateOf(0) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             CenterAlignedTopAppBar(
-
                 title = {
                     Text(
                         text = "Mathly",
@@ -59,9 +61,15 @@ fun MainScreen(
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.TextFields, contentDescription = "Word Problems") },
-                    label = { Text("Word Problems") },
+                    label = { Text("Word Problems", maxLines = 1, overflow = TextOverflow.Ellipsis) },
                     selected = selectedTab == 1,
                     onClick = { selectedTab = 1 }
+                )
+                NavigationBarItem(
+                    icon = { Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = "Graph") },
+                    label = { Text("Graph") },
+                    selected = selectedTab == 3,
+                    onClick = { selectedTab = 3 }
                 )
                 NavigationBarItem(
                     icon = { Icon(Icons.Default.History, contentDescription = "History") },
@@ -71,12 +79,7 @@ fun MainScreen(
                         selectedTab = 2
                     }
                 )
-                NavigationBarItem(
-                    icon = { Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = "Graph") },
-                    label = { Text("Graph") },
-                    selected = selectedTab == 3,
-                    onClick = { selectedTab = 3 }
-                )
+
             }
         }
     ) { paddingValues ->
@@ -98,7 +101,8 @@ fun MainScreen(
                 paddingValues = paddingValues
             )
             3 -> GraphTab(
-                paddingValues = paddingValues
+                paddingValues = paddingValues,
+                snackbarHostState
             )
         }
     }

@@ -1,6 +1,9 @@
 package com.zahid.mathly.presentation.ui.components
 
+import android.util.Log
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -9,20 +12,22 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.jjoe64.graphview.GraphView
+import com.jjoe64.graphview.series.DataPoint
+import com.jjoe64.graphview.series.LineGraphSeries
+import com.zahid.mathly.presentation.ui.theme.md_theme_light_onPrimaryContainer
 import com.zahid.mathly.presentation.ui.theme.md_theme_light_primary
 import com.zahid.mathly.presentation.ui.theme.md_theme_light_primaryContainer
-import ir.ehsannarmani.compose_charts.LineChart
-import ir.ehsannarmani.compose_charts.models.AnimationMode
-import ir.ehsannarmani.compose_charts.models.DotProperties
-import ir.ehsannarmani.compose_charts.models.DrawStyle
-import ir.ehsannarmani.compose_charts.models.Line
-import ir.ehsannarmani.compose_charts.models.ZeroLineProperties
-import kotlin.math.*
+import kotlinx.coroutines.launch
+import org.mariuszgromada.math.mxparser.Argument
+import org.mariuszgromada.math.mxparser.Expression
 
 @Composable
 fun EquationGraph(
     equation: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -31,62 +36,30 @@ fun EquationGraph(
         )
     ) {
         Column(
-            modifier = Modifier.padding(16.dp),
+            modifier = Modifier.padding(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = "Function Graph",
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            
-            Text(
-                text = "y = $equation",
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            
+
             // Generate data points for the function
             val dataPoints = remember(equation) {
-                generateFunctionDataPoints(equation, -5.0, 5.0, 1.0)
+                generateDataPoints(equation, -5.0, 5.0, 0.2)
             }
-            
+
             if (dataPoints.isNotEmpty()) {
                 // Calculate the actual min and max values from the data
-                val minY = dataPoints.minOfOrNull { it.second } ?: 0.0
-                val maxY = dataPoints.maxOfOrNull { it.second } ?: 10.0
-                
-                LineChart(
-                    modifier = Modifier
-                        .width(400.dp)
-                        .height(400.dp),
-                    data = remember {
-                        listOf(
-                            Line(
-                                label = "Function",
-                                values = dataPoints.map { it.second },
-                                color = SolidColor(md_theme_light_primary),
-                                curvedEdges = true,
-                                dotProperties = DotProperties(
-                                    enabled = true,
-                                    color = SolidColor(md_theme_light_primary),
-                                    radius = 3f.dp,
-                                    strokeColor = SolidColor(md_theme_light_primaryContainer),
-                                    strokeWidth = 2f.dp
-                                ),
-                                drawStyle = DrawStyle.Stroke(width = 3.dp)
-                            )
-                        )
-                    },
-                    animationMode = AnimationMode.Together(delayBuilder = { it * 50L }),
-                    zeroLineProperties = ZeroLineProperties(
-                        enabled = true,
-                        color = SolidColor(MaterialTheme.colorScheme.outline.copy(alpha = 0.5f))
-                    ),
-                    minValue = minY - 1.0, // Add some padding
-                    maxValue = maxY + 1.0  // Add some padding
-                )
+                dataPoints.forEach {
+                    Log.d("Data Points", "${it.first},${it.second}")
+                }
+                Row(modifier = Modifier.horizontalScroll(rememberScrollState(), true)) {
+                    GraphViewCompose(
+                        points = dataPoints,
+                        modifier = Modifier
+                            .width(500.dp)
+                            .height(500.dp),
+                        snackbarHostState
+                    )
+                }
+
             } else {
                 Box(
                     modifier = Modifier
@@ -104,161 +77,79 @@ fun EquationGraph(
     }
 }
 
-private fun generateFunctionDataPoints(
+fun generateDataPoints(
     equation: String,
-    startX: Double,
-    endX: Double,
-    step: Double
-): List<Pair<Double, Double>> {
-    val dataPoints = mutableListOf<Pair<Double, Double>>()
-    
-    var x = startX
-    while (x <= endX) {
-        try {
-            val y = evaluateFunction(equation, x)
-            if (y.isFinite() && y >= -100 && y <= 100) { // Filter out invalid values
-                dataPoints.add(x to y)
-            }
-        } catch (e: Exception) {
-            // Skip invalid points
+    start: Double = -5.0,
+    end: Double = 5.0,
+    step: Double = 1.0
+): MutableList<Pair<Double, Double>> {
+    val points = mutableListOf<Pair<Double, Double>>()
+    val xArg = Argument("x", 0.0) // Define 'x' variable
+
+    // Parse the equation with x as an argument
+    val exp = Expression(equation, xArg)
+
+    var xVal = start
+    while (xVal <= end) {
+        xArg.argumentValue = xVal
+        val yVal = exp.calculate()
+
+        // Handle invalid numbers (NaN, Infinity) gracefully
+        if (!yVal.isNaN() && yVal.isFinite()) {
+            points.add(Pair(xVal, yVal))
         }
-        x += step
-    }
-    
-    return dataPoints
-}
 
-private fun evaluateFunction(equation: String, x: Double): Double {
-    return try {
-        // Extract the right side of the equation (after =)
-        val expression = if (equation.contains("=")) {
-            equation.split("=")[1].trim()
-        } else {
-            equation.trim()
-        }
-        
-        // Replace x with the actual value and evaluate
-        val substitutedExpression = expression.replace("x", "($x)")
-        
-        val result = evaluateExpression(substitutedExpression)
-        result
-    } catch (e: Exception) {
-        Double.NaN
+        xVal += step
     }
-}
 
-private fun evaluateExpression(expression: String): Double {
-    val tokens = tokenize(expression)
-    val result = evaluateTokens(tokens)
-    return result
-}
-
-private fun tokenize(expression: String): List<String> {
-    val tokens = mutableListOf<String>()
-    var current = ""
-    
-    for (i in expression.replace(" ", "").indices) {
-        val char = expression[i]
-        when (char) {
-            '+', '-', '*', '/', '(', ')' -> {
-                if (current.isNotEmpty()) {
-                    tokens.add(current)
-                    current = ""
-                }
-                tokens.add(char.toString())
-            }
-            else -> {
-                current += char
-                // Check if we need to add implicit multiplication
-                if (i < expression.length - 1) {
-                    val nextChar = expression[i + 1]
-                    if (nextChar == '(' && current.matches(Regex("-?\\d+(\\.\\d+)?"))) {
-                        // Add implicit multiplication: 2( becomes 2*(
-                        tokens.add(current)
-                        tokens.add("*")
-                        current = ""
-                    }
-                }
-            }
-        }
-    }
-    if (current.isNotEmpty()) {
-        tokens.add(current)
-    }
-    
-    return tokens
-}
-
-private fun evaluateTokens(tokens: List<String>): Double {
-    val stack = mutableListOf<Double>()
-    val operators = mutableListOf<String>()
-    
-    for (token in tokens) {
-        when {
-            token.matches(Regex("-?\\d+(\\.\\d+)?")) -> {
-                stack.add(token.toDouble())
-            }
-            token == "(" -> {
-                operators.add(token)
-            }
-            token == ")" -> {
-                while (operators.isNotEmpty() && operators.last() != "(") {
-                    val op = operators.removeAt(operators.size - 1)
-                    applyOperator(stack, op)
-                }
-                if (operators.isNotEmpty() && operators.last() == "(") {
-                    operators.removeAt(operators.size - 1)
-                }
-            }
-            isOperator(token) -> {
-                while (operators.isNotEmpty() && 
-                       operators.last() != "(" && 
-                       precedence(operators.last()) >= precedence(token)) {
-                    val op = operators.removeAt(operators.size - 1)
-                    applyOperator(stack, op)
-                }
-                operators.add(token)
-            }
-        }
-    }
-    
-    while (operators.isNotEmpty()) {
-        val op = operators.removeAt(operators.size - 1)
-        applyOperator(stack, op)
-    }
-    
-    val result = stack.firstOrNull() ?: 0.0
-    return result
-}
-
-private fun isOperator(token: String): Boolean {
-    return token in listOf("+", "-", "*", "/")
-}
-
-private fun precedence(operator: String): Int {
-    return when (operator) {
-        "*", "/" -> 2
-        "+", "-" -> 1
-        else -> 0
-    }
-}
-
-private fun applyOperator(stack: MutableList<Double>, operator: String) {
-    if (stack.size < 2) return
-    
-    val b = stack.removeAt(stack.size - 1)
-    val a = stack.removeAt(stack.size - 1)
-    
-    val result = when (operator) {
-        "+" -> a + b
-        "-" -> a - b
-        "*" -> a * b
-        "/" -> if (b != 0.0) a / b else Double.NaN
-        else -> Double.NaN
-    }
-    
-    stack.add(result)
+    return points
 }
 
 // Extension function for power operation
 private fun Double.pow(power: Double): Double = this.pow(power)
+
+@Composable
+fun GraphViewCompose(
+    points: List<Pair<Double, Double>>,
+    modifier: Modifier = Modifier,
+    snackbarHostState: SnackbarHostState
+) {
+    val scope = rememberCoroutineScope()
+    AndroidView(
+        factory = { context ->
+            GraphView(context).apply {
+                val dataPoints = points.map { DataPoint(it.first, it.second) }.toTypedArray()
+                val series = LineGraphSeries(dataPoints)
+
+                addSeries(series)
+
+                // Style the series
+                series.color = md_theme_light_primary.hashCode()
+                series.isDrawDataPoints = true
+                series.dataPointsRadius = 6f
+                series.thickness = 4
+                series.setOnDataPointTapListener { points, p ->
+                    scope.launch {
+                        snackbarHostState.showSnackbar(message = "x = ${p.x}, y = ${p.y}")
+                    }
+
+                }
+                series.backgroundColor = md_theme_light_primaryContainer.hashCode()
+                series.setAnimated(true)
+                // Viewport bounds
+                viewport.isXAxisBoundsManual = true
+                viewport.isYAxisBoundsManual = true
+                viewport.setMinX(points.minOf { it.first })
+                viewport.setMaxX(points.maxOf { it.first })
+                viewport.setMinY(points.minOf { it.second })
+                viewport.setMaxY(points.maxOf { it.second })
+
+
+                // Enable zooming & scrolling
+                viewport.isScalable = true
+                viewport.isScrollable = true
+            }
+        },
+        modifier = modifier
+    )
+}

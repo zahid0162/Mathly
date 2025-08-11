@@ -19,15 +19,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zahid.mathly.presentation.ui.components.EquationGraph
 import com.zahid.mathly.presentation.ui.components.MathInputBottomSheet
+import java.nio.file.WatchEvent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GraphTab(
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    snackbarHostState: SnackbarHostState
 ) {
     var functionInput by remember { mutableStateOf("") }
     var showGraph by remember { mutableStateOf(false) }
-    var currentFunction by remember { mutableStateOf("") }
     var showMathKeyboard by remember { mutableStateOf(false) }
 
     Column(
@@ -35,7 +36,7 @@ fun GraphTab(
             .fillMaxSize()
             .padding(paddingValues)
             .padding(16.dp)
-            .verticalScroll(rememberScrollState(),true),
+            .verticalScroll(rememberScrollState(), true),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
@@ -61,8 +62,8 @@ fun GraphTab(
             )
         ) {
             Column(
-                modifier = Modifier.padding(20.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
 
                 Text(
@@ -75,14 +76,15 @@ fun GraphTab(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { showMathKeyboard = true }
                 ) {
                     OutlinedTextField(
                         value = functionInput,
-                        onValueChange = { /* Read-only, only editable via bottom sheet */ },
+                        onValueChange = {
+                            showGraph = false
+                            functionInput = it },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = {
-                            Text("Tap to open math keyboard...")
+                            Text("Enter equation according to below format")
                         },
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -94,26 +96,17 @@ fun GraphTab(
                         ),
                         minLines = 3,
                         maxLines = 6,
-                        readOnly = true, // Make it read-only
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Text,
                             imeAction = ImeAction.Done
                         ),
-                        trailingIcon = {
-                            IconButton(onClick = { showMathKeyboard = true }) {
-                                Icon(
-                                    imageVector = Icons.Default.Edit,
-                                    contentDescription = "Edit"
-                                )
-                            }
-                        }
                     )
                 }
 
                 Button(
                     onClick = {
                         if (functionInput.isNotBlank()) {
-                            currentFunction = functionInput.trim()
+                            showGraph = false
                             showGraph = true
                         }
                     },
@@ -132,7 +125,7 @@ fun GraphTab(
         }
 
         // Graph Section
-        if (showGraph && currentFunction.isNotBlank()) {
+        if (showGraph) {
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
@@ -144,7 +137,7 @@ fun GraphTab(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        text = "Graph of y = $currentFunction",
+                        text = "Graph of y = $functionInput",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -155,55 +148,20 @@ fun GraphTab(
                         contentAlignment = Alignment.Center
                     ) {
                         EquationGraph(
-                            equation = currentFunction,
-                            modifier = Modifier.fillMaxWidth()
+                            equation = extractFunctionFromEquation(functionInput),
+                            modifier = Modifier.fillMaxWidth(),
+                            snackbarHostState
                         )
                     }
                 }
             }
         }
-
+        Spacer(modifier = Modifier.height(8.dp))
         // Instructions
-        if (!showGraph) {
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
-                )
-            ) {
-                Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = "How to use:",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Text(
-                        text = "• Enter a function like 'x+2' or '2*x-1'",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = "• Use * for multiplication (2*x)",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = "• Use + and - for addition/subtraction",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                    Text(
-                        text = "• Click 'Draw Graph' to see the function",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
-                }
-            }
-        }
+        InstructionsView()
+
+
+
     }
 
     // Math Input Bottom Sheet
@@ -214,4 +172,81 @@ fun GraphTab(
             onDismiss = { showMathKeyboard = false },
         )
     }
-} 
+}
+
+@Composable
+fun InstructionsView(){
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.3f)
+        )
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Text(
+                text = "How to use:",
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
+            // Basic usage
+            Text("• Enter a function like 'x+2' or '2*x-1'", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("• Use * for multiplication (e.g., 2*x)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("• Use + and - for addition and subtraction", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("• Use / for division (e.g., x/2)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("• Use ^ for powers (e.g., x^2 for x squared)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+            // Trigonometry
+            Text("• Trigonometry: sin(x), cos(x), tan(x), asin(x), acos(x), atan(x)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("• By default, angles are in radians. Use 'deg' for degrees (e.g., sin(30 deg))", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+            // Constants
+            Text("• Constants: pi, e", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+            // Advanced math
+            Text("• Square root: sqrt(x)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("• Logarithms: log(x) for base 10, ln(x) for natural log", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("• Absolute value: abs(x)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+            // Calculus
+            Text("• Derivatives: der(expression, x)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text("• Integrals: int(expression, x, start, end)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+            // Usage tip
+            Text("• Click 'Draw Graph' to visualize your function", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+
+
+        }
+    }
+}
+
+private fun extractFunctionFromEquation(equation: String): String {
+    val cleanEquation = equation.replace(" ", "")
+
+    return when {
+        cleanEquation.startsWith("y=") -> cleanEquation.substring(2)
+        cleanEquation.startsWith("f(x)=") -> cleanEquation.substring(5)
+        cleanEquation.contains("=") -> {
+            val parts = cleanEquation.split("=")
+            if (parts.size == 2) {
+                // Try to extract the function part
+                val left = parts[0]
+                val right = parts[1]
+
+                when {
+                    left.contains("x") -> left
+                    right.contains("x") -> right
+                    else -> right // Default to right side
+                }
+            } else {
+                cleanEquation
+            }
+        }
+
+        else -> cleanEquation
+    }
+}
