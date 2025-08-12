@@ -4,12 +4,96 @@ import com.zahid.mathly.domain.model.Solution
 import com.zahid.mathly.domain.model.SolutionStep
 import com.zahid.mathly.domain.model.SolutionType
 import com.zahid.mathly.domain.model.WordProblem
+import com.zahid.mathly.domain.model.CaloriesAnalysis
+import com.zahid.mathly.domain.model.FoodItem
+import com.zahid.mathly.domain.model.Exercise
 import javax.inject.Inject
 
 class OpenAIService @Inject constructor(private val api: OpenAIApi) {
     
     companion object {
         private const val API_KEY = "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" // Replace with your actual API key
+    }
+
+    suspend fun analyzeCalories(foodDescription: String): CaloriesAnalysis {
+        val prompt = """
+            You are a nutritionist and fitness expert. Analyze the following food description and provide detailed calorie information and exercise recommendations.
+            
+            Food Description: "$foodDescription"
+            
+            Please provide your response in this exact JSON format:
+            {
+                "foodDescription": "$foodDescription",
+                "breakdown": [
+                    {
+                        "name": "Food item name",
+                        "calories": 250,
+                        "serving": "1 cup"
+                    }
+                ],
+                "totalCalories": 850,
+                "suggestedExercises": [
+                    {
+                        "name": "Exercise name",
+                        "duration": "30 minutes",
+                        "caloriesBurned": 300,
+                        "intensity": "moderate"
+                    }
+                ]
+            }
+            
+            Guidelines:
+            1. Break down each food item mentioned in the description
+            2. Provide realistic calorie estimates based on common serving sizes
+            3. For exercises, assume a 70kg person and provide 3-4 different exercise options
+            4. Exercise durations should be realistic to burn the total calories
+            5. Include a mix of cardio and strength training exercises
+            6. Use common exercise names (walking, running, cycling, swimming, etc.)
+            7. Ensure the total calories burned by exercises equals or exceeds the total food calories
+        """.trimIndent()
+
+        val request = ChatCompletionRequest(
+            model = "gpt-4",
+            messages = listOf(
+                Message(role = "user", content = prompt)
+            ),
+            temperature = 0.3
+        )
+
+        return try {
+            val response = api.createChatCompletion("Bearer $API_KEY", request)
+            val content = response.choices.firstOrNull()?.message?.content
+                ?: throw Exception("No response content")
+            
+            parseCaloriesAnalysisFromResponse(content, foodDescription)
+        } catch (e: Exception) {
+            // Fallback: create a basic analysis
+            CaloriesAnalysis(
+                foodDescription = foodDescription,
+                breakdown = listOf(
+                    FoodItem(
+                        name = "Food items",
+                        calories = 500,
+                        serving = "estimated"
+                    )
+                ),
+                totalCalories = 500,
+                suggestedExercises = listOf(
+                    Exercise(
+                        name = "Walking",
+                        duration = "45 minutes",
+                        caloriesBurned = 250,
+                        intensity = "moderate"
+                    ),
+                    Exercise(
+                        name = "Cycling",
+                        duration = "20 minutes",
+                        caloriesBurned = 250,
+                        intensity = "moderate"
+                    )
+                )
+            )
+        }
     }
 
     suspend fun solveEquation(equation: String): Solution {
@@ -212,6 +296,75 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
         }
     }
 
+    private fun parseCaloriesAnalysisFromResponse(response: String, foodDescription: String): CaloriesAnalysis {
+        // Extract JSON from response
+        val jsonStart = response.indexOf('{')
+        val jsonEnd = response.lastIndexOf('}') + 1
+        val jsonString = if (jsonStart >= 0 && jsonEnd > jsonStart) {
+            response.substring(jsonStart, jsonEnd)
+        } else {
+            response
+        }
+
+        return try {
+            val gson = com.google.gson.Gson()
+            val caloriesAnalysisResponse = gson.fromJson(jsonString, CaloriesAnalysisResponse::class.java)
+            
+            val breakdown = caloriesAnalysisResponse.breakdown?.map { item ->
+                FoodItem(
+                    name = item.name,
+                    calories = item.calories,
+                    serving = item.serving
+                )
+            } ?: emptyList()
+
+            val totalCalories = caloriesAnalysisResponse.totalCalories ?: 0
+
+            val suggestedExercises = caloriesAnalysisResponse.suggestedExercises?.map { exercise ->
+                Exercise(
+                    name = exercise.name,
+                    duration = exercise.duration,
+                    caloriesBurned = exercise.caloriesBurned,
+                    intensity = exercise.intensity
+                )
+            } ?: emptyList()
+
+            CaloriesAnalysis(
+                foodDescription = foodDescription,
+                breakdown = breakdown,
+                totalCalories = totalCalories,
+                suggestedExercises = suggestedExercises
+            )
+        } catch (e: Exception) {
+            // Fallback: create a basic analysis
+            CaloriesAnalysis(
+                foodDescription = foodDescription,
+                breakdown = listOf(
+                    FoodItem(
+                        name = "Food items",
+                        calories = 500,
+                        serving = "estimated"
+                    )
+                ),
+                totalCalories = 500,
+                suggestedExercises = listOf(
+                    Exercise(
+                        name = "Walking",
+                        duration = "45 minutes",
+                        caloriesBurned = 250,
+                        intensity = "moderate"
+                    ),
+                    Exercise(
+                        name = "Cycling",
+                        duration = "20 minutes",
+                        caloriesBurned = 250,
+                        intensity = "moderate"
+                    )
+                )
+            )
+        }
+    }
+
     // Data classes for JSON parsing
     private data class SolutionResponse(
         val equationId: String?,
@@ -222,5 +375,25 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
     private data class WordProblemResponse(
         val extractedEquation: String?,
         val solution: Solution?
+    )
+
+    private data class CaloriesAnalysisResponse(
+        val foodDescription: String?,
+        val breakdown: List<FoodItemResponse>?,
+        val totalCalories: Int?,
+        val suggestedExercises: List<ExerciseResponse>?
+    )
+
+    private data class FoodItemResponse(
+        val name: String,
+        val calories: Int,
+        val serving: String
+    )
+
+    private data class ExerciseResponse(
+        val name: String,
+        val duration: String,
+        val caloriesBurned: Int,
+        val intensity: String
     )
 } 

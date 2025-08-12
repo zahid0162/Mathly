@@ -40,13 +40,6 @@ fun GraphTab(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
-        // Header
-        Text(
-            text = "Function Grapher",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.primary
-        )
 
         Text(
             text = "Enter a function to plot its graph",

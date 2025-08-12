@@ -1,26 +1,35 @@
 package com.zahid.mathly.presentation.ui.screens
 
-import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ShowChart
-import androidx.compose.material.icons.filled.Calculate
-import androidx.compose.material.icons.filled.History
-import androidx.compose.material.icons.filled.TextFields
-import androidx.compose.material.icons.filled.ShowChart
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberDrawerState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.zahid.mathly.presentation.ui.components.NavigationDrawer
+import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
+import com.zahid.mathly.presentation.viewmodel.CaloriesCounterViewModel
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
-import com.zahid.mathly.R
-
-val PlayfairDisplay = FontFamily(
-    Font(R.font.title_font, FontWeight.Normal),
-)
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,80 +39,90 @@ fun MainScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val history by viewModel.history.collectAsState()
-    var selectedTab by remember { mutableStateOf(0) }
+    var selectedScreen by remember { mutableStateOf("Equations") }
     val snackbarHostState = remember { SnackbarHostState() }
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        text = "Mathly",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.W700,
-                        fontFamily = PlayfairDisplay,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface
-                )
-            )
-        },
-        bottomBar = {
-            NavigationBar {
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.Calculate, contentDescription = "Equations") },
-                    label = { Text("Equations") },
-                    selected = selectedTab == 0,
-                    onClick = { selectedTab = 0 }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.TextFields, contentDescription = "Word Problems") },
-                    label = { Text("Word Problems", maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                    selected = selectedTab == 1,
-                    onClick = { selectedTab = 1 }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.AutoMirrored.Filled.ShowChart, contentDescription = "Graph") },
-                    label = { Text("Graph") },
-                    selected = selectedTab == 3,
-                    onClick = { selectedTab = 3 }
-                )
-                NavigationBarItem(
-                    icon = { Icon(Icons.Default.History, contentDescription = "History") },
-                    label = { Text("History") },
-                    selected = selectedTab == 2,
-                    onClick = { 
-                        selectedTab = 2
-                    }
-                )
-
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            NavigationDrawer(drawerState,selectedScreen) {
+                scope.launch {
+                    drawerState.close()
+                }
+                selectedScreen = it
             }
         }
-    ) { paddingValues ->
-        when (selectedTab) {
-            0 -> EquationsTab(
-                navController = navController,
-                viewModel = viewModel,
-                state = state,
-                history = history,
-                paddingValues = paddingValues
-            )
-            1 -> WordProblemsTab(
-                navController = navController,
-                paddingValues = paddingValues
-            )
-            2 -> HistoryTab(
-                navController = navController,
-                viewModel = viewModel,
-                paddingValues = paddingValues
-            )
-            3 -> GraphTab(
-                paddingValues = paddingValues,
-                snackbarHostState
-            )
+    ) {
+        Scaffold(
+            snackbarHost = { SnackbarHost(snackbarHostState) },
+            topBar = {
+                CenterAlignedTopAppBar(
+                    title = {
+                        Text(
+                            text = selectedScreen,
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.W700,
+                            fontFamily = PlayfairDisplay,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(
+                            onClick = {
+                                scope.launch {
+                                    drawerState.open()
+                                }
+                            }
+                        ) {
+                            Icon(Icons.Default.Menu, contentDescription = "Menu")
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.surface
+                    )
+                )
+            }
+        ) { paddingValues ->
+            when (selectedScreen) {
+                "Equations" -> EquationsTab(
+                    navController = navController,
+                    viewModel = viewModel,
+                    state = state,
+                    history = history,
+                    paddingValues = paddingValues
+                )
+                "WordProblems" -> WordProblemsTab(
+                    navController = navController,
+                    paddingValues = paddingValues
+                )
+                "Graphs" -> GraphTab(
+                    paddingValues = paddingValues,
+                    snackbarHostState
+                )
+                "BasicCalculator" -> BasicCalculatorScreen(
+                    navController = navController,
+                    paddingValues = paddingValues
+                )
+                "CaloriesCounter" -> {
+                    val openAIService = androidx.hilt.navigation.compose.hiltViewModel<CaloriesCounterViewModel>().openAIService
+                    CaloriesCounterScreen(
+                        navController = navController,
+                        paddingValues = paddingValues,
+                        openAIService = openAIService
+                    )
+                }
+                "BMICalculator" -> BMICalculatorScreen(
+                    navController = navController,
+                    paddingValues = paddingValues
+                )
+                "Profile" -> ProfileScreen(
+                    navController = navController,
+                    viewModel = viewModel,
+                    paddingValues = paddingValues
+                )
+            }
         }
     }
 }

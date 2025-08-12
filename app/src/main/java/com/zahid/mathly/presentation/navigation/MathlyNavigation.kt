@@ -69,5 +69,14 @@ fun MathlyNavigation() {
                 viewModel = wordProblemViewModel
             )
         }
+
+        // History route for Profile navigation
+        composable("history") {
+            HistoryTab(
+                navController = navController,
+                viewModel = sharedViewModel,
+                paddingValues = androidx.compose.foundation.layout.PaddingValues()
+            )
+        }
     }
 } 
