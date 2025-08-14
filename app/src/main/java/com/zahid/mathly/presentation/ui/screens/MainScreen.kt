@@ -22,27 +22,37 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.zahid.mathly.presentation.ui.components.LanguageDropdown
 import com.zahid.mathly.presentation.ui.components.NavigationDrawer
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
 import com.zahid.mathly.presentation.viewmodel.CaloriesCounterViewModel
+import com.zahid.mathly.presentation.viewmodel.LanguageViewModel
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
+import com.zahid.mathly.presentation.viewmodel.ThemeViewModel
 import kotlinx.coroutines.launch
+import  com.zahid.mathly.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     navController: NavController,
-    viewModel: SharedViewModel
+    viewModel: SharedViewModel,
+    themeViewModel: ThemeViewModel,
+    languageViewModel: LanguageViewModel = androidx.hilt.navigation.compose.hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val context = LocalContext.current
     val history by viewModel.history.collectAsState()
-    var selectedScreen by remember { mutableStateOf("Equations") }
+    var selectedScreen by remember { mutableStateOf(context.getString(R.string.equations)) }
     val snackbarHostState = remember { SnackbarHostState() }
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -65,7 +75,7 @@ fun MainScreen(
                             fontSize = 28.sp,
                             fontWeight = FontWeight.W700,
                             fontFamily = PlayfairDisplay,
-                            color = MaterialTheme.colorScheme.primary
+                            color = MaterialTheme.colorScheme.onPrimary
                         )
                     },
                     navigationIcon = {
@@ -76,36 +86,42 @@ fun MainScreen(
                                 }
                             }
                         ) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu")
+                            Icon(Icons.Default.Menu, contentDescription = "Menu", tint = MaterialTheme.colorScheme.onPrimary)
                         }
                     },
+                    actions = {
+                        LanguageDropdown(
+                            languageViewModel = languageViewModel,
+                            snackbarHostState = snackbarHostState
+                        )
+                    },
                     colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.surface
+                        containerColor = MaterialTheme.colorScheme.primary
                     )
                 )
             }
         ) { paddingValues ->
             when (selectedScreen) {
-                "Equations" -> EquationsTab(
+                context.getString(R.string.equations) -> EquationsTab(
                     navController = navController,
                     viewModel = viewModel,
                     state = state,
                     history = history,
                     paddingValues = paddingValues
                 )
-                "WordProblems" -> WordProblemsTab(
+                context.getString(R.string.word_problems) -> WordProblemsTab(
                     navController = navController,
                     paddingValues = paddingValues
                 )
-                "Graphs" -> GraphTab(
+                context.getString(R.string.graphs) -> GraphTab(
                     paddingValues = paddingValues,
                     snackbarHostState
                 )
-                "BasicCalculator" -> BasicCalculatorScreen(
+                context.getString(R.string.basic_calculator) -> BasicCalculatorScreen(
                     navController = navController,
                     paddingValues = paddingValues
                 )
-                "CaloriesCounter" -> {
+                context.getString(R.string.calories_counter) -> {
                     val openAIService = androidx.hilt.navigation.compose.hiltViewModel<CaloriesCounterViewModel>().openAIService
                     CaloriesCounterScreen(
                         navController = navController,
@@ -113,14 +129,15 @@ fun MainScreen(
                         openAIService = openAIService
                     )
                 }
-                "BMICalculator" -> BMICalculatorScreen(
+                context.getString(R.string.bmi_calculator) -> BMICalculatorScreen(
                     navController = navController,
                     paddingValues = paddingValues
                 )
-                "Profile" -> ProfileScreen(
+                context.getString(R.string.profile) -> ProfileScreen(
                     navController = navController,
                     viewModel = viewModel,
-                    paddingValues = paddingValues
+                    paddingValues = paddingValues,
+                    themeViewModel = themeViewModel
                 )
             }
         }

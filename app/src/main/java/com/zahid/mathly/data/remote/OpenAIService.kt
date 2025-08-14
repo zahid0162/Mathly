@@ -1,5 +1,7 @@
 package com.zahid.mathly.data.remote
 
+import android.content.Context
+import android.content.SharedPreferences
 import com.zahid.mathly.domain.model.Solution
 import com.zahid.mathly.domain.model.SolutionStep
 import com.zahid.mathly.domain.model.SolutionType
@@ -7,17 +9,35 @@ import com.zahid.mathly.domain.model.WordProblem
 import com.zahid.mathly.domain.model.CaloriesAnalysis
 import com.zahid.mathly.domain.model.FoodItem
 import com.zahid.mathly.domain.model.Exercise
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class OpenAIService @Inject constructor(private val api: OpenAIApi) {
+class OpenAIService @Inject constructor(
+    private val api: OpenAIApi,
+    @ApplicationContext private val context: Context
+) {
     
     companion object {
         private const val API_KEY = "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" // Replace with your actual API key
     }
+    
+    private fun getCurrentLanguage(): String {
+        val prefs: SharedPreferences = context.getSharedPreferences("language_prefs", Context.MODE_PRIVATE)
+        return prefs.getString("selected_language", "en") ?: "en"
+    }
 
     suspend fun analyzeCalories(foodDescription: String): CaloriesAnalysis {
+        val language = getCurrentLanguage()
+        val languageInstruction = when (language) {
+            "ar" -> "Please provide your response in Arabic."
+            "ur" -> "Please provide your response in Urdu."
+            else -> "Please provide your response in English."
+        }
+        
         val prompt = """
             You are a nutritionist and fitness expert. Analyze the following food description and provide detailed calorie information and exercise recommendations.
+            
+            $languageInstruction
             
             Food Description: "$foodDescription"
             
@@ -57,7 +77,7 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
             messages = listOf(
                 Message(role = "user", content = prompt)
             ),
-            temperature = 0.3
+            temperature = 0.3,
         )
 
         return try {
@@ -97,8 +117,17 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
     }
 
     suspend fun solveEquation(equation: String): Solution {
+        val language = getCurrentLanguage()
+        val languageInstruction = when (language) {
+            "ar" -> "Please provide your response in Arabic."
+            "ur" -> "Please provide your response in Urdu."
+            else -> "Please provide your response in English."
+        }
+        
         val prompt = """
             You are a math tutor. Solve this equation step by step: $equation
+            
+            $languageInstruction
             
             Provide your response in this exact JSON format:
             {
@@ -126,7 +155,7 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
             messages = listOf(
                 Message(role = "user", content = prompt)
             ),
-            temperature = 0.3
+            temperature = 0.3,
         )
 
         return try {
@@ -155,8 +184,17 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
     }
 
     suspend fun solveWordProblem(wordProblem: WordProblem): WordProblem {
+        val language = getCurrentLanguage()
+        val languageInstruction = when (language) {
+            "ar" -> "Please provide your response in Arabic."
+            "ur" -> "Please provide your response in Urdu."
+            else -> "Please provide your response in English."
+        }
+        
         val prompt = """
             You are a math tutor helping students convert word problems into equations and solve them.
+            
+            $languageInstruction
             
             Word Problem: ${wordProblem.problem}
             
@@ -196,7 +234,7 @@ class OpenAIService @Inject constructor(private val api: OpenAIApi) {
             messages = listOf(
                 Message(role = "user", content = prompt)
             ),
-            temperature = 0.3
+            temperature = 0.3,
         )
 
         return try {

@@ -1,5 +1,6 @@
 package com.zahid.mathly.presentation.ui.screens
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,6 +17,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
+import java.util.Locale
 import kotlin.math.pow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,6 +42,7 @@ fun BMICalculatorScreen(
     var bmiResult by remember { mutableStateOf<Double?>(null) }
     var bmiCategory by remember { mutableStateOf("") }
     var showResult by remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     Column(
         modifier = Modifier
@@ -47,15 +52,15 @@ fun BMICalculatorScreen(
             .verticalScroll(rememberScrollState()),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        
+
         Spacer(modifier = Modifier.height(8.dp))
-        
+
         Text(
-            text = "Calculate your Body Mass Index",
+            text = stringResource(R.string.calculate_your_body_mass_index),
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
-        
+
         Spacer(modifier = Modifier.height(32.dp))
 
         // Input Card
@@ -69,37 +74,37 @@ fun BMICalculatorScreen(
                 modifier = Modifier.padding(24.dp)
             ) {
                 Text(
-                    text = "Enter Your Details",
+                    text = stringResource(R.string.enter_your_details),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.W600,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                
+
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Height Input
                 OutlinedTextField(
                     value = height,
                     onValueChange = { height = it },
-                    label = { Text("Height (cm)") },
+                    label = { Text(stringResource(R.string.height_cm)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Height,
-                            contentDescription = "Height"
+                            contentDescription = stringResource(R.string.height)
                         )
                     },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Weight Input
                 OutlinedTextField(
                     value = weight,
                     onValueChange = { weight = it },
-                    label = { Text("Weight (kg)") },
+                    label = { Text(stringResource(R.string.weight_kg)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.MonitorWeight,
@@ -110,7 +115,7 @@ fun BMICalculatorScreen(
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
-                
+
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Calculate Button
@@ -118,7 +123,7 @@ fun BMICalculatorScreen(
                     onClick = {
                         calculateBMI(height, weight)?.let { bmi ->
                             bmiResult = bmi
-                            bmiCategory = getBMICategory(bmi)
+                            bmiCategory = context.getString(getBMICategory(bmi))
                             showResult = true
                         }
                     },
@@ -127,10 +132,10 @@ fun BMICalculatorScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Calculate,
-                        contentDescription = "Calculate"
+                        contentDescription = stringResource(R.string.calculate)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Calculate BMI")
+                    Text(stringResource(R.string.calculate_bmi))
                 }
             }
         }
@@ -138,7 +143,7 @@ fun BMICalculatorScreen(
         // Result Card
         if (showResult && bmiResult != null) {
             Spacer(modifier = Modifier.height(24.dp))
-            
+
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 colors = CardDefaults.cardColors(
@@ -150,43 +155,43 @@ fun BMICalculatorScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Your BMI Result",
+                        text = stringResource(R.string.your_bmi_result),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.W600,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Text(
-                        text = String.format("%.1f", bmiResult),
+                        text = String.format(Locale.US, "%.1f", bmiResult),
                         fontSize = 48.sp,
                         fontWeight = FontWeight.W700,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Spacer(modifier = Modifier.height(8.dp))
-                    
+
                     Text(
                         text = bmiCategory,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.W600,
                         color = MaterialTheme.colorScheme.onSurface
                     )
-                    
+
                     Spacer(modifier = Modifier.height(16.dp))
-                    
+
                     Text(
-                        text = getBMIDescription(bmiResult!!),
+                        text = stringResource(getBMIDescription(bmiResult!!)),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Reset Button
             OutlinedButton(
                 onClick = {
@@ -200,16 +205,16 @@ fun BMICalculatorScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Refresh,
-                    contentDescription = "Reset"
+                    contentDescription = stringResource(R.string.reset)
                 )
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Calculate Again")
+                Text(stringResource(R.string.calculate_again))
             }
         }
 
         // BMI Categories Info
         Spacer(modifier = Modifier.height(32.dp))
-        
+
         Card(
             modifier = Modifier.fillMaxWidth(),
             colors = CardDefaults.cardColors(
@@ -220,18 +225,34 @@ fun BMICalculatorScreen(
                 modifier = Modifier.padding(24.dp)
             ) {
                 Text(
-                    text = "BMI Categories",
+                    text = stringResource(R.string.bmi_categories),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.W600,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                
+
                 Spacer(modifier = Modifier.height(16.dp))
-                
-                BMICategoryItem("Underweight", "< 18.5", MaterialTheme.colorScheme.primary)
-                BMICategoryItem("Normal weight", "18.5 - 24.9", MaterialTheme.colorScheme.secondary)
-                BMICategoryItem("Overweight", "25.0 - 29.9", MaterialTheme.colorScheme.tertiary)
-                BMICategoryItem("Obese", "≥ 30.0", MaterialTheme.colorScheme.error)
+
+                BMICategoryItem(
+                    stringResource(R.string.underweight),
+                    "< 18.5",
+                    MaterialTheme.colorScheme.primary
+                )
+                BMICategoryItem(
+                    stringResource(R.string.normal_weight),
+                    "18.5 - 24.9",
+                    MaterialTheme.colorScheme.secondary
+                )
+                BMICategoryItem(
+                    stringResource(R.string.overweight),
+                    "25.0 - 29.9",
+                    MaterialTheme.colorScheme.tertiary
+                )
+                BMICategoryItem(
+                    stringResource(R.string.obese),
+                    "≥ 30.0",
+                    MaterialTheme.colorScheme.error
+                )
             }
         }
     }
@@ -278,22 +299,21 @@ private fun calculateBMI(height: String, weight: String): Double? {
         null
     }
 }
-
-private fun getBMICategory(bmi: Double): String {
+private fun getBMICategory(bmi: Double): Int {
     return when {
-        bmi < 18.5 -> "Underweight"
-        bmi < 25.0 -> "Normal weight"
-        bmi < 30.0 -> "Overweight"
-        else -> "Obese"
+        bmi < 18.5 -> R.string.underweight
+        bmi < 25.0 -> R.string.normal_weight
+        bmi < 30.0 -> R.string.overweight
+        else -> R.string.obese
     }
 }
 
-private fun getBMIDescription(bmi: Double): String {
+private fun getBMIDescription(bmi: Double): Int {
     return when {
-        bmi < 18.5 -> "You may be underweight. Consider consulting a healthcare provider for guidance on healthy weight gain."
-        bmi < 25.0 -> "Congratulations! Your BMI is in the healthy range. Maintain a balanced diet and regular exercise."
-        bmi < 30.0 -> "You may be overweight. Consider lifestyle changes like diet and exercise to improve your health."
-        else -> "You may be obese. It's recommended to consult a healthcare provider for personalized advice."
+        bmi < 18.5 -> R.string.you_may_be_underweight_consider_consulting_a_healthcare_provider_for_guidance_on_healthy_weight_gain
+        bmi < 25.0 -> R.string.congratulations_your_bmi_is_in_the_healthy_range_maintain_a_balanced_diet_and_regular_exercise
+        bmi < 30.0 -> R.string.you_may_be_overweight_consider_lifestyle_changes_like_diet_and_exercise_to_improve_your_health
+        else -> R.string.you_may_be_obese_it_s_recommended_to_consult_a_healthcare_provider_for_personalized_advice
     }
 }
 

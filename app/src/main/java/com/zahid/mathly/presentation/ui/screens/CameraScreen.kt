@@ -20,12 +20,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import com.zahid.mathly.R
 import com.zahid.mathly.data.mlkit.MLKitTextRecognizer
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 import kotlinx.coroutines.launch
@@ -72,7 +74,7 @@ fun CameraScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Scan Equation",
+                        text = stringResource(R.string.scan_equation),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onPrimary
@@ -185,7 +187,7 @@ fun CameraScreen(
                         } else {
                             Icon(
                                 imageVector = Icons.Default.Camera,
-                                contentDescription = "Capture",
+                                contentDescription = stringResource(R.string.capture),
                                 modifier = Modifier.size(36.dp)
                             )
                         }
@@ -206,7 +208,7 @@ fun CameraScreen(
                             modifier = Modifier.padding(16.dp)
                         ) {
                             Text(
-                                text = "Recognized Text:",
+                                text = stringResource(R.string.recognized_text),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -237,14 +239,14 @@ fun CameraScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = "Camera Permission Required",
+                        text = stringResource(R.string.camera_permission_required),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Please grant camera permission to scan equations",
+                        text = stringResource(R.string.please_grant_camera_permission_to_scan_equations),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(horizontal = 32.dp)
@@ -253,7 +255,7 @@ fun CameraScreen(
                     Button(
                         onClick = { launcher.launch(Manifest.permission.CAMERA) }
                     ) {
-                        Text("Grant Permission")
+                        Text(stringResource(R.string.grant_permission))
                     }
                 }
             }

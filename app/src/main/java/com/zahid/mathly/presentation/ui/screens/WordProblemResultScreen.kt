@@ -12,10 +12,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.zahid.mathly.R
 import com.zahid.mathly.domain.model.SolutionStep
 import com.zahid.mathly.presentation.viewmodel.WordProblemViewModel
 
@@ -33,7 +35,7 @@ fun WordProblemResultScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Word Problem Solution",
+                        text = stringResource(R.string.word_problem_solution),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onPrimary
@@ -89,7 +91,7 @@ fun WordProblemResultScreen(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "Solving word problem...",
+                        text = stringResource(R.string.solving_word_problem),
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -119,14 +121,14 @@ fun WordProblemResultScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "No word problem solution available",
+                                    text = stringResource(R.string.no_word_problem_solution_available),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    text = "Try solving a word problem first",
+                                    text = stringResource(R.string.try_solving_a_word_problem_first),
                                     fontSize = 14.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -178,7 +180,7 @@ fun WordProblemSolutionCard(wordProblem: com.zahid.mathly.domain.model.WordProbl
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        text = "Word Problem:",
+                        text = stringResource(R.string.word_problem_colon),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -204,7 +206,7 @@ fun WordProblemSolutionCard(wordProblem: com.zahid.mathly.domain.model.WordProbl
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Extracted Equation:",
+                            text = stringResource(R.string.extracted_equation),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -227,7 +229,7 @@ fun WordProblemSolutionCard(wordProblem: com.zahid.mathly.domain.model.WordProbl
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         Text(
-                            text = "Step-by-step solution:",
+                            text = stringResource(R.string.step_by_step_solution),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSurface
@@ -250,7 +252,7 @@ fun WordProblemSolutionCard(wordProblem: com.zahid.mathly.domain.model.WordProbl
                             modifier = Modifier.padding(16.dp)
                         ) {
                             Text(
-                                text = "Final Answer:",
+                                text = stringResource(R.string.final_answer),
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = MaterialTheme.colorScheme.onTertiaryContainer
@@ -306,7 +308,7 @@ private fun shareWordProblemSolution(context: android.content.Context, wordProbl
         action = android.content.Intent.ACTION_SEND
         type = "text/plain"
         putExtra(android.content.Intent.EXTRA_TEXT, shareText)
-        putExtra(android.content.Intent.EXTRA_SUBJECT, "Mathly Word Problem Solution")
+        putExtra(android.content.Intent.EXTRA_SUBJECT, "Solved by CalcSmart")
     }
 
     val chooser = android.content.Intent.createChooser(shareIntent, "Share Word Problem Solution")

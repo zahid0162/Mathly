@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -19,16 +20,16 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
+import com.zahid.mathly.presentation.viewmodel.ThemeViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
     navController: NavController,
     viewModel: SharedViewModel,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    themeViewModel: ThemeViewModel
 ) {
-    var isDarkMode by remember { mutableStateOf(false) }
-    
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -99,13 +100,13 @@ fun ProfileScreen(
             }
         }
 
+        // Dark Mode Toggle
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
             onClick = {
-                isDarkMode = !isDarkMode
-                // TODO: Implement dark mode toggle functionality
+                themeViewModel.toggleDarkMode()
             }
         ) {
             Row(
@@ -115,7 +116,7 @@ fun ProfileScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(
-                    imageVector = if (isDarkMode) Icons.Default.LightMode else Icons.Default.DarkMode,
+                    imageVector = if (themeViewModel.isDarkMode) Icons.Default.LightMode else Icons.Default.DarkMode,
                     contentDescription = "Dark Mode",
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(24.dp)
@@ -129,14 +130,16 @@ fun ProfileScreen(
                         color = MaterialTheme.colorScheme.onSurface
                     )
                     Text(
-                        text = if (isDarkMode) "Switch to light mode" else "Switch to dark mode",
+                        text = if (themeViewModel.isDarkMode) stringResource(R.string.switch_to_light_mode) else stringResource(
+                            R.string.switch_to_dark_mode
+                        ),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
                 Switch(
-                    checked = isDarkMode,
-                    onCheckedChange = { isDarkMode = it }
+                    checked = themeViewModel.isDarkMode,
+                    onCheckedChange = { themeViewModel.updateDarkMode(it) }
                 )
             }
         }
@@ -158,20 +161,20 @@ fun ProfileScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.History,
-                    contentDescription = "More Options",
+                    contentDescription = stringResource(R.string.more_options),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.size(24.dp)
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = "More Options",
+                        text = stringResource(R.string.more_options),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.W600,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     Text(
-                        text = "Coming soon...",
+                        text = stringResource(R.string.coming_soon),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )

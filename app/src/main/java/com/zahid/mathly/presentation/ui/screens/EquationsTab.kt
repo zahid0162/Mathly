@@ -7,10 +7,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.zahid.mathly.R
 import com.zahid.mathly.domain.model.Solution
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 
@@ -36,14 +38,14 @@ fun EquationsTab(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Solve Math Equations",
+                    text = stringResource(R.string.solve_math_equations),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = "Choose how you'd like to input your equation",
+                    text = stringResource(R.string.choose_how_you_d_like_to_input_your_equation),
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 32.dp)
@@ -80,13 +82,13 @@ fun EquationsTab(
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         Text(
-                            text = "Scan Equation",
+                            text = stringResource(R.string.scan_equation),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimary
                         )
                         Text(
-                            text = "Use camera to capture math",
+                            text = stringResource(R.string.use_camera_to_capture_math),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
                         )
@@ -120,13 +122,13 @@ fun EquationsTab(
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         Text(
-                            text = "Type Equation",
+                            text = stringResource(R.string.type_equation),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )
                         Text(
-                            text = "Enter math manually",
+                            text = stringResource(R.string.enter_math_manually),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -139,7 +141,7 @@ fun EquationsTab(
         if (history.isNotEmpty()) {
             item {
                 Text(
-                    text = "Recent Solutions",
+                    text = stringResource(R.string.recent_solutions),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -166,7 +168,7 @@ fun EquationsTab(
                             containerColor = MaterialTheme.colorScheme.tertiary
                         )
                     ) {
-                        Text("View All History")
+                        Text(stringResource(R.string.view_all_history))
                     }
                 }
             }

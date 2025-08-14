@@ -1,26 +1,52 @@
 package com.zahid.mathly.presentation.ui.screens
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.zahid.mathly.R
 import com.zahid.mathly.presentation.ui.components.MathInputBottomSheet
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 
@@ -47,7 +73,7 @@ fun InputScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Type Equation",
+                        text = stringResource(R.string.type_equation),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onPrimary
@@ -101,14 +127,14 @@ fun InputScreen(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        text = "Enter your equation",
+                        text = stringResource(R.string.enter_your_equation),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Tap the input field below to open the math keyboard for easy equation input.",
+                        text = stringResource(R.string.tap_the_input_field_below_to_open_the_math_keyboard_for_easy_equation_input),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
@@ -127,7 +153,7 @@ fun InputScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Equation:",
+                        text = stringResource(R.string.equation_colon),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface
@@ -138,7 +164,7 @@ fun InputScreen(
                         onValueChange = { /* Read-only, only editable via bottom sheet */ },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = {
-                            Text("Tap to open math keyboard...")
+                            Text(stringResource(R.string.tap_to_open_math_keyboard))
                         },
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -167,7 +193,7 @@ fun InputScreen(
                     
                     // Tap hint
                     Text(
-                        text = "💡 Tap the input field or edit icon to open math keyboard",
+                        text = stringResource(R.string.tap_the_input_field_or_edit_icon_to_open_math_keyboard),
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.padding(top = 4.dp)
@@ -197,7 +223,7 @@ fun InputScreen(
                             contentDescription = "Edit"
                         )
                         Text(
-                            text = "Open Math Keyboard",
+                            text = stringResource(R.string.open_math_keyboard),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -227,7 +253,9 @@ fun InputScreen(
                             contentDescription = "Solve"
                         )
                         Text(
-                            text = if (state.isLoading) "Solving..." else "Solve Equation",
+                            text = if (state.isLoading) stringResource(R.string.solving) else stringResource(
+                                R.string.solve_equation
+                            ),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -238,7 +266,7 @@ fun InputScreen(
                     onClick = { equation = "" },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Clear Equation")
+                    Text(stringResource(R.string.clear_equation))
                 }
             }
             

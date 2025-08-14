@@ -12,11 +12,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.zahid.mathly.R
 import com.zahid.mathly.presentation.ui.components.EquationGraph
 import com.zahid.mathly.presentation.ui.components.MathInputBottomSheet
 import java.nio.file.WatchEvent
@@ -42,7 +44,7 @@ fun GraphTab(
     ) {
 
         Text(
-            text = "Enter a function to plot its graph",
+            text = stringResource(R.string.enter_a_function_to_plot_its_graph),
             fontSize = 16.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -60,7 +62,7 @@ fun GraphTab(
             ) {
 
                 Text(
-                    text = "Function (e.g., x+2, 2*x-1, x^2+3)",
+                    text = stringResource(R.string.function_e_g_x_2_2_x_1_x_2_3),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface
@@ -77,7 +79,7 @@ fun GraphTab(
                             functionInput = it },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = {
-                            Text("Enter equation according to below format")
+                            Text(stringResource(R.string.enter_equation_according_to_below_format))
                         },
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -112,7 +114,7 @@ fun GraphTab(
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Draw Graph")
+                    Text(stringResource(R.string.draw_graph))
                 }
             }
         }
@@ -130,7 +132,7 @@ fun GraphTab(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     Text(
-                        text = "Graph of y = $functionInput",
+                        text = stringResource(R.string.graph_of_y, functionInput),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -180,37 +182,37 @@ fun InstructionsView(){
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "How to use:",
+                text = stringResource(R.string.how_to_use),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onSurface
             )
 
             // Basic usage
-            Text("• Enter a function like 'x+2' or '2*x-1'", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("• Use * for multiplication (e.g., 2*x)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("• Use + and - for addition and subtraction", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("• Use / for division (e.g., x/2)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("• Use ^ for powers (e.g., x^2 for x squared)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.enter_a_function_like_x_2_or_2_x_1), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.use_for_multiplication_e_g_2_x), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.use_and_for_addition_and_subtraction), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.use_for_division_e_g_x_2), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.use_for_powers_e_g_x_2_for_x_squared), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             // Trigonometry
-            Text("• Trigonometry: sin(x), cos(x), tan(x), asin(x), acos(x), atan(x)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("• By default, angles are in radians. Use 'deg' for degrees (e.g., sin(30 deg))", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.trigonometry_sin_x_cos_x_tan_x_asin_x_acos_x_atan_x), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.by_default_angles_are_in_radians_use_deg_for_degrees_e_g_sin_30_deg), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             // Constants
-            Text("• Constants: pi, e", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.constants_pi_e), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             // Advanced math
-            Text("• Square root: sqrt(x)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("• Logarithms: log(x) for base 10, ln(x) for natural log", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("• Absolute value: abs(x)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.square_root_sqrt_x), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.logarithms_log_x_for_base_10_ln_x_for_natural_log), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.absolute_value_abs_x), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             // Calculus
-            Text("• Derivatives: der(expression, x)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text("• Integrals: int(expression, x, start, end)", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.derivatives_der_expression_x), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.integrals_int_expression_x_start_end), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
             // Usage tip
-            Text("• Click 'Draw Graph' to visualize your function", fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.click_draw_graph_to_visualize_your_function), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
 
 
         }

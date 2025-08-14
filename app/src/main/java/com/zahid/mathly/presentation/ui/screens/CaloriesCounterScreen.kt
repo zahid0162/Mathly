@@ -14,11 +14,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.zahid.mathly.R
 import com.zahid.mathly.domain.model.CaloriesAnalysis
 import com.zahid.mathly.domain.model.FoodItem
 import com.zahid.mathly.domain.model.Exercise
@@ -60,7 +62,7 @@ fun CaloriesCounterScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 Text(
-                    text = "Describe your meal",
+                    text = stringResource(R.string.describe_your_meal),
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface
@@ -69,7 +71,7 @@ fun CaloriesCounterScreen(
                 OutlinedTextField(
                     value = foodDescription,
                     onValueChange = { foodDescription = it },
-                    label = { Text("e.g., I had biryani, salad, and a Coke") },
+                    label = { Text(stringResource(R.string.e_g_i_had_biryani_salad_and_a_coke)) },
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3,
                     maxLines = 5,
@@ -112,11 +114,11 @@ fun CaloriesCounterScreen(
                     }
                     Icon(
                         imageVector = Icons.Default.Calculate,
-                        contentDescription = "Analyze",
+                        contentDescription = stringResource(R.string.analyze),
                         modifier = Modifier.size(20.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Analyze Calories")
+                    Text(stringResource(R.string.analyze_calories))
                 }
             }
         }
@@ -155,7 +157,7 @@ fun CaloriesCounterScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "Total Calories",
+                                text = stringResource(R.string.total_calories),
                                 fontSize = 16.sp,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer
                             )
@@ -186,12 +188,12 @@ fun CaloriesCounterScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Restaurant,
-                                    contentDescription = "Food",
+                                    contentDescription = stringResource(R.string.food),
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "Food Breakdown",
+                                    text = stringResource(R.string.food_breakdown),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Medium
                                 )
@@ -216,7 +218,7 @@ fun CaloriesCounterScreen(
                                         )
                                     }
                                     Text(
-                                        text = "${foodItem.calories} cal",
+                                        text = stringResource(R.string.cal, foodItem.calories),
                                         fontWeight = FontWeight.Bold,
                                         color = MaterialTheme.colorScheme.primary
                                     )
@@ -243,19 +245,22 @@ fun CaloriesCounterScreen(
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.FitnessCenter,
-                                    contentDescription = "Exercise",
+                                    contentDescription = stringResource(R.string.exercise),
                                     tint = MaterialTheme.colorScheme.primary
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
                                 Text(
-                                    text = "Exercise Recommendations",
+                                    text = stringResource(R.string.exercise_recommendations),
                                     fontSize = 18.sp,
                                     fontWeight = FontWeight.Medium
                                 )
                             }
 
                             Text(
-                                text = "To burn ${analysis.totalCalories} calories (for a 70kg person):",
+                                text = stringResource(
+                                    R.string.to_burn_calories_for_a_70kg_person,
+                                    analysis.totalCalories
+                                ),
                                 fontSize = 14.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                                 modifier = Modifier.padding(bottom = 8.dp)
@@ -291,7 +296,10 @@ fun CaloriesCounterScreen(
                                             )
                                         }
                                         Text(
-                                            text = "-${exercise.caloriesBurned} cal",
+                                            text = stringResource(
+                                                R.string.cal_burn,
+                                                exercise.caloriesBurned
+                                            ),
                                             fontWeight = FontWeight.Bold,
                                             color = MaterialTheme.colorScheme.primary
                                         )

@@ -1,0 +1,140 @@
+<resources>
+    <string name="app_name">كالك سمارت</string>
+    <string name="smart_solutions_powered_by_ai">حلول ذكية مدعومة بالذكاء الاصطناعي</string>
+    <string name="calculate_your_body_mass_index">احسب مؤشر كتلة جسمك</string>
+    <string name="enter_your_details">أدخل بياناتك</string>
+    <string name="height_cm">الطول (سم)</string>
+    <string name="height">الطول</string>
+    <string name="weight_kg">الوزن (كجم)</string>
+    <string name="calculate">احسب</string>
+    <string name="calculate_bmi">احسب مؤشر كتلة الجسم</string>
+    <string name="your_bmi_result">نتيجة مؤشر كتلة جسمك</string>
+    <string name="reset">إعادة تعيين</string>
+    <string name="calculate_again">احسب مرة أخرى</string>
+    <string name="bmi_categories">تصنيفات مؤشر كتلة الجسم</string>
+    <string name="underweight">نقص في الوزن</string>
+    <string name="normal_weight">وزن طبيعي</string>
+    <string name="overweight">زيادة في الوزن</string>
+    <string name="obese">سمنة</string>
+    <string name="you_may_be_underweight_consider_consulting_a_healthcare_provider_for_guidance_on_healthy_weight_gain">قد تكون تعاني من نقص في الوزن. يُنصح باستشارة مقدم الرعاية الصحية للحصول على إرشادات حول زيادة الوزن الصحي.</string>
+    <string name="congratulations_your_bmi_is_in_the_healthy_range_maintain_a_balanced_diet_and_regular_exercise">تهانينا! مؤشر كتلة جسمك في النطاق الصحي. حافظ على نظام غذائي متوازن وممارسة التمارين بانتظام.</string>
+    <string name="you_may_be_overweight_consider_lifestyle_changes_like_diet_and_exercise_to_improve_your_health">قد تكون تعاني من زيادة في الوزن. فكر في إجراء تغييرات في نمط الحياة مثل النظام الغذائي والتمارين لتحسين صحتك.</string>
+    <string name="you_may_be_obese_it_s_recommended_to_consult_a_healthcare_provider_for_personalized_advice">قد تكون تعاني من السمنة. يُنصح باستشارة مقدم الرعاية الصحية للحصول على نصائح شخصية.</string>
+    <string name="describe_your_meal">صف وجبتك</string>
+    <string name="e_g_i_had_biryani_salad_and_a_coke">مثال: تناولت برياني وسلطة وكولا</string>
+    <string name="analyze">تحليل</string>
+    <string name="total_calories">إجمالي السعرات الحرارية</string>
+    <string name="food">طعام</string>
+    <string name="food_breakdown">تفصيل الطعام</string>
+    <string name="cal">%1$d سعرة حرارية</string>
+    <string name="exercise">تمرين</string>
+    <string name="to_burn_calories_for_a_70kg_person">لحرق %1$d سعرة حرارية (لشخص وزنه 70 كجم):</string>
+    <string name="cal_burn">-%1$d سعرة حرارية</string>
+    <string name="exercise_recommendations">توصيات التمرين</string>
+    <string name="analyze_calories">تحليل السعرات الحرارية</string>
+    <string name="scan_equation">مسح المعادلة</string>
+    <string name="capture">التقاط</string>
+    <string name="recognized_text">النص المُعترف به:</string>
+    <string name="camera_permission_required">إذن الكاميرا مطلوب</string>
+    <string name="please_grant_camera_permission_to_scan_equations">يرجى منح إذن الكاميرا لمسح المعادلات</string>
+    <string name="grant_permission">منح الإذن</string>
+    <string name="solve_math_equations">حل المعادلات الرياضية</string>
+    <string name="choose_how_you_d_like_to_input_your_equation">اختر طريقة إدخال المعادلة</string>
+    <string name="use_camera_to_capture_math">استخدم الكاميرا لالتقاط المعادلات</string>
+    <string name="type_equation">اكتب المعادلة</string>
+    <string name="enter_math_manually">أدخل المعادلة يدويًا</string>
+    <string name="recent_solutions">الحلول الأخيرة</string>
+    <string name="view_all_history">عرض كل السجل</string>
+    <string name="enter_a_function_to_plot_its_graph">أدخل دالة لرسم مخططها</string>
+    <string name="function_e_g_x_2_2_x_1_x_2_3">الدالة (مثال: x+2 أو 2*x-1 أو x^2+3)</string>
+    <string name="enter_equation_according_to_below_format">أدخل المعادلة وفقًا للصيغة أدناه</string>
+    <string name="draw_graph">رسم المخطط</string>
+    <string name="graph_of_y">مخطط y = %1$s</string>
+    <string name="how_to_use">كيفية الاستخدام:</string>
+    <string name="enter_a_function_like_x_2_or_2_x_1">• أدخل دالة مثل \'x+2\' أو \'2*x-1\'</string>
+    <string name="use_for_multiplication_e_g_2_x">• استخدم * للضرب (مثال: 2*x)</string>
+    <string name="use_and_for_addition_and_subtraction">• استخدم + و - للجمع والطرح</string>
+    <string name="use_for_division_e_g_x_2">• استخدم / للقسمة (مثال: x/2)</string>
+    <string name="use_for_powers_e_g_x_2_for_x_squared">• استخدم ^ للأسس (مثال: x^2 للتربيع)</string>
+    <string name="trigonometry_sin_x_cos_x_tan_x_asin_x_acos_x_atan_x">• علم المثلثات: sin(x)، cos(x)، tan(x)، asin(x)، acos(x)، atan(x)</string>
+    <string name="by_default_angles_are_in_radians_use_deg_for_degrees_e_g_sin_30_deg">• بشكل افتراضي، الزوايا بوحدة الراديان. استخدم \'deg\' للدرجات (مثال: sin(30 deg))</string>
+    <string name="constants_pi_e">• الثوابت: pi، e</string>
+    <string name="square_root_sqrt_x">• الجذر التربيعي: sqrt(x)</string>
+    <string name="logarithms_log_x_for_base_10_ln_x_for_natural_log">• اللوغاريتمات: log(x) للأساس 10، وln(x) للوغاريتم الطبيعي</string>
+    <string name="absolute_value_abs_x">• القيمة المطلقة: abs(x)</string>
+    <string name="derivatives_der_expression_x">• المشتقات: der(expression, x)</string>
+    <string name="integrals_int_expression_x_start_end">• التكاملات: int(expression, x, start, end)</string>
+    <string name="click_draw_graph_to_visualize_your_function">• انقر على "رسم المخطط" لعرض دالتك</string>
+    <string name="no_solutions_yet">لا توجد حلول بعد</string>
+    <string name="solve_some_equations_to_see_them_here">قم بحل بعض المعادلات لرؤيتها هنا</string>
+    <string name="word_problem">مسألة لفظية</string>
+    <string name="equation">المعادلة</string>
+    <string name="answer">الإجابة:</string>
+    <string name="answer_param">الإجابة: %1$s</string>
+    <string name="steps_param">%1$d خطوات</string>
+    <string name="enter_your_equation">أدخل معادلتك</string>
+    <string name="tap_the_input_field_below_to_open_the_math_keyboard_for_easy_equation_input">اضغط على حقل الإدخال أدناه لفتح لوحة مفاتيح الرياضيات لتسهيل إدخال المعادلات.</string>
+    <string name="equation_colon">المعادلة:</string>
+    <string name="tap_to_open_math_keyboard">اضغط لفتح لوحة مفاتيح الرياضيات…</string>
+    <string name="tap_the_input_field_or_edit_icon_to_open_math_keyboard">💡 اضغط على حقل الإدخال أو أيقونة التعديل لفتح لوحة مفاتيح الرياضيات</string>
+    <string name="open_math_keyboard">فتح لوحة مفاتيح الرياضيات</string>
+    <string name="solving">جارٍ الحل…</string>
+    <string name="solve_equation">حل المعادلة</string>
+    <string name="clear_equation">مسح المعادلة</string>
+    <string name="switch_to_light_mode">التبديل إلى الوضع الفاتح</string>
+    <string name="switch_to_dark_mode">التبديل إلى الوضع الداكن</string>
+    <string name="more_options">المزيد من الخيارات</string>
+    <string name="coming_soon">قريبًا…</string>
+    <string name="solution">الحل</string>
+    <string name="solving_equation">جارٍ حل المعادلة…</string>
+    <string name="no_solution_available">لا يوجد حل متاح</string>
+    <string name="try_solving_an_equation_first">جرب حل معادلة أولاً</string>
+    <string name="step_by_step_solution">الحل خطوة بخطوة:</string>
+    <string name="final_answer">الإجابة النهائية:</string>
+    <string name="step">الخطوة %1$d: %2$s</string>
+    <string name="calculation">الحساب: %1$s</string>
+    <string name="result">النتيجة: %1$s</string>
+    <string name="scan_your_equation">امسح معادلتك</string>
+    <string name="point_your_camera_at_a_handwritten_or_printed_mathematical_equation_to_scan_it">وجّه الكاميرا إلى معادلة رياضية مكتوبة يدويًا أو مطبوعة لمسحها.</string>
+    <string name="camera_ready">الكاميرا جاهزة</string>
+    <string name="tap_the_button_below_to_start_scanning">اضغط على الزر أدناه لبدء المسح</string>
+    <string name="scanned_text">النص الممسوح:</string>
+    <string name="tap_to_edit_scanned_text">اضغط لتعديل النص الممسوح…</string>
+    <string name="tap_the_edit_icon_to_open_math_keyboard_for_corrections">💡 اضغط على أيقونة التعديل لفتح لوحة مفاتيح الرياضيات للتصحيحات</string>
+    <string name="start_camera_scan">بدء مسح الكاميرا</string>
+    <string name="enter_text_manually_test">أدخل النص يدويًا (اختبار)</string>
+    <string name="edit_with_math_keyboard">تعديل باستخدام لوحة مفاتيح الرياضيات</string>
+    <string name="solve_scanned_equation">حل المعادلة الممسوحة</string>
+    <string name="clear_text">مسح النص</string>
+    <string name="word_problem_solver">حل المسائل اللفظية</string>
+    <string name="enter_a_word_problem_in_natural_language_the_ai_will_convert_it_to_an_equation_and_solve_it_step_by_step">أدخل مسألة لفظية باللغة الطبيعية، وسيحوّلها الذكاء الاصطناعي إلى معادلة ويحلها خطوة بخطوة.</string>
+    <string name="example">مثال:</string>
+    <string name="if_a_train_travels_60_km_in_1_5_hours_what_is_its_speed">إذا قطار يسير 60 كم في 1.5 ساعة، فما سرعته؟</string>
+    <string name="the_ai_will_extract_speed_60_1_5_and_solve_it">سيستخرج الذكاء الاصطناعي: السرعة = 60/1.5 ويقوم بحلها.</string>
+    <string name="word_problem_colon">المسألة اللفظية:</string>
+    <string name="enter_your_word_problem_here">أدخل مسألتك اللفظية هنا…</string>
+    <string name="solve_word_problem">حل المسألة اللفظية</string>
+    <string name="clear_problem">مسح المسألة</string>
+    <string name="word_problem_solution">حل المسألة اللفظية</string>
+    <string name="solving_word_problem">جارٍ حل المسألة اللفظية…</string>
+    <string name="no_word_problem_solution_available">لا يوجد حل للمسألة اللفظية</string>
+    <string name="try_solving_a_word_problem_first">جرب حل مسألة لفظية أولاً</string>
+    <string name="extracted_equation">المعادلة المستخرجة:</string>
+    <string name="convert_natural_language_to_equations">تحويل اللغة الطبيعية إلى معادلات</string>
+    <string name="enter_problem_in_natural_language">أدخل المسألة باللغة الطبيعية</string>
+    <string name="the_ai_will_extract_speed_60_1_5_and_solve_it_step_by_step">سيستخرج الذكاء الاصطناعي: السرعة = 60/1.5 ويحلها خطوة بخطوة.</string>
+    <string name="unable_to_plot_function">غير قادر على رسم الدالة</string>
+    <string name="math_input">إدخال رياضي</string>
+    <string name="use_these_arrows_to_move_cursor_position">💡 استخدم هذه الأسهم لتحريك موضع المؤشر</string>
+    <string name="calcsmart">كالك سمارت</string>
+    <string name="equations">معادلات</string>
+    <string name="word_problems">مسائل لفظية</string>
+    <string name="graphs">مخططات</string>
+    <string name="basic_calculator">آلة حاسبة أساسية</string>
+    <string name="profile">الملف الشخصي</string>
+    <string name="bmi_calculator">حاسبة مؤشر كتلة الجسم</string>
+    <string name="calories_counter">عداد السعرات الحرارية</string>
+    <string name="language">اللغة</string>
+    <string name="change_language">تغيير اللغة</string>
+    <string name="language_changed">تم تغيير اللغة. سيتم إعادة تشغيل التطبيق لتطبيق التغييرات.</string>
+</resources>

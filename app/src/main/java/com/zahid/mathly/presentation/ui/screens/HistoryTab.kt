@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.TextFields
@@ -12,10 +13,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.zahid.mathly.R
 import com.zahid.mathly.domain.model.Solution
 import com.zahid.mathly.domain.model.SolutionType
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
@@ -80,14 +83,14 @@ fun HistoryTab(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "No solutions yet",
+                            text = stringResource(R.string.no_solutions_yet),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            text = "Solve some equations to see them here",
+                            text = stringResource(R.string.solve_some_equations_to_see_them_here),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -135,7 +138,9 @@ fun HistorySolutionCard(
                         modifier = Modifier.size(16.dp)
                     )
                     Text(
-                        text = if (isWordProblem) "Word Problem" else "Equation",
+                        text = if (isWordProblem) stringResource(R.string.word_problem) else stringResource(
+                            R.string.equation
+                        ),
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -177,7 +182,7 @@ fun HistorySolutionCard(
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         Text(
-                            text = "Answer:",
+                            text = stringResource(R.string.answer),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -191,7 +196,7 @@ fun HistorySolutionCard(
                     
                     // Navigation arrow
                     Icon(
-                        imageVector = Icons.Default.ArrowForward,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = "View details",
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(16.dp)
@@ -227,14 +232,14 @@ fun RecentSolutionCard(
 
             if (solution.finalAnswer.isNotBlank()) {
                 Text(
-                    text = "Answer: ${solution.finalAnswer}",
+                    text = stringResource(R.string.answer_param, solution.finalAnswer),
                     fontSize = 14.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
 
             Text(
-                text = "${solution.steps.size} steps",
+                text = stringResource(R.string.steps_param, solution.steps.size),
                 fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

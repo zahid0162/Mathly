@@ -8,7 +8,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -16,6 +18,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.jjoe64.graphview.GraphView
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
+import com.zahid.mathly.R
 import com.zahid.mathly.presentation.ui.theme.md_theme_light_onPrimaryContainer
 import com.zahid.mathly.presentation.ui.theme.md_theme_light_primary
 import com.zahid.mathly.presentation.ui.theme.md_theme_light_primaryContainer
@@ -46,10 +49,6 @@ fun EquationGraph(
             }
 
             if (dataPoints.isNotEmpty()) {
-                // Calculate the actual min and max values from the data
-                dataPoints.forEach {
-                    Log.d("Data Points", "${it.first},${it.second}")
-                }
                 Row(modifier = Modifier.horizontalScroll(rememberScrollState(), true)) {
                     GraphViewCompose(
                         points = dataPoints,
@@ -68,7 +67,7 @@ fun EquationGraph(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Unable to plot function",
+                        text = stringResource(R.string.unable_to_plot_function),
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -115,6 +114,7 @@ fun GraphViewCompose(
     snackbarHostState: SnackbarHostState
 ) {
     val scope = rememberCoroutineScope()
+    val cCode = MaterialTheme.colorScheme.primary.hashCode()
     AndroidView(
         factory = { context ->
             GraphView(context).apply {
@@ -122,9 +122,9 @@ fun GraphViewCompose(
                 val series = LineGraphSeries(dataPoints)
 
                 addSeries(series)
-
+                setBackgroundColor(android.graphics.Color.WHITE)
                 // Style the series
-                series.color = md_theme_light_primary.hashCode()
+                series.color = cCode
                 series.isDrawDataPoints = true
                 series.dataPointsRadius = 6f
                 series.thickness = 4
@@ -134,7 +134,6 @@ fun GraphViewCompose(
                     }
 
                 }
-                series.backgroundColor = md_theme_light_primaryContainer.hashCode()
                 series.setAnimated(true)
                 // Viewport bounds
                 viewport.isXAxisBoundsManual = true

@@ -6,10 +6,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.zahid.mathly.R
 
 @Composable
 fun WordProblemsTab(
@@ -30,14 +32,14 @@ fun WordProblemsTab(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Word Problem Solver",
+                    text = stringResource(R.string.word_problem_solver),
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 Text(
-                    text = "Convert natural language to equations",
+                    text = stringResource(R.string.convert_natural_language_to_equations),
                     fontSize = 16.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     modifier = Modifier.padding(bottom = 32.dp)
@@ -74,13 +76,13 @@ fun WordProblemsTab(
                             modifier = Modifier.padding(bottom = 8.dp)
                         )
                         Text(
-                            text = "Solve Word Problem",
+                            text = stringResource(R.string.solve_word_problem),
                             fontSize = 18.sp,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onSecondary
                         )
                         Text(
-                            text = "Enter problem in natural language",
+                            text = stringResource(R.string.enter_problem_in_natural_language),
                             fontSize = 14.sp,
                             color = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.8f)
                         )
@@ -107,13 +109,13 @@ fun WordProblemsTab(
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "If a train travels 60 km in 1.5 hours, what is its speed?",
+                        text = stringResource(R.string.if_a_train_travels_60_km_in_1_5_hours_what_is_its_speed),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "The AI will extract: speed = 60/1.5 and solve it step by step.",
+                        text = stringResource(R.string.the_ai_will_extract_speed_60_1_5_and_solve_it_step_by_step),
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onTertiaryContainer
                     )

@@ -10,10 +10,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.zahid.mathly.R
 import com.zahid.mathly.presentation.viewmodel.WordProblemViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,7 +39,7 @@ fun WordProblemInputScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Word Problem Solver",
+                        text = stringResource(R.string.word_problem_solver),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium
                     )
@@ -89,14 +91,14 @@ fun WordProblemInputScreen(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        text = "Word Problem Solver",
+                        text = stringResource(R.string.word_problem_solver),
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Enter a word problem in natural language. The AI will convert it to an equation and solve it step by step.",
+                        text = stringResource(R.string.enter_a_word_problem_in_natural_language_the_ai_will_convert_it_to_an_equation_and_solve_it_step_by_step),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
@@ -113,20 +115,20 @@ fun WordProblemInputScreen(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        text = "Example:",
+                        text = stringResource(R.string.example),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "If a train travels 60 km in 1.5 hours, what is its speed?",
+                        text = stringResource(R.string.if_a_train_travels_60_km_in_1_5_hours_what_is_its_speed),
                         fontSize = 14.sp,
                         color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = "The AI will extract: speed = 60/1.5 and solve it.",
+                        text = stringResource(R.string.the_ai_will_extract_speed_60_1_5_and_solve_it),
                         fontSize = 12.sp,
                         color = MaterialTheme.colorScheme.onTertiaryContainer
                     )
@@ -145,7 +147,7 @@ fun WordProblemInputScreen(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Word Problem:",
+                        text = stringResource(R.string.word_problem_colon),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurface
@@ -156,7 +158,7 @@ fun WordProblemInputScreen(
                         onValueChange = { problemText = it },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = {
-                            Text("Enter your word problem here...")
+                            Text(stringResource(R.string.enter_your_word_problem_here))
                         },
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
@@ -199,7 +201,9 @@ fun WordProblemInputScreen(
                             contentDescription = "Solve"
                         )
                         Text(
-                            text = if (state.isLoading) "Solving..." else "Solve Word Problem",
+                            text = if (state.isLoading) stringResource(R.string.solving) else stringResource(
+                                R.string.solve_word_problem
+                            ),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
@@ -210,7 +214,7 @@ fun WordProblemInputScreen(
                     onClick = { problemText = "" },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Clear Problem")
+                    Text(stringResource(R.string.clear_problem))
                 }
             }
 

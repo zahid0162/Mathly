@@ -20,7 +20,7 @@ import kotlin.math.pow
 @Composable
 fun BasicCalculatorScreen(
     navController: androidx.navigation.NavController,
-    paddingValues: androidx.compose.foundation.layout.PaddingValues
+    paddingValues: PaddingValues
 ) {
     var displayValue by remember { mutableStateOf("0") }
     var previousValue by remember { mutableStateOf(0.0) }

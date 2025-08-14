@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Mathly"
+rootProject.name = "CalcSmart"
 include(":app")
  

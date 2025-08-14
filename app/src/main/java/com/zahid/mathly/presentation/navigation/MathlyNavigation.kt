@@ -8,10 +8,15 @@ import androidx.navigation.compose.rememberNavController
 import com.zahid.mathly.presentation.ui.screens.*
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 import com.zahid.mathly.presentation.viewmodel.WordProblemViewModel
+import com.zahid.mathly.presentation.viewmodel.ThemeViewModel
+import com.zahid.mathly.presentation.viewmodel.LanguageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @Composable
-fun MathlyNavigation() {
+fun MathlyNavigation(
+    themeViewModel: ThemeViewModel,
+    languageViewModel: LanguageViewModel
+) {
     val navController = rememberNavController()
     val sharedViewModel = androidx.hilt.navigation.compose.hiltViewModel<SharedViewModel>()
     val wordProblemViewModel = androidx.hilt.navigation.compose.hiltViewModel<WordProblemViewModel>()
@@ -23,7 +28,9 @@ fun MathlyNavigation() {
         composable("main") {
             MainScreen(
                 navController = navController,
-                viewModel = sharedViewModel
+                viewModel = sharedViewModel,
+                themeViewModel = themeViewModel,
+                languageViewModel = languageViewModel
             )
         }
 

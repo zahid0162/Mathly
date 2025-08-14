@@ -1,5 +1,7 @@
 package com.zahid.mathly.presentation.ui.screens
 
+import com.zahid.mathly.R
+
 import android.content.Intent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,7 +42,7 @@ fun ResultScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Solution",
+                        text = stringResource(R.string.solution),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onPrimary
@@ -95,7 +98,7 @@ fun ResultScreen(
                         color = MaterialTheme.colorScheme.primary
                     )
                     Text(
-                        text = "Solving equation...",
+                        text = stringResource(R.string.solving_equation),
                         fontSize = 16.sp,
                         color = MaterialTheme.colorScheme.onSurface
                     )
@@ -142,14 +145,14 @@ fun ResultScreen(
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
                                 Text(
-                                    text = "No solution available",
+                                    text = stringResource(R.string.no_solution_available),
                                     fontSize = 16.sp,
                                     fontWeight = FontWeight.Medium,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                                 Spacer(modifier = Modifier.height(8.dp))
                                 Text(
-                                    text = "Try solving an equation first",
+                                    text = stringResource(R.string.try_solving_an_equation_first),
                                     fontSize = 14.sp,
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -207,7 +210,7 @@ private fun shareSolution(context: android.content.Context, solution: com.zahid.
         action = Intent.ACTION_SEND
         type = "text/plain"
         putExtra(Intent.EXTRA_TEXT, shareText)
-        putExtra(Intent.EXTRA_SUBJECT, "Mathly Solution")
+        putExtra(Intent.EXTRA_SUBJECT, "Here is my Solution")
     }
     
     val chooser = Intent.createChooser(shareIntent, "Share Solution")
@@ -278,7 +281,7 @@ fun SolutionCard(
                     modifier = Modifier.padding(16.dp)
                 ) {
                     Text(
-                        text = "Equation:",
+                        text = stringResource(R.string.equation_colon),
                         fontSize = 14.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
@@ -299,7 +302,7 @@ fun SolutionCard(
                     verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     Text(
-                        text = "Step-by-step solution:",
+                        text = stringResource(R.string.step_by_step_solution),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface
@@ -322,7 +325,7 @@ fun SolutionCard(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Final Answer:",
+                            text = stringResource(R.string.final_answer),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSecondaryContainer
@@ -353,7 +356,7 @@ fun StepCard(step: SolutionStep) {
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "Step ${step.stepNumber}: ${step.description}",
+                text = stringResource(R.string.step, step.stepNumber, step.description),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Medium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -361,7 +364,7 @@ fun StepCard(step: SolutionStep) {
             
             if (step.calculation.isNotBlank()) {
                 Text(
-                    text = "Calculation: ${step.calculation}",
+                    text = stringResource(R.string.calculation, step.calculation),
                     fontSize = 12.sp,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
@@ -369,7 +372,7 @@ fun StepCard(step: SolutionStep) {
             
             if (step.result.isNotBlank()) {
                 Text(
-                    text = "Result: ${step.result}",
+                    text = stringResource(R.string.result, step.result),
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
