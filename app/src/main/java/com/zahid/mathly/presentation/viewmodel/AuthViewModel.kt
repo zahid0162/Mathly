@@ -148,6 +148,10 @@ class AuthViewModel @Inject constructor(
     fun onNavigationHandled() {
         _uiState.value = _uiState.value.copy(navigateTo = null)
     }
+
+    fun getCurrentUserEmail(): String{
+        return supabaseClient.auth.currentUserOrNull()?.email ?:"abc@gmail.com"
+    }
 }
 
 

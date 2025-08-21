@@ -258,38 +258,6 @@ fun BMICalculatorScreen(
     }
 }
 
-@Composable
-fun BMICategoryItem(
-    category: String,
-    range: String,
-    color: Color
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(
-            modifier = Modifier
-                .size(12.dp)
-                .background(color, shape = CircleShape)
-        )
-        Spacer(modifier = Modifier.width(12.dp))
-        Text(
-            text = category,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.W500,
-            modifier = Modifier.weight(1f)
-        )
-        Text(
-            text = range,
-            fontSize = 14.sp,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
 private fun calculateBMI(height: String, weight: String): Double? {
     return try {
         val heightM = height.toDouble() / 100 // Convert cm to meters
@@ -325,4 +293,4 @@ private fun getBMIColor(bmi: Double): Color {
         bmi < 30.0 -> MaterialTheme.colorScheme.tertiaryContainer
         else -> MaterialTheme.colorScheme.errorContainer
     }
-} 
+}

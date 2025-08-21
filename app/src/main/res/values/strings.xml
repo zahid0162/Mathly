@@ -139,4 +139,8 @@
     <string name="change_language">Change Language</string>
     <string name="language_changed">Language changed. App will restart to apply changes.</string>
     <string name="history">history</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="settings">Setings</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="logout">Logout</string>
 </resources>

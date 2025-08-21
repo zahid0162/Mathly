@@ -138,4 +138,8 @@
     <string name="language">زبان</string>
     <string name="change_language">زبان تبدیل کریں</string>
     <string name="language_changed">زبان تبدیل ہو گئی۔ تبدیلیاں لاگو کرنے کے لیے ایپ دوبارہ شروع ہو گی۔</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="settings">Setings</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="logout">Logout</string>
 </resources>

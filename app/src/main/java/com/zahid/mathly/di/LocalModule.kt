@@ -21,3 +21,4 @@ object LocalModule {
         return SessionManager(context)
     }
 }
+

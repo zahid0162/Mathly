@@ -40,7 +40,10 @@ class ProfileViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     val uiState: StateFlow<ProfileUiState> = _uiState
-    
+
+    init {
+        fetchProfile()
+    }
     fun fetchProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = _uiState.value.copy(loading = true)

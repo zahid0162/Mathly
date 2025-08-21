@@ -138,4 +138,8 @@
     <string name="language">اللغة</string>
     <string name="change_language">تغيير اللغة</string>
     <string name="language_changed">تم تغيير اللغة. سيتم إعادة تشغيل التطبيق لتطبيق التغييرات.</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="settings">Setings</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="logout">Logout</string>
 </resources>

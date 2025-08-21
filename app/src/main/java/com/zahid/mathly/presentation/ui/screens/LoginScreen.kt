@@ -19,6 +19,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -51,12 +55,14 @@ fun LoginScreen(
                 }
                 viewModel.onNavigationHandled()
             }
+
             AuthDestination.Main -> {
-                navController.navigate("main") {
+                navController.navigate("home") {
                     popUpTo("login") { inclusive = true }
                 }
                 viewModel.onNavigationHandled()
             }
+
             null -> Unit
         }
     }
@@ -66,143 +72,178 @@ fun LoginScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            
-            Text(
-                text = "Welcome Back!",
-                style = MaterialTheme.typography.headlineLarge,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 24.dp, bottom = 8.dp)
+        Column(modifier = Modifier.fillMaxWidth()) {
+            PrimaryBanner(
+                modifier = Modifier,
+                image = painterResource(R.drawable.calcsmart_tech_app_logo_with_brain_design),
+                contentDescription = "CalcSmart Logo"
             )
-            
-            Text(
-                text = "Sign in to continue using CalcSmart",
-                style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 32.dp)
-            )
-
-            // Email Field
-            OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Email") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = "Email Icon",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Email,
-                    imeAction = ImeAction.Next
-                ),
+            Spacer(modifier = Modifier.height(8.dp))
+            Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                shape = RoundedCornerShape(12.dp)
-            )
+                    .fillMaxSize()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
-            // Password Field
-            OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Password") },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = "Password Icon",
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                },
-                trailingIcon = {
-                    IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                Text(
+                    text = "Welcome Back!",
+                    style = MaterialTheme.typography.headlineLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 24.dp, bottom = 8.dp)
+                )
+
+                Text(
+                    text = "Sign in to continue using CalcSmart",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(bottom = 32.dp)
+                )
+
+                // Email Field
+                OutlinedTextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Email") },
+                    leadingIcon = {
                         Icon(
-                            imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                            contentDescription = if (passwordVisible) "Hide Password" else "Show Password",
+                            imageVector = Icons.Default.Email,
+                            contentDescription = "Email Icon",
                             tint = MaterialTheme.colorScheme.primary
                         )
+                    },
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Email,
+                        imeAction = ImeAction.Next
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    shape = RoundedCornerShape(12.dp)
+                )
+
+                // Password Field
+                OutlinedTextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password") },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Lock,
+                            contentDescription = "Password Icon",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    },
+                    trailingIcon = {
+                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                            Icon(
+                                imageVector = if (passwordVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                contentDescription = if (passwordVisible) "Hide Password" else "Show Password",
+                                tint = MaterialTheme.colorScheme.primary
+                            )
+                        }
+                    },
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password,
+                        imeAction = ImeAction.Done
+                    ),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 24.dp),
+                    shape = RoundedCornerShape(12.dp)
+                )
+
+                // Sign In Button
+                Button(
+                    onClick = { viewModel.signIn(email, password) },
+                    enabled = !uiState.loading,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    if (uiState.loading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    } else {
+                        Text(
+                            "Sign In",
+                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        )
                     }
-                },
-                visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 24.dp),
-                shape = RoundedCornerShape(12.dp)
-            )
+                }
 
-            // Sign In Button
-            Button(
-                onClick = { viewModel.signIn(email, password) },
-                enabled = !uiState.loading,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                if (uiState.loading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = MaterialTheme.colorScheme.onPrimary
-                    )
-                } else {
+                // Error Message
+                AnimatedVisibility(
+                    visible = uiState.errorMessage != null,
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
                     Text(
-                        "Sign In",
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                        text = uiState.errorMessage ?: "",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = 8.dp)
                     )
+                }
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                // Register Link
+                Row(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        "Don't have an account?",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    TextButton(onClick = { navController.navigate("register") }) {
+                        Text(
+                            "Register Here",
+                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
             }
 
-            // Error Message
-            AnimatedVisibility(
-                visible = uiState.errorMessage != null,
-                enter = fadeIn(),
-                exit = fadeOut()
-            ) {
-                Text(
-                    text = uiState.errorMessage ?: "",
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyMedium,
-                    modifier = Modifier.padding(top = 8.dp)
-                )
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // Register Link
-            Row(
-                modifier = Modifier.padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    "Don't have an account? ",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                TextButton(onClick = { navController.navigate("register") }) {
-                    Text(
-                        "Register",
-                        style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
         }
+
+    }
+}
+
+@Composable
+fun PrimaryBanner(
+    modifier: Modifier = Modifier,
+    image: Painter,
+    contentDescription: String? = null,
+) {
+    val screenHeight = LocalWindowInfo.current.containerSize.height.dp
+    val bannerHeight = screenHeight * 0.1f
+
+    Box(
+        modifier = modifier
+            .width(LocalWindowInfo.current.containerSize.width.dp)
+            .height(bannerHeight)
+            .background(MaterialTheme.colorScheme.primary),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = image,
+            contentDescription = contentDescription,
+            modifier = Modifier.fillMaxHeight(),
+            contentScale = ContentScale.Fit // keeps aspect ratio while filling height
+        )
     }
 }
 
