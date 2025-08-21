@@ -128,7 +128,8 @@ fun MathlyNavigation(
             ProfileMainScreen(
                 navController = navController,
                 themeViewModel = themeViewModel,
-                profileViewModel = profileViewModel
+                profileViewModel = profileViewModel,
+                languageViewModel = languageViewModel
             )
         }
 

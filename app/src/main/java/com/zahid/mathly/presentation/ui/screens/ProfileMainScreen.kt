@@ -10,8 +10,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -27,8 +29,10 @@ import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
 import com.zahid.mathly.presentation.viewmodel.AuthViewModel
+import com.zahid.mathly.presentation.viewmodel.LanguageViewModel
 import com.zahid.mathly.presentation.viewmodel.ProfileViewModel
 import com.zahid.mathly.presentation.viewmodel.ThemeViewModel
+import com.zahid.mathly.presentation.ui.components.LanguageDropdown
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,10 +41,12 @@ fun ProfileMainScreen(
     navController: NavController,
     themeViewModel: ThemeViewModel,
     profileViewModel: ProfileViewModel = hiltViewModel(),
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel(),
+    languageViewModel: LanguageViewModel = hiltViewModel()
 ) {
     val profileState by profileViewModel.uiState.collectAsState()
     val darkMode = themeViewModel.isDarkMode
+    val snackbarHostState = remember { SnackbarHostState() }
     val pinfo = LocalContext.current.packageManager.getPackageInfo(
         LocalContext.current.packageName,
         0
@@ -75,7 +81,8 @@ fun ProfileMainScreen(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -196,6 +203,77 @@ fun ProfileMainScreen(
                                 checkedTrackColor = MaterialTheme.colorScheme.primaryContainer
                             )
                         )
+                    }
+
+                    Divider(
+                        modifier = Modifier.padding(vertical = 8.dp),
+                        color = MaterialTheme.colorScheme.outlineVariant
+                    )
+
+                    // Language Selection
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Language,
+                            contentDescription = "Language",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = stringResource(R.string.language),
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.weight(1f)
+                        )
+                        
+                        // Current language display with dropdown
+                        Box {
+                            var showLanguageDropdown by remember { mutableStateOf(false) }
+                            
+                            OutlinedButton(
+                                onClick = { showLanguageDropdown = true },
+                                colors = ButtonDefaults.outlinedButtonColors(
+                                    contentColor = MaterialTheme.colorScheme.primary
+                                )
+                            ) {
+                                Text(languageViewModel.getLanguageDisplayName(languageViewModel.currentLanguage))
+                                Spacer(modifier = Modifier.width(4.dp))
+                                Icon(
+                                    imageVector = Icons.Default.ArrowDropDown,
+                                    contentDescription = "Select Language"
+                                )
+                            }
+                            
+                            DropdownMenu(
+                                expanded = showLanguageDropdown,
+                                onDismissRequest = { showLanguageDropdown = false }
+                            ) {
+                                languageViewModel.getAvailableLanguages().forEach { (code, name) ->
+                                    DropdownMenuItem(
+                                        text = { Text(name) },
+                                        onClick = {
+                                            if (code != languageViewModel.currentLanguage) {
+                                                languageViewModel.setLanguage(code)
+                                            }
+                                            showLanguageDropdown = false
+                                        },
+                                        leadingIcon = {
+                                            if (code == languageViewModel.currentLanguage) {
+                                                Icon(
+                                                    imageVector = Icons.Default.Language,
+                                                    contentDescription = null,
+                                                    tint = MaterialTheme.colorScheme.primary
+                                                )
+                                            }
+                                        }
+                                    )
+                                }
+                            }
+                        }
                     }
 
                     Divider(
