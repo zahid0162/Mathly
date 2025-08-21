@@ -11,17 +11,24 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import com.zahid.mathly.data.local.SessionManager
 import com.zahid.mathly.presentation.navigation.MathlyNavigation
 import com.zahid.mathly.presentation.ui.screens.SplashScreen
 import com.zahid.mathly.presentation.ui.theme.MathlyTheme
+import com.zahid.mathly.presentation.viewmodel.AuthViewModel
 import com.zahid.mathly.presentation.viewmodel.LanguageViewModel
 import com.zahid.mathly.presentation.viewmodel.ThemeViewModel
+import io.github.jan.supabase.SupabaseClient
 import com.zahid.mathly.utils.LocaleHelper
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.hilt.navigation.compose.hiltViewModel
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject
+    lateinit var sessionManager: SessionManager
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
@@ -50,7 +57,8 @@ class MainActivity : ComponentActivity() {
                     } else {
                         MathlyNavigation(
                             themeViewModel = themeViewModel,
-                            languageViewModel = languageViewModel
+                            languageViewModel = languageViewModel,
+                            sessionManager = sessionManager
                         )
                     }
                 }

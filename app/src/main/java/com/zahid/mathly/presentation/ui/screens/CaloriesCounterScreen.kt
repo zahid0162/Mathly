@@ -1,5 +1,10 @@
 package com.zahid.mathly.presentation.ui.screens
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.speech.RecognizerIntent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -7,6 +12,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Calculate
+import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material.icons.filled.FitnessCenter
 import androidx.compose.material3.*
@@ -14,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,8 +32,12 @@ import com.zahid.mathly.domain.model.CaloriesAnalysis
 import com.zahid.mathly.domain.model.FoodItem
 import com.zahid.mathly.domain.model.Exercise
 import com.zahid.mathly.data.remote.OpenAIService
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +50,41 @@ fun CaloriesCounterScreen(
     var isLoading by remember { mutableStateOf(false) }
     var caloriesAnalysis by remember { mutableStateOf<CaloriesAnalysis?>(null) }
     var errorMessage by remember { mutableStateOf("") }
+    val context = LocalContext.current
+
+    // Launcher to handle speech recognition result
+    val speechRecognizerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val matches = result.data?.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS)
+            val spokenText = matches?.firstOrNull()
+            if (!spokenText.isNullOrBlank()) {
+                foodDescription = spokenText
+            }
+        }
+    }
+
+    // Function to start speech recognition
+    val startSpeechRecognition: () -> Unit = {
+        val intent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).apply {
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)
+            putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault())
+            putExtra(RecognizerIntent.EXTRA_PROMPT, context.getString(R.string.speak))
+        }
+        speechRecognizerLauncher.launch(intent)
+    }
+
+    // Permission request launcher for RECORD_AUDIO
+    val audioPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            startSpeechRecognition()
+        } else {
+            errorMessage = "Microphone permission denied"
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -75,6 +121,24 @@ fun CaloriesCounterScreen(
                     modifier = Modifier.fillMaxWidth(),
                     minLines = 3,
                     maxLines = 5,
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            val hasAudioPermission = ContextCompat.checkSelfPermission(
+                                context,
+                                Manifest.permission.RECORD_AUDIO
+                            ) == PackageManager.PERMISSION_GRANTED
+                            if (hasAudioPermission) {
+                                startSpeechRecognition()
+                            } else {
+                                audioPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+                            }
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Mic,
+                                contentDescription = stringResource(R.string.speak)
+                            )
+                        }
+                    },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = MaterialTheme.colorScheme.primary,
                         unfocusedBorderColor = MaterialTheme.colorScheme.outline

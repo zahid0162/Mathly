@@ -33,6 +33,7 @@
     <string name="exercise_recommendations">توصيات التمرين</string>
     <string name="analyze_calories">تحليل السعرات الحرارية</string>
     <string name="scan_equation">مسح المعادلة</string>
+    <string name="history">السجل</string>
     <string name="capture">التقاط</string>
     <string name="recognized_text">النص المُعترف به:</string>
     <string name="camera_permission_required">إذن الكاميرا مطلوب</string>

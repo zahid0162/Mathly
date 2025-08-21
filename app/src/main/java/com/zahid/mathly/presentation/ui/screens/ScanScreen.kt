@@ -88,7 +88,7 @@ fun ScanScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = "Scan Equation",
+                        text = stringResource(R.string.scan_equation),
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onPrimary

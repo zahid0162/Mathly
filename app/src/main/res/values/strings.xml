@@ -32,6 +32,7 @@
     <string name="cal_burn">-%1$d cal</string>
     <string name="exercise_recommendations">Exercise Recommendations</string>
     <string name="analyze_calories">Analyze Calories</string>
+    <string name="speak">Speak</string>
     <string name="scan_equation">Scan Equation</string>
     <string name="capture">Capture</string>
     <string name="recognized_text">Recognized Text:</string>
@@ -137,4 +138,5 @@
     <string name="language">Language</string>
     <string name="change_language">Change Language</string>
     <string name="language_changed">Language changed. App will restart to apply changes.</string>
+    <string name="history">history</string>
 </resources>

@@ -9,7 +9,8 @@ import android.content.Context
 
 @Database(
     entities = [EquationEntity::class, SolutionEntity::class],
-    version = 2
+    version = 2,
+
 )
 abstract class EquationDatabase : RoomDatabase() {
     abstract fun equationDao(): EquationDao

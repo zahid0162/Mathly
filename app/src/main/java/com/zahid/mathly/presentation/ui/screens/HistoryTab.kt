@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Calculate
@@ -25,80 +26,109 @@ import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HistoryTab(
     navController: NavController,
     viewModel: SharedViewModel,
-    paddingValues: PaddingValues
 ) {
     val history by viewModel.history.collectAsState()
-    
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(paddingValues)
-            .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        // Header
-        item {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    text = "Problem History",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                Text(
-                    text = "View your previously solved problems",
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 24.dp)
-                )
-            }
-        }
 
-        if (history.isNotEmpty()) {
-            items(history) { solution ->
-                HistorySolutionCard(
-                    solution = solution,
-                    onClick = {
-                        viewModel.setSolution(solution)
-                        navController.navigate("result")
-                    }
-                )
-            }
-        } else {
-            item {
-                Card(
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceVariant
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.history),
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.navigateUp() }) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
+            )
+        }
+    ) { paddingValues ->
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // Header
+            item {
+                Column(
+                    modifier = Modifier.fillMaxWidth()
                 ) {
-                    Column(
-                        modifier = Modifier.padding(32.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Text(
+                        text = "Problem History",
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSurface,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    Text(
+                        text = "View your previously solved problems",
+                        fontSize = 16.sp,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.padding(bottom = 24.dp)
+                    )
+                }
+            }
+
+            if (history.isNotEmpty()) {
+                items(history) { solution ->
+                    HistorySolutionCard(
+                        solution = solution,
+                        onClick = {
+                            viewModel.setSolution(solution)
+                            navController.navigate("result")
+                        }
+                    )
+                }
+            } else {
+                item {
+                    Card(
+                        colors = CardDefaults.cardColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant
+                        )
                     ) {
-                        Text(
-                            text = stringResource(R.string.no_solutions_yet),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = stringResource(R.string.solve_some_equations_to_see_them_here),
-                            fontSize = 14.sp,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Column(
+                            modifier = Modifier.padding(32.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(R.string.no_solutions_yet),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = stringResource(R.string.solve_some_equations_to_see_them_here),
+                                fontSize = 14.sp,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
                     }
                 }
             }
         }
     }
+
+
 }
 
 @Composable
@@ -130,7 +160,7 @@ fun HistorySolutionCard(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     val isWordProblem = solution.type == SolutionType.WORD_PROBLEM
-                    
+
                     Icon(
                         imageVector = if (isWordProblem) Icons.Default.TextFields else Icons.Default.Calculate,
                         contentDescription = if (isWordProblem) "Word Problem" else "Equation",
@@ -146,7 +176,7 @@ fun HistorySolutionCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
-                
+
                 // Timestamp
                 Text(
                     text = getTimeAgo(solution.timestamp),
@@ -154,14 +184,14 @@ fun HistorySolutionCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            
+
             // Problem statement - show original problem for word problems, equation for equations
             val problemText = if (solution.type == SolutionType.WORD_PROBLEM) {
                 solution.originalProblem.ifBlank { solution.equationId }
             } else {
                 solution.equationId
             }
-            
+
             Text(
                 text = problemText,
                 fontSize = 16.sp,
@@ -169,7 +199,7 @@ fun HistorySolutionCard(
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.fillMaxWidth()
             )
-            
+
             // Answer
             if (solution.finalAnswer.isNotBlank()) {
                 Row(
@@ -193,7 +223,7 @@ fun HistorySolutionCard(
                             color = Color(0xFF1ABC9C) // Green color for answers
                         )
                     }
-                    
+
                     // Navigation arrow
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowForward,
@@ -250,7 +280,7 @@ fun RecentSolutionCard(
 private fun getTimeAgo(timestamp: Long): String {
     val now = System.currentTimeMillis()
     val diff = now - timestamp
-    
+
     return when {
         diff < 60 * 1000 -> "Just now"
         diff < 60 * 60 * 1000 -> "${diff / (60 * 1000)} minutes ago"

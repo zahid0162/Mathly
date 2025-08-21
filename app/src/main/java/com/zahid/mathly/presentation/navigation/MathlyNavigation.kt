@@ -1,30 +1,53 @@
 package com.zahid.mathly.presentation.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
+import androidx.compose.runtime.remember
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.zahid.mathly.data.local.SessionManager
 import com.zahid.mathly.presentation.ui.screens.*
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 import com.zahid.mathly.presentation.viewmodel.WordProblemViewModel
 import com.zahid.mathly.presentation.viewmodel.ThemeViewModel
 import com.zahid.mathly.presentation.viewmodel.LanguageViewModel
-import dagger.hilt.android.AndroidEntryPoint
+import io.github.jan.supabase.SupabaseClient
 
 @Composable
 fun MathlyNavigation(
     themeViewModel: ThemeViewModel,
-    languageViewModel: LanguageViewModel
+    languageViewModel: LanguageViewModel,
+    sessionManager: SessionManager
 ) {
     val navController = rememberNavController()
     val sharedViewModel = androidx.hilt.navigation.compose.hiltViewModel<SharedViewModel>()
     val wordProblemViewModel = androidx.hilt.navigation.compose.hiltViewModel<WordProblemViewModel>()
 
+    // Determine start destination based on session state
+    val startDestination = remember {
+        when {
+            !sessionManager.isLoggedIn -> "login"
+            !sessionManager.hasCompletedProfile -> "profileSetup"
+            else -> "main"
+        }
+    }
+
     NavHost(
         navController = navController,
-        startDestination = "main"
+        startDestination = startDestination
     ) {
+        composable("login") {
+            LoginScreen(
+                navController = navController
+            )
+        }
+
+        composable("profileSetup") {
+            ProfileSetupScreen(
+                navController = navController
+            )
+        }
+
         composable("main") {
             MainScreen(
                 navController = navController,
@@ -82,7 +105,13 @@ fun MathlyNavigation(
             HistoryTab(
                 navController = navController,
                 viewModel = sharedViewModel,
-                paddingValues = androidx.compose.foundation.layout.PaddingValues()
+            )
+        }
+        
+        // Edit Profile route
+        composable("editProfile") {
+            EditProfileScreen(
+                navController = navController
             )
         }
     }

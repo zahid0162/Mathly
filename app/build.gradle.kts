@@ -20,6 +20,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -32,7 +36,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
-
     }
     kotlinOptions {
         jvmTarget = "11"
@@ -41,10 +44,8 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "2.0.21"
+        kotlinCompilerExtensionVersion = "2.2.0"
     }
-
-
 }
 
 dependencies {
@@ -101,7 +102,16 @@ dependencies {
     implementation(libs.gson)
     
     // ComposeCharts for mathematical function plotting
-    implementation("io.github.ehsannarmani:compose-charts:0.1.8")
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.android)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.compose.charts)
+    implementation(platform(libs.bom))
+    implementation(libs.postgrest.kt)
+    implementation(libs.auth.kt)
+    implementation(libs.realtime.kt)
+    implementation(libs.storage.kt)
+    implementation(libs.coil.compose)
 
     // Testing
     testImplementation(libs.junit)

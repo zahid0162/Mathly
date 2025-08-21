@@ -27,6 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.zahid.mathly.data.local.SessionManager
 import com.zahid.mathly.presentation.ui.components.LanguageDropdown
 import com.zahid.mathly.presentation.ui.components.NavigationDrawer
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
@@ -34,6 +35,7 @@ import com.zahid.mathly.presentation.viewmodel.CaloriesCounterViewModel
 import com.zahid.mathly.presentation.viewmodel.LanguageViewModel
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 import com.zahid.mathly.presentation.viewmodel.ThemeViewModel
+import io.github.jan.supabase.SupabaseClient
 import kotlinx.coroutines.launch
 import  com.zahid.mathly.R
 
@@ -50,7 +52,7 @@ fun MainScreen(
     val history by viewModel.history.collectAsState()
     var selectedScreen by remember { mutableStateOf(context.getString(R.string.equations)) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Open)
     val scope = rememberCoroutineScope()
 
 
@@ -135,7 +137,6 @@ fun MainScreen(
                 )
                 context.getString(R.string.profile) -> ProfileScreen(
                     navController = navController,
-                    viewModel = viewModel,
                     paddingValues = paddingValues,
                     themeViewModel = themeViewModel
                 )

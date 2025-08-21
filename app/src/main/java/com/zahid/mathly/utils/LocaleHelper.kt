@@ -44,3 +44,5 @@ object LocaleHelper {
         return context.resources.configuration.locales[0].language
     }
 }
+
+
