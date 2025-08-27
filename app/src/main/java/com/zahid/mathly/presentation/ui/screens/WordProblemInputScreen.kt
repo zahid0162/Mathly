@@ -41,7 +41,8 @@ fun WordProblemInputScreen(
                     Text(
                         text = stringResource(R.string.word_problem_solver),
                         fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 },
                 navigationIcon = {
@@ -52,23 +53,8 @@ fun WordProblemInputScreen(
                         )
                     }
                 },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            if (problemText.isNotBlank()) {
-                                viewModel.solveWordProblem(problemText)
-                            }
-                        },
-                        enabled = problemText.isNotBlank() && !state.isLoading
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Check,
-                            contentDescription = "Solve"
-                        )
-                    }
-                },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                    containerColor = MaterialTheme.colorScheme.primary
                 )
             )
         }

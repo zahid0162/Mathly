@@ -230,32 +230,6 @@ private fun canPlotEquation(equation: String): Boolean {
     )
 }
 
-private fun extractFunctionFromEquation(equation: String): String {
-    val cleanEquation = equation.replace(" ", "")
-    
-    return when {
-        cleanEquation.startsWith("y=") -> cleanEquation.substring(2)
-        cleanEquation.startsWith("f(x)=") -> cleanEquation.substring(5)
-        cleanEquation.contains("=") -> {
-            val parts = cleanEquation.split("=")
-            if (parts.size == 2) {
-                // Try to extract the function part
-                val left = parts[0]
-                val right = parts[1]
-                
-                when {
-                    left.contains("x") -> left
-                    right.contains("x") -> right
-                    else -> right // Default to right side
-                }
-            } else {
-                cleanEquation
-            }
-        }
-        else -> cleanEquation
-    }
-}
-
 @Composable
 fun SolutionCard(
     equation: String,

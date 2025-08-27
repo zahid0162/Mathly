@@ -38,6 +38,9 @@ class AuthViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState
 
+    private val _logout = MutableStateFlow(false)
+    val logout: StateFlow<Boolean> = _logout
+
     init {
         // Check session state on initialization
         viewModelScope.launch(Dispatchers.IO) {
@@ -141,6 +144,7 @@ class AuthViewModel @Inject constructor(
             } finally {
                 sessionManager.clearSession()
                 _uiState.value = AuthUiState()
+                _logout.value = true
             }
         }
     }

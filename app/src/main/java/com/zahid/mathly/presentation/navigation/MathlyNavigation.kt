@@ -18,6 +18,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.zahid.mathly.presentation.viewmodel.BMIViewModel
+import com.zahid.mathly.presentation.viewmodel.CaloriesCounterViewModel
+import com.zahid.mathly.presentation.viewmodel.GraphViewModel
 import com.zahid.mathly.presentation.viewmodel.ProfileViewModel
 
 @Composable
@@ -30,6 +33,9 @@ fun MathlyNavigation(
     val sharedViewModel = hiltViewModel<SharedViewModel>()
     val wordProblemViewModel = hiltViewModel<WordProblemViewModel>()
     val profileViewModel = hiltViewModel<ProfileViewModel>()
+    val graphViewModel = hiltViewModel<GraphViewModel>()
+    val caloriesViewModel = hiltViewModel<CaloriesCounterViewModel>()
+    val bmiViewModel = hiltViewModel<BMIViewModel>()
 
     // Determine start destination based on session state
     val startDestination = remember {
@@ -46,7 +52,8 @@ fun MathlyNavigation(
     ) {
         composable("login") {
             LoginScreen(
-                navController = navController
+                navController = navController,
+                languageViewModel = languageViewModel
             )
         }
 
@@ -74,7 +81,8 @@ fun MathlyNavigation(
                 navController = navController,
                 onAddClick = {
                     navController.navigate("equations_input")
-                }
+                },
+                sharedViewModel
             )
         }
         
@@ -83,7 +91,8 @@ fun MathlyNavigation(
                 navController = navController,
                 onAddClick = {
                     navController.navigate("word_problem_input")
-                }
+                },
+                sharedViewModel
             )
         }
         
@@ -92,7 +101,8 @@ fun MathlyNavigation(
                 navController = navController,
                 onAddClick = {
                     navController.navigate("graph_input")
-                }
+                },
+                graphViewModel = graphViewModel
             )
         }
         
@@ -110,7 +120,8 @@ fun MathlyNavigation(
                 navController = navController,
                 onAddClick = {
                     navController.navigate("calories_input")
-                }
+                },
+                viewModel = caloriesViewModel
             )
         }
         
@@ -119,7 +130,8 @@ fun MathlyNavigation(
                 navController = navController,
                 onAddClick = {
                     navController.navigate("bmi_input")
-                }
+                },
+                viewModel = bmiViewModel
             )
         }
 
@@ -156,7 +168,8 @@ fun MathlyNavigation(
         
         composable("graph_input") {
             GraphInputScreen(
-                navController = navController
+                navController = navController,
+                graphViewModel = graphViewModel
             )
         }
         
@@ -167,16 +180,16 @@ fun MathlyNavigation(
         }
         
         composable("calories_input") {
-            val openAIService = androidx.hilt.navigation.compose.hiltViewModel<com.zahid.mathly.presentation.viewmodel.CaloriesCounterViewModel>().openAIService
             CaloriesCounterInputScreen(
                 navController = navController,
-                openAIService = openAIService
+                viewModel = caloriesViewModel
             )
         }
         
         composable("bmi_input") {
             BMICalculatorInputScreen(
-                navController = navController
+                navController = navController,
+                viewModel = bmiViewModel
             )
         }
 
@@ -229,6 +242,22 @@ fun MathlyNavigation(
             EditProfileScreen(
                 navController = navController,
                 viewModel = profileViewModel
+            )
+        }
+        
+        // Graph Detail route
+        composable("graph_detail") {
+            GraphDetailScreen(
+                navController = navController,
+                graphViewModel = graphViewModel
+            )
+        }
+        
+        // Calories Detail route
+        composable("calories_detail") {
+            CaloriesDetailScreen(
+                navController = navController,
+                viewModel = caloriesViewModel
             )
         }
     }

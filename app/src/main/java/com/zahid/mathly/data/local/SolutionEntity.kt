@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.zahid.mathly.domain.model.Solution
 import com.zahid.mathly.domain.model.SolutionStep
+import com.zahid.mathly.domain.model.SolutionType
 
 @Entity(tableName = "solutions")
 data class SolutionEntity(
@@ -11,7 +12,8 @@ data class SolutionEntity(
     val equationId: String,
     val stepsJson: String,
     val finalAnswer: String,
-    val timestamp: Long
+    val timestamp: Long,
+    val type: SolutionType
 ) {
     fun toDomain(): Solution {
         return Solution(
@@ -19,7 +21,8 @@ data class SolutionEntity(
             equationId = equationId,
             steps = parseSteps(stepsJson),
             finalAnswer = finalAnswer,
-            timestamp = timestamp
+            timestamp = timestamp,
+            type = type
         )
     }
     
@@ -30,7 +33,8 @@ data class SolutionEntity(
                 equationId = solution.equationId,
                 stepsJson = serializeSteps(solution.steps),
                 finalAnswer = solution.finalAnswer,
-                timestamp = solution.timestamp
+                timestamp = solution.timestamp,
+                type = solution.type
             )
         }
         

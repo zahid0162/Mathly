@@ -27,12 +27,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.zahid.mathly.R
-import com.zahid.mathly.data.remote.OpenAIService
 import com.zahid.mathly.domain.model.CaloriesAnalysis
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.zahid.mathly.presentation.viewmodel.CaloriesCounterViewModel
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -40,13 +41,13 @@ import java.util.Locale
 @Composable
 fun CaloriesCounterInputScreen(
     navController: NavController,
-    openAIService: OpenAIService
+    viewModel: CaloriesCounterViewModel = hiltViewModel()
 ) {
     var foodDescription by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
     var caloriesAnalysis by remember { mutableStateOf<CaloriesAnalysis?>(null) }
-    var errorMessage by remember { mutableStateOf("") }
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     // Launcher to handle speech recognition result
     val speechRecognizerLauncher = rememberLauncherForActivityResult(
@@ -78,7 +79,9 @@ fun CaloriesCounterInputScreen(
         if (isGranted) {
             startSpeechRecognition()
         } else {
-            errorMessage = "Microphone permission denied"
+            scope.launch {
+                snackbarHostState.showSnackbar("Microphone permission denied")
+            }
         }
     }
 
@@ -124,7 +127,8 @@ fun CaloriesCounterInputScreen(
                     containerColor = MaterialTheme.colorScheme.primary
                 )
             )
-        }
+        },
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -187,27 +191,21 @@ fun CaloriesCounterInputScreen(
                     Button(
                         onClick = {
                             if (foodDescription.isNotBlank()) {
-                                isLoading = true
-                                errorMessage = ""
-                                // Launch coroutine to call API
-                                kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.Main).launch {
-                                    try {
-                                        caloriesAnalysis = openAIService.analyzeCalories(foodDescription)
-                                    } catch (e: Exception) {
-                                        errorMessage = "Error: ${e.message}"
-                                    } finally {
-                                        isLoading = false
+                                viewModel.analyzeCalories(foodDescription) {
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar("Analysis saved successfully")
+                                        navController.popBackStack()
                                     }
                                 }
                             }
                         },
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = foodDescription.isNotBlank() && !isLoading,
+                        enabled = foodDescription.isNotBlank() && !viewModel.isLoading,
                         colors = ButtonDefaults.buttonColors(
                             containerColor = MaterialTheme.colorScheme.primary
                         )
                     ) {
-                        if (isLoading) {
+                        if (viewModel.isLoading) {
                             CircularProgressIndicator(
                                 modifier = Modifier.size(20.dp),
                                 color = MaterialTheme.colorScheme.onPrimary,
@@ -227,7 +225,7 @@ fun CaloriesCounterInputScreen(
             }
 
             // Error Message
-            if (errorMessage.isNotEmpty()) {
+            if (viewModel.errorMessage.isNotEmpty()) {
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(
@@ -235,7 +233,7 @@ fun CaloriesCounterInputScreen(
                     )
                 ) {
                     Text(
-                        text = errorMessage,
+                        text = viewModel.errorMessage,
                         color = MaterialTheme.colorScheme.onErrorContainer,
                         modifier = Modifier.padding(16.dp)
                     )

@@ -137,15 +137,6 @@ fun HomeScreen(
                                 contentDescription = "Profile",
                                 tint = MaterialTheme.colorScheme.onPrimary
                             )
-                            // Optional: Add a small indicator dot for notifications
-                            /*
-                            Box(
-                                modifier = Modifier
-                                    .size(8.dp)
-                                    .background(Color.Red, CircleShape)
-                                    .align(Alignment.TopEnd)
-                            )
-                            */
                         }
                     }
                 },

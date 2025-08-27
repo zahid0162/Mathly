@@ -27,6 +27,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -35,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.zahid.mathly.R
 import com.zahid.mathly.presentation.viewmodel.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,7 +83,7 @@ fun ProfileSetupScreen(
 				.background(MaterialTheme.colorScheme.primary)
 		) {
 			Text(
-				text = "Complete Profile",
+				text = stringResource(R.string.complete_profile),
 				style = MaterialTheme.typography.headlineMedium.copy(color = MaterialTheme.colorScheme.onPrimary),
 				modifier = Modifier
 					.align(Alignment.Center)
@@ -158,7 +160,7 @@ fun ProfileSetupScreen(
 				modifier = Modifier.fillMaxWidth(),
 				shape = RoundedCornerShape(12.dp),
 				leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-				label = { Text("Full name") },
+				label = { Text(stringResource(R.string.full_name)) },
 				singleLine = true,
 				keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(imeAction = ImeAction.Next)
 			)
@@ -169,7 +171,7 @@ fun ProfileSetupScreen(
 				modifier = Modifier.fillMaxWidth(),
 				shape = RoundedCornerShape(12.dp),
 				leadingIcon = { Icon(Icons.Default.Numbers, contentDescription = null) },
-				label = { Text("Age") },
+				label = { Text(stringResource(R.string.age)) },
 				singleLine = true,
 				keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
 					keyboardType = KeyboardType.Number,
@@ -191,7 +193,7 @@ fun ProfileSetupScreen(
 					shape = RoundedCornerShape(12.dp),
 					readOnly = true,
 					leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-					label = { Text("Gender") },
+					label = { Text(stringResource(R.string.gender)) },
 					trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = genderExpanded) }
 				)
 				ExposedDropdownMenu(
@@ -224,7 +226,7 @@ fun ProfileSetupScreen(
 					shape = RoundedCornerShape(12.dp),
 					readOnly = true,
 					leadingIcon = { Icon(Icons.Default.Work, contentDescription = null) },
-					label = { Text("Occupation") },
+					label = { Text(stringResource(R.string.occupation)) },
 					trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = occupationExpanded) }
 				)
 				ExposedDropdownMenu(
@@ -288,7 +290,7 @@ fun ProfileSetupScreen(
 						color = MaterialTheme.colorScheme.onPrimary
 					)
 				} else {
-					Text("Save & Continue")
+					Text(stringResource(R.string.save_continue))
 				}
 			}
 

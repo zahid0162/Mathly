@@ -8,6 +8,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Draw
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Save
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,21 +19,27 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.presentation.ui.components.EquationGraph
 import com.zahid.mathly.presentation.ui.components.MathInputBottomSheet
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
+import com.zahid.mathly.presentation.viewmodel.GraphViewModel
+import io.github.jan.supabase.realtime.Column
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GraphInputScreen(
-    navController: NavController
+    navController: NavController,
+    graphViewModel: GraphViewModel = hiltViewModel()
 ) {
     var functionInput by remember { mutableStateOf("") }
     var showGraph by remember { mutableStateOf(false) }
     var showMathKeyboard by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -120,7 +127,8 @@ fun GraphInputScreen(
                             value = functionInput,
                             onValueChange = {
                                 showGraph = false
-                                functionInput = it },
+                                functionInput = it
+                            },
                             modifier = Modifier.fillMaxWidth(),
                             placeholder = {
                                 Text(stringResource(R.string.enter_equation_according_to_below_format))
@@ -142,23 +150,50 @@ fun GraphInputScreen(
                         )
                     }
 
-                    Button(
-                        onClick = {
-                            if (functionInput.isNotBlank()) {
-                                showGraph = false
-                                showGraph = true
-                            }
-                        },
+                    Column(
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = functionInput.isNotBlank()
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Icon(
-                            Icons.Default.Draw,
-                            contentDescription = "Draw",
-                            modifier = Modifier.size(20.dp)
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Text(stringResource(R.string.draw_graph))
+                        Button(
+                            onClick = {
+                                if (functionInput.isNotBlank()) {
+                                    showGraph = false
+                                    showGraph = true
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = functionInput.isNotBlank()
+                        ) {
+                            Icon(
+                                Icons.Default.Draw,
+                                contentDescription = "Draw",
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(stringResource(R.string.draw_graph))
+                        }
+
+                        Button(
+                            onClick = {
+                                if (functionInput.isNotBlank()) {
+                                    graphViewModel.saveGraph(functionInput)
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar("Graph equation saved")
+                                    }
+
+                                }
+                            },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled = functionInput.isNotBlank()
+                        ) {
+                            Icon(
+                                Icons.Default.Save,
+                                contentDescription = "Save",
+                                modifier = Modifier.size(20.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Save Graph")
+                        }
                     }
                 }
             }
@@ -195,9 +230,9 @@ fun GraphInputScreen(
                     }
                 }
             }
-            
+
             Spacer(modifier = Modifier.height(16.dp))
-            
+
             // Instructions
             InstructionsView()
         }
@@ -233,35 +268,91 @@ fun InstructionsView() {
             )
 
             // Basic usage
-            Text(stringResource(R.string.enter_a_function_like_x_2_or_2_x_1), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(stringResource(R.string.use_for_multiplication_e_g_2_x), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(stringResource(R.string.use_and_for_addition_and_subtraction), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(stringResource(R.string.use_for_division_e_g_x_2), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(stringResource(R.string.use_for_powers_e_g_x_2_for_x_squared), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                stringResource(R.string.enter_a_function_like_x_2_or_2_x_1),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                stringResource(R.string.use_for_multiplication_e_g_2_x),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                stringResource(R.string.use_and_for_addition_and_subtraction),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                stringResource(R.string.use_for_division_e_g_x_2),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                stringResource(R.string.use_for_powers_e_g_x_2_for_x_squared),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
             // Trigonometry
-            Text(stringResource(R.string.trigonometry_sin_x_cos_x_tan_x_asin_x_acos_x_atan_x), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(stringResource(R.string.by_default_angles_are_in_radians_use_deg_for_degrees_e_g_sin_30_deg), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                stringResource(R.string.trigonometry_sin_x_cos_x_tan_x_asin_x_acos_x_atan_x),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                stringResource(R.string.by_default_angles_are_in_radians_use_deg_for_degrees_e_g_sin_30_deg),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
             // Constants
-            Text(stringResource(R.string.constants_pi_e), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                stringResource(R.string.constants_pi_e),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
             // Advanced math
-            Text(stringResource(R.string.square_root_sqrt_x), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(stringResource(R.string.logarithms_log_x_for_base_10_ln_x_for_natural_log), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(stringResource(R.string.absolute_value_abs_x), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                stringResource(R.string.square_root_sqrt_x),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                stringResource(R.string.logarithms_log_x_for_base_10_ln_x_for_natural_log),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                stringResource(R.string.absolute_value_abs_x),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
             // Calculus
-            Text(stringResource(R.string.derivatives_der_expression_x), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Text(stringResource(R.string.integrals_int_expression_x_start_end), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                stringResource(R.string.derivatives_der_expression_x),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                stringResource(R.string.integrals_int_expression_x_start_end),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
 
             // Usage tip
-            Text(stringResource(R.string.click_draw_graph_to_visualize_your_function), fontSize = 14.sp, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(
+                stringResource(R.string.click_draw_graph_to_visualize_your_function),
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
     }
 }
 
-private fun extractFunctionFromEquation(equation: String): String {
+fun extractFunctionFromEquation(equation: String): String {
     val cleanEquation = equation.replace(" ", "")
 
     return when {

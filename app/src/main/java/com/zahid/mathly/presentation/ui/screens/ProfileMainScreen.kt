@@ -45,12 +45,23 @@ fun ProfileMainScreen(
     languageViewModel: LanguageViewModel = hiltViewModel()
 ) {
     val profileState by profileViewModel.uiState.collectAsState()
+    val logout by authViewModel.logout.collectAsState()
     val darkMode = themeViewModel.isDarkMode
     val snackbarHostState = remember { SnackbarHostState() }
     val pinfo = LocalContext.current.packageManager.getPackageInfo(
         LocalContext.current.packageName,
         0
     ).versionName
+
+    LaunchedEffect(logout) {
+        if(logout){
+            navController.navigate("login") {
+                popUpTo("home") {
+                    inclusive = true
+                }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -288,9 +299,8 @@ fun ProfileMainScreen(
                             .padding(vertical = 8.dp)
                             .clickable {
                                 authViewModel.signOut()
-                                navController.navigate("login") {
-                                    popUpTo("main") { inclusive = true }
-                                }
+
+
                             },
                         verticalAlignment = Alignment.CenterVertically
                     ) {

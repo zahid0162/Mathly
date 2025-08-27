@@ -6,6 +6,8 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -24,6 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -34,18 +37,22 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zahid.mathly.R
+import com.zahid.mathly.presentation.ui.components.LanguageDropdown
 import com.zahid.mathly.presentation.viewmodel.AuthDestination
 import com.zahid.mathly.presentation.viewmodel.AuthViewModel
+import com.zahid.mathly.presentation.viewmodel.LanguageViewModel
 
 @Composable
 fun LoginScreen(
     navController: NavController,
-    viewModel: AuthViewModel = hiltViewModel()
+    viewModel: AuthViewModel = hiltViewModel(),
+    languageViewModel: LanguageViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var email by remember { mutableStateOf("zaidmuneer25@gmail.com") }
     var password by remember { mutableStateOf("12345678") }
     var passwordVisible by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(uiState.navigateTo) {
         when (uiState.navigateTo) {
@@ -67,16 +74,22 @@ fun LoginScreen(
         }
     }
 
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .padding(paddingValues)
             .background(MaterialTheme.colorScheme.background)
     ) {
         Column(modifier = Modifier.fillMaxWidth()) {
             PrimaryBanner(
                 modifier = Modifier,
                 image = painterResource(R.drawable.calcsmart_tech_app_logo_with_brain_design),
-                contentDescription = "CalcSmart Logo"
+                contentDescription = "CalcSmart Logo",
+                languageViewModel = languageViewModel,
+                snackbarHostState = snackbarHostState
             )
             Spacer(modifier = Modifier.height(8.dp))
             Column(
@@ -87,7 +100,7 @@ fun LoginScreen(
             ) {
 
                 Text(
-                    text = "Welcome Back!",
+                    text = stringResource(R.string.welcome_back),
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
@@ -95,7 +108,7 @@ fun LoginScreen(
                 )
 
                 Text(
-                    text = "Sign in to continue using CalcSmart",
+                    text = stringResource(R.string.sign_in_to_continue_using_calcsmart),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -106,7 +119,7 @@ fun LoginScreen(
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Email") },
+                    label = { Text(stringResource(R.string.email)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Email,
@@ -129,7 +142,7 @@ fun LoginScreen(
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Password") },
+                    label = { Text(stringResource(R.string.password)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Lock,
@@ -174,7 +187,7 @@ fun LoginScreen(
                         )
                     } else {
                         Text(
-                            "Sign In",
+                            stringResource(R.string.sign_in),
                             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                         )
                     }
@@ -203,13 +216,13 @@ fun LoginScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Don't have an account?",
+                        stringResource(R.string.don_t_have_an_account),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                     TextButton(onClick = { navController.navigate("register") }) {
                         Text(
-                            "Register Here",
+                            stringResource(R.string.register_here),
                             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary
                         )
@@ -220,6 +233,7 @@ fun LoginScreen(
         }
 
     }
+    }
 }
 
 @Composable
@@ -227,6 +241,8 @@ fun PrimaryBanner(
     modifier: Modifier = Modifier,
     image: Painter,
     contentDescription: String? = null,
+    languageViewModel: LanguageViewModel? = null,
+    snackbarHostState: SnackbarHostState? = null
 ) {
     val screenHeight = LocalWindowInfo.current.containerSize.height.dp
     val bannerHeight = screenHeight * 0.1f
@@ -238,6 +254,22 @@ fun PrimaryBanner(
             .background(MaterialTheme.colorScheme.primary),
         contentAlignment = Alignment.Center
     ) {
+        // Language dropdown in the top-right corner
+        if (languageViewModel != null && snackbarHostState != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(end = 8.dp),
+                contentAlignment = Alignment.CenterEnd
+            ) {
+                LanguageDropdown(
+                    languageViewModel = languageViewModel,
+                    snackbarHostState = snackbarHostState
+                )
+            }
+        }
+        
+        // Logo in the center
         Image(
             painter = image,
             contentDescription = contentDescription,

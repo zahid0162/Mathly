@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -78,7 +79,7 @@ fun RegisterScreen(
             ) {
 
                 Text(
-                    text = "Create Account",
+                    text = stringResource(R.string.create_account),
                     style = MaterialTheme.typography.headlineLarge,
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold,
@@ -86,7 +87,7 @@ fun RegisterScreen(
                 )
 
                 Text(
-                    text = "Join CalcSmart and start your journey",
+                    text = stringResource(R.string.join_calcsmart_and_start_your_journey),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,
@@ -97,7 +98,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Email") },
+                    label = { Text(stringResource(R.string.email)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Email,
@@ -120,7 +121,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Password") },
+                    label = { Text(stringResource(R.string.password)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Lock,
@@ -153,7 +154,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
-                    label = { Text("Confirm Password") },
+                    label = { Text(stringResource(R.string.confirm_password)) },
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Lock,
@@ -215,7 +216,7 @@ fun RegisterScreen(
                     exit = fadeOut()
                 ) {
                     Text(
-                        text = "Passwords do not match",
+                        text = stringResource(R.string.passwords_do_not_match),
                         color = MaterialTheme.colorScheme.error,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = 8.dp)
@@ -245,7 +246,7 @@ fun RegisterScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "Already have an account?",
+                        stringResource(R.string.already_have_an_account),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -253,7 +254,7 @@ fun RegisterScreen(
                         popUpTo("register") { inclusive = true }
                     } }) {
                         Text(
-                            "Sign In",
+                            stringResource(R.string.sign_in),
                             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                             color = MaterialTheme.colorScheme.primary
                         )

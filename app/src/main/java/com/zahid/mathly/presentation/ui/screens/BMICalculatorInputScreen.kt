@@ -25,16 +25,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
+import com.zahid.mathly.presentation.viewmodel.BMIViewModel
 import java.util.Locale
 import kotlin.math.pow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BMICalculatorInputScreen(
-    navController: NavController
+    navController: NavController,
+    viewModel: BMIViewModel = hiltViewModel()
 ) {
     var height by remember { mutableStateOf("") }
     var weight by remember { mutableStateOf("") }
@@ -165,8 +168,17 @@ fun BMICalculatorInputScreen(
                         onClick = {
                             calculateBMI(height, weight)?.let { bmi ->
                                 bmiResult = bmi
-                                bmiCategory = context.getString(getBMICategory(bmi))
+                                val categoryResId = getBMICategory(bmi)
+                                bmiCategory = context.getString(categoryResId)
                                 showResult = true
+                                
+                                // Save BMI record to database
+                                viewModel.saveBMIRecord(
+                                    height = height.toDouble(),
+                                    weight = weight.toDouble(),
+                                    bmiValue = bmi,
+                                    category = bmiCategory
+                                )
                             }
                         },
                         modifier = Modifier.fillMaxWidth(),

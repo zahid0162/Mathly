@@ -1,8 +1,11 @@
 package com.zahid.mathly.di
 
 import android.content.Context
+import com.zahid.mathly.data.local.BMIDao
+import com.zahid.mathly.data.local.CaloriesDao
 import com.zahid.mathly.data.local.EquationDao
 import com.zahid.mathly.data.local.EquationDatabase
+import com.zahid.mathly.data.local.GraphDao
 import com.zahid.mathly.data.local.SolutionDao
 import dagger.Module
 import dagger.Provides
@@ -31,5 +34,23 @@ object DatabaseModule {
     @Singleton
     fun provideSolutionDao(database: EquationDatabase): SolutionDao {
         return database.solutionDao()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideGraphDao(database: EquationDatabase): GraphDao {
+        return database.graphDao()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideCaloriesDao(database: EquationDatabase): CaloriesDao {
+        return database.caloriesDao()
+    }
+    
+    @Provides
+    @Singleton
+    fun provideBMIDao(database: EquationDatabase): BMIDao {
+        return database.bmiDao()
     }
 } 

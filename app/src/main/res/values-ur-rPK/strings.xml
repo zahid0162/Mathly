@@ -138,8 +138,36 @@
     <string name="language">زبان</string>
     <string name="change_language">زبان تبدیل کریں</string>
     <string name="language_changed">زبان تبدیل ہو گئی۔ تبدیلیاں لاگو کرنے کے لیے ایپ دوبارہ شروع ہو گی۔</string>
-    <string name="edit_profile">Edit Profile</string>
-    <string name="settings">Setings</string>
-    <string name="dark_mode">Dark Mode</string>
-    <string name="logout">Logout</string>
+
+    <string name="edit_profile">پروفائل میں ترمیم کریں</string>
+    <string name="settings">ترتیبات</string>
+    <string name="dark_mode">ڈارک موڈ</string>
+    <string name="logout">لاگ آؤٹ</string>
+    <string name="example_word_problem">مثالی لفظی سوال:</string>
+    <string name="no_word_problems_yet">ابھی تک کوئی لفظی سوال نہیں ہے</string>
+    <string name="solve_word_problems_with_detailed_explanations">لفظی سوالات کو تفصیلی وضاحت کے ساتھ حل کریں</string>
+    <string name="create_account">اکاؤنٹ بنائیں</string>
+    <string name="join_calcsmart_and_start_your_journey">CalcSmart میں شامل ہوں اور اپنا سفر شروع کریں</string>
+    <string name="email">ای میل</string>
+    <string name="password">پاس ورڈ</string>
+    <string name="confirm_password">پاس ورڈ کی تصدیق کریں</string>
+    <string name="passwords_do_not_match">پاس ورڈز میل نہیں کھاتے</string>
+    <string name="already_have_an_account">کیا آپ کا پہلے سے اکاؤنٹ ہے؟</string>
+    <string name="sign_in">سائن اِن</string>
+    <string name="complete_profile">پروفائل مکمل کریں</string>
+    <string name="full_name">پورا نام</string>
+    <string name="age">عمر</string>
+    <string name="gender">جنس</string>
+    <string name="occupation">پیشہ</string>
+    <string name="save_continue"><![CDATA[محفوظ کریں اور جاری رکھیں]]></string>
+    <string name="welcome_back">خوش آمدید!</string>
+    <string name="sign_in_to_continue_using_calcsmart">CalcSmart استعمال کرنے کے لیے سائن اِن کریں</string>
+    <string name="don_t_have_an_account">کیا آپ کا اکاؤنٹ نہیں ہے؟</string>
+    <string name="register_here">یہاں رجسٹر کریں</string>
+    <string name="value_cal">%1$d کیلوری</string>
+    <string name="no_calorie_entries_yet">ابھی تک کوئی کیلوری اندراج نہیں ہے</string>
+    <string name="add_food_items_and_track_your_calorie_intake">کھانے کی اشیاء شامل کریں اور اپنی کیلوری انٹیک کا حساب رکھیں</string>
+    <string name="start_a_new_calculation_with_our_easy_to_use_calculator">ہماری آسان کیلکولیٹر کے ساتھ نئی کیلکولیشن شروع کریں</string>
+    <string name="click_to_add_new">نیا شامل کرنے کے لیے \'+\' پر کلک کریں</string>
 </resources>
+

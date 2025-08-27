@@ -24,9 +24,16 @@ android {
         arg("room.schemaLocation", "$projectDir/schemas")
     }
 
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = false
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

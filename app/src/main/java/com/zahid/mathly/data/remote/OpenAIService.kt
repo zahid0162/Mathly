@@ -269,7 +269,7 @@ class OpenAIService @Inject constructor(
             Solution(
                 equationId = solutionResponse.equationId?.takeIf { it.isNotBlank() } ?: originalEquation,
                 originalProblem = originalEquation,
-                type = SolutionType.EQUATION,
+                type = SolutionType.WORD_PROBLEM,
                 steps = solutionResponse.steps?.filter { step ->
                     step.description.isNotBlank() || step.calculation.isNotBlank() || step.result.isNotBlank()
                 } ?: emptyList(),

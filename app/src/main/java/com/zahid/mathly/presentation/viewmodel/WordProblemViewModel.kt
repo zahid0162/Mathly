@@ -2,6 +2,8 @@ package com.zahid.mathly.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zahid.mathly.domain.model.Solution
+import com.zahid.mathly.domain.model.SolutionType
 import com.zahid.mathly.domain.model.WordProblem
 import com.zahid.mathly.domain.repository.EquationRepository
 import com.zahid.mathly.domain.usecase.SolveWordProblemUseCase
@@ -15,7 +17,8 @@ import javax.inject.Inject
 data class WordProblemState(
     val isLoading: Boolean = false,
     val error: String? = null,
-    val currentWordProblem: WordProblem? = null
+    val currentWordProblem: WordProblem? = null,
+    val problemsList: List<Solution> = arrayListOf()
 )
 
 @HiltViewModel
@@ -30,6 +33,14 @@ class WordProblemViewModel @Inject constructor(
     // Callback to notify when solution is saved
     private val _onSolutionSaved = MutableStateFlow<Boolean>(false)
     val onSolutionSaved: StateFlow<Boolean> = _onSolutionSaved.asStateFlow()
+
+    fun getAllProblems(){
+        viewModelScope.launch {
+            equationRepository.getRecentSolutions().collect {
+                _state.value = _state.value.copy(problemsList = it)
+            }
+        }
+    }
 
     fun solveWordProblem(problem: String) {
         viewModelScope.launch {
@@ -51,14 +62,6 @@ class WordProblemViewModel @Inject constructor(
                         // Save the solution to database if it exists
                         solvedWordProblem.solution?.let { solution ->
                             try {
-                                // Debug: Print solution details
-                                println("Saving word problem solution:")
-                                println("  ID: ${solution.id}")
-                                println("  Type: ${solution.type}")
-                                println("  Original Problem: ${solution.originalProblem}")
-                                println("  Equation ID: ${solution.equationId}")
-                                println("  Steps count: ${solution.steps.size}")
-                                println("  Final answer: ${solution.finalAnswer}")
                                 
                                 // Validate solution before saving
                                 if (solution.equationId.isNotBlank()) {

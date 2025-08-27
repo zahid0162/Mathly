@@ -86,8 +86,8 @@ fun CalculatorMainScreen(
                 .padding(paddingValues)
         ) {
             EmptyStateView(
-                title = "Basic Calculator",
-                message = "Start a new calculation with our easy-to-use calculator",
+                title = stringResource(R.string.basic_calculator),
+                message = stringResource(R.string.start_a_new_calculation_with_our_easy_to_use_calculator),
                 icon = Icons.Default.Calculate
             )
         }

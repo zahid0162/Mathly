@@ -150,7 +150,7 @@ fun WordProblemsInputScreen(
                         modifier = Modifier.padding(16.dp)
                     ) {
                         Text(
-                            text = "Example Word Problem:",
+                            text = stringResource(R.string.example_word_problem),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onTertiaryContainer
