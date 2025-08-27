@@ -6,18 +6,36 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.zahid.mathly.data.local.SessionManager
-import com.zahid.mathly.presentation.ui.screens.*
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 import com.zahid.mathly.presentation.viewmodel.WordProblemViewModel
 import com.zahid.mathly.presentation.viewmodel.ThemeViewModel
 import com.zahid.mathly.presentation.viewmodel.LanguageViewModel
-import io.github.jan.supabase.SupabaseClient
-import androidx.navigation.NavType
-import androidx.navigation.navArgument
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.zahid.mathly.presentation.ui.screens.auth.LoginScreen
+import com.zahid.mathly.presentation.ui.screens.auth.RegisterScreen
+import com.zahid.mathly.presentation.ui.screens.basicCalc.BasicCalculatorInputScreen
+import com.zahid.mathly.presentation.ui.screens.basicCalc.CalculatorMainScreen
+import com.zahid.mathly.presentation.ui.screens.bmi.BMICalculatorInputScreen
+import com.zahid.mathly.presentation.ui.screens.bmi.BMIMainScreen
+import com.zahid.mathly.presentation.ui.screens.calories.CaloriesCounterInputScreen
+import com.zahid.mathly.presentation.ui.screens.calories.CaloriesDetailScreen
+import com.zahid.mathly.presentation.ui.screens.calories.CaloriesMainScreen
+import com.zahid.mathly.presentation.ui.screens.equation.CameraScreen
+import com.zahid.mathly.presentation.ui.screens.equation.EquationsInputScreen
+import com.zahid.mathly.presentation.ui.screens.equation.EquationsMainScreen
+import com.zahid.mathly.presentation.ui.screens.equation.ResultScreen
+import com.zahid.mathly.presentation.ui.screens.equation.ScanScreen
+import com.zahid.mathly.presentation.ui.screens.graph.GraphDetailScreen
+import com.zahid.mathly.presentation.ui.screens.graph.GraphInputScreen
+import com.zahid.mathly.presentation.ui.screens.graph.GraphMainScreen
+import com.zahid.mathly.presentation.ui.screens.profile.EditProfileScreen
+import com.zahid.mathly.presentation.ui.screens.profile.HomeScreen
+import com.zahid.mathly.presentation.ui.screens.profile.ProfileMainScreen
+import com.zahid.mathly.presentation.ui.screens.profile.ProfileSetupScreen
+import com.zahid.mathly.presentation.ui.screens.wordProblem.WordProblemInputScreen
+import com.zahid.mathly.presentation.ui.screens.wordProblem.WordProblemMainScreen
+import com.zahid.mathly.presentation.ui.screens.wordProblem.WordProblemResultScreen
+import com.zahid.mathly.presentation.ui.screens.wordProblem.WordProblemsInputScreen
 import com.zahid.mathly.presentation.viewmodel.BMIViewModel
 import com.zahid.mathly.presentation.viewmodel.CaloriesCounterViewModel
 import com.zahid.mathly.presentation.viewmodel.GraphViewModel
@@ -153,13 +171,6 @@ fun MathlyNavigation(
             )
         }
         
-        composable("input") {
-            InputScreen(
-                navController = navController,
-                viewModel = sharedViewModel
-            )
-        }
-        
         composable("word_problem_input") {
             WordProblemsInputScreen(
                 navController = navController
@@ -226,14 +237,6 @@ fun MathlyNavigation(
             WordProblemResultScreen(
                 navController = navController,
                 viewModel = wordProblemViewModel
-            )
-        }
-
-        // History route for Profile navigation
-        composable("history") {
-            HistoryTab(
-                navController = navController,
-                viewModel = sharedViewModel,
             )
         }
         
