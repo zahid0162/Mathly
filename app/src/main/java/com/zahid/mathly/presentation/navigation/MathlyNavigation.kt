@@ -40,6 +40,36 @@ import com.zahid.mathly.presentation.viewmodel.BMIViewModel
 import com.zahid.mathly.presentation.viewmodel.CaloriesCounterViewModel
 import com.zahid.mathly.presentation.viewmodel.GraphViewModel
 import com.zahid.mathly.presentation.viewmodel.ProfileViewModel
+import com.zahid.mathly.utils.horizontalAnimatedComposable
+import com.zahid.mathly.utils.verticalAnimatedComposable
+
+enum class AppRoutes(val route: String){
+    Login("login"),
+    Register("register"),
+    ProfileSetup("profileSetup"),
+    Home("home"),
+    EquationsMain("equations_main"),
+    WordProblemMain("word_problem_main"),
+    GraphMain("graph_main"),
+    CalculatorMain("calculator_main"),
+    CaloriesMain("calories_main"),
+    BMIMain("bmi_main"),
+    ProfileMain("profile_main"),
+    EquationsInput("equations_input"),
+    WordProblemInput("word_problem_input"),
+    GraphInput("graph_input"),
+    CalculatorInput("calculator_input"),
+    CaloriesInput("calories_input"),
+    BMIInput("bmi_input"),
+    Scan("scan"),
+    Camera("camera"),
+    Result("result"),
+    WordProblemInputScreen("wordProblemInput"),
+    WordProblemResultScreen("wordProblemResult"),
+    EditProfile("editProfile"),
+    GraphDetail("graph_detail"),
+    CaloriesDetail("calories_detail"),
+}
 
 @Composable
 fun MathlyNavigation(
@@ -58,9 +88,9 @@ fun MathlyNavigation(
     // Determine start destination based on session state
     val startDestination = remember {
         when {
-            !sessionManager.isLoggedIn -> "login"
-            !sessionManager.hasCompletedProfile -> "profileSetup"
-            else -> "home"
+            !sessionManager.isLoggedIn -> AppRoutes.Login.route
+            !sessionManager.hasCompletedProfile -> AppRoutes.ProfileSetup.route
+            else -> AppRoutes.Home.route
         }
     }
 
@@ -68,93 +98,93 @@ fun MathlyNavigation(
         navController = navController,
         startDestination = startDestination
     ) {
-        composable("login") {
+        composable(AppRoutes.Login.route) {
             LoginScreen(
                 navController = navController,
                 languageViewModel = languageViewModel
             )
         }
 
-        composable("register") {
+        horizontalAnimatedComposable(AppRoutes.Register.route) {
             RegisterScreen(
                 navController = navController
             )
         }
 
-        composable("profileSetup") {
+        horizontalAnimatedComposable(AppRoutes.ProfileSetup.route) {
             ProfileSetupScreen(
                 navController = navController
             )
         }
 
-        composable("home") {
+        verticalAnimatedComposable(AppRoutes.Home.route) {
             HomeScreen(
                 navController = navController
             )
         }
         
         // New main screens for each feature
-        composable("equations_main") {
+        horizontalAnimatedComposable(AppRoutes.EquationsMain.route) {
             EquationsMainScreen(
                 navController = navController,
                 onAddClick = {
-                    navController.navigate("equations_input")
+                    navController.navigate(AppRoutes.EquationsInput.route)
                 },
                 sharedViewModel
             )
         }
         
-        composable("word_problem_main") {
+        horizontalAnimatedComposable(AppRoutes.WordProblemMain.route) {
             WordProblemMainScreen(
                 navController = navController,
                 onAddClick = {
-                    navController.navigate("word_problem_input")
+                    navController.navigate(AppRoutes.WordProblemInput.route)
                 },
                 sharedViewModel
             )
         }
         
-        composable("graph_main") {
+        horizontalAnimatedComposable(AppRoutes.GraphMain.route) {
             GraphMainScreen(
                 navController = navController,
                 onAddClick = {
-                    navController.navigate("graph_input")
+                    navController.navigate(AppRoutes.GraphInput.route)
                 },
                 graphViewModel = graphViewModel
             )
         }
         
-        composable("calculator_main") {
+        horizontalAnimatedComposable(AppRoutes.CalculatorMain.route) {
             CalculatorMainScreen(
                 navController = navController,
                 onAddClick = {
-                    navController.navigate("calculator_input")
+                    navController.navigate(AppRoutes.CalculatorInput.route)
                 }
             )
         }
         
-        composable("calories_main") {
+        horizontalAnimatedComposable(AppRoutes.CaloriesMain.route) {
             CaloriesMainScreen(
                 navController = navController,
                 onAddClick = {
-                    navController.navigate("calories_input")
+                    navController.navigate(AppRoutes.CaloriesInput.route)
                 },
                 viewModel = caloriesViewModel
             )
         }
         
-        composable("bmi_main") {
+        horizontalAnimatedComposable(AppRoutes.BMIMain.route) {
             BMIMainScreen(
                 navController = navController,
                 onAddClick = {
-                    navController.navigate("bmi_input")
+                    navController.navigate(AppRoutes.BMIInput.route)
                 },
                 viewModel = bmiViewModel
             )
         }
 
         // Profile screen route
-        composable("profile_main") {
+        verticalAnimatedComposable(AppRoutes.ProfileMain.route) {
             ProfileMainScreen(
                 navController = navController,
                 themeViewModel = themeViewModel,
@@ -164,61 +194,61 @@ fun MathlyNavigation(
         }
 
         // Input screens for each feature
-        composable("equations_input") {
+        horizontalAnimatedComposable(AppRoutes.EquationsInput.route) {
             EquationsInputScreen(
                 navController = navController,
                 viewModel = sharedViewModel
             )
         }
         
-        composable("word_problem_input") {
+        horizontalAnimatedComposable(AppRoutes.WordProblemInput.route) {
             WordProblemsInputScreen(
                 navController = navController
             )
         }
         
-        composable("graph_input") {
+        horizontalAnimatedComposable(AppRoutes.GraphInput.route) {
             GraphInputScreen(
                 navController = navController,
                 graphViewModel = graphViewModel
             )
         }
         
-        composable("calculator_input") {
+        horizontalAnimatedComposable(AppRoutes.CalculatorInput.route) {
             BasicCalculatorInputScreen(
                 navController = navController
             )
         }
         
-        composable("calories_input") {
+        horizontalAnimatedComposable(AppRoutes.CaloriesInput.route) {
             CaloriesCounterInputScreen(
                 navController = navController,
                 viewModel = caloriesViewModel
             )
         }
         
-        composable("bmi_input") {
+        horizontalAnimatedComposable(AppRoutes.BMIInput.route) {
             BMICalculatorInputScreen(
                 navController = navController,
                 viewModel = bmiViewModel
             )
         }
 
-        composable("scan") {
+        horizontalAnimatedComposable(AppRoutes.Scan.route) {
             ScanScreen(
                 navController = navController,
                 viewModel = sharedViewModel
             )
         }
 
-        composable("camera") {
+        verticalAnimatedComposable(AppRoutes.Camera.route) {
             CameraScreen(
                 navController = navController,
                 viewModel = sharedViewModel
             )
         }
 
-        composable("result") {
+        horizontalAnimatedComposable(AppRoutes.Result.route) {
             ResultScreen(
                 navController = navController,
                 viewModel = sharedViewModel
@@ -226,14 +256,14 @@ fun MathlyNavigation(
         }
 
         // Word Problem Routes
-        composable("wordProblemInput") {
+        horizontalAnimatedComposable(AppRoutes.WordProblemInputScreen.route) {
             WordProblemInputScreen(
                 navController = navController,
                 viewModel = wordProblemViewModel,
             )
         }
 
-        composable("wordProblemResult") {
+        horizontalAnimatedComposable(AppRoutes.WordProblemResultScreen.route) {
             WordProblemResultScreen(
                 navController = navController,
                 viewModel = wordProblemViewModel
@@ -241,7 +271,7 @@ fun MathlyNavigation(
         }
         
         // Edit Profile route
-        composable("editProfile") {
+        horizontalAnimatedComposable(AppRoutes.EditProfile.route) {
             EditProfileScreen(
                 navController = navController,
                 viewModel = profileViewModel
@@ -249,7 +279,7 @@ fun MathlyNavigation(
         }
         
         // Graph Detail route
-        composable("graph_detail") {
+        horizontalAnimatedComposable(AppRoutes.GraphDetail.route) {
             GraphDetailScreen(
                 navController = navController,
                 graphViewModel = graphViewModel
@@ -257,7 +287,7 @@ fun MathlyNavigation(
         }
         
         // Calories Detail route
-        composable("calories_detail") {
+        horizontalAnimatedComposable(AppRoutes.CaloriesDetail.route) {
             CaloriesDetailScreen(
                 navController = navController,
                 viewModel = caloriesViewModel

@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zahid.mathly.R
+import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.components.LanguageDropdown
 import com.zahid.mathly.presentation.viewmodel.AuthDestination
 import com.zahid.mathly.presentation.viewmodel.AuthViewModel
@@ -54,15 +55,15 @@ fun LoginScreen(
     LaunchedEffect(uiState.navigateTo) {
         when (uiState.navigateTo) {
             AuthDestination.ProfileSetup -> {
-                navController.navigate("profileSetup") {
-                    popUpTo("login") { inclusive = true }
+                navController.navigate(AppRoutes.ProfileSetup.route) {
+                    popUpTo(AppRoutes.Login.route) { inclusive = true }
                 }
                 viewModel.onNavigationHandled()
             }
 
             AuthDestination.Main -> {
-                navController.navigate("home") {
-                    popUpTo("login") { inclusive = true }
+                navController.navigate(AppRoutes.Home.route) {
+                    popUpTo(AppRoutes.Login.route) { inclusive = true }
                 }
                 viewModel.onNavigationHandled()
             }
@@ -217,7 +218,7 @@ fun LoginScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    TextButton(onClick = { navController.navigate("register") }) {
+                    TextButton(onClick = { navController.navigate(AppRoutes.Register.route) }) {
                         Text(
                             stringResource(R.string.register_here),
                             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),

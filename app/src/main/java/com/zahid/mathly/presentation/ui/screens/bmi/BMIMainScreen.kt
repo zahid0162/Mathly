@@ -23,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.domain.model.BMIRecord
+import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.components.EmptyStateView
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
 import com.zahid.mathly.presentation.viewmodel.BMIViewModel
@@ -54,8 +55,8 @@ fun BMIMainScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navController.navigate("home") {
-                                popUpTo("home") { inclusive = true }
+                            navController.navigate(AppRoutes.Home.route) {
+                                popUpTo(AppRoutes.Home.route) { inclusive = true }
                             }
                         }
                     ) {
@@ -69,7 +70,7 @@ fun BMIMainScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            navController.navigate("profile_main")
+                            navController.navigate(AppRoutes.ProfileMain.route)
                         }
                     ) {
                         Icon(

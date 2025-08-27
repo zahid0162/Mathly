@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.*
 import androidx.navigation.compose.composable
 
-private const val DefaultDuration = 300
+private const val DefaultDuration = 500
 
 /**
  * Horizontal slide:

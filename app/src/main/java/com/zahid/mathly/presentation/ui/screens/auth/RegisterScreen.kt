@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.zahid.mathly.R
+import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.viewmodel.AuthDestination
 import com.zahid.mathly.presentation.viewmodel.AuthViewModel
 
@@ -43,14 +44,14 @@ fun RegisterScreen(
     LaunchedEffect(uiState.navigateTo) {
         when (uiState.navigateTo) {
             AuthDestination.ProfileSetup -> {
-                navController.navigate("profileSetup") {
-                    popUpTo("register") { inclusive = true }
+                navController.navigate(AppRoutes.ProfileSetup.route) {
+                    popUpTo(AppRoutes.Register.route) { inclusive = true }
                 }
                 viewModel.onNavigationHandled()
             }
             AuthDestination.Main -> {
-                navController.navigate("main") {
-                    popUpTo("register") { inclusive = true }
+                navController.navigate(AppRoutes.Home.route) {
+                    popUpTo(AppRoutes.Register.route) { inclusive = true }
                 }
                 viewModel.onNavigationHandled()
             }
@@ -249,7 +250,7 @@ fun RegisterScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    TextButton(onClick = { navController.navigate("login") {
+                    TextButton(onClick = { navController.navigate(AppRoutes.Login.route) {
                         popUpTo("register") { inclusive = true }
                     } }) {
                         Text(

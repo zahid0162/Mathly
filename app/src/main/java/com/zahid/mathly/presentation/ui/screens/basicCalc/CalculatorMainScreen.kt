@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.zahid.mathly.R
+import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.components.EmptyStateView
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
 
@@ -40,8 +41,8 @@ fun CalculatorMainScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navController.navigate("home") {
-                                popUpTo("home") { inclusive = true }
+                            navController.navigate(AppRoutes.Home.route) {
+                                popUpTo(AppRoutes.Home.route) { inclusive = true }
                             }
                         }
                     ) {
@@ -55,7 +56,7 @@ fun CalculatorMainScreen(
                 actions = {
                     IconButton(
                         onClick = {
-                            navController.navigate("profile_main")
+                            navController.navigate(AppRoutes.ProfileMain.route)
                         }
                     ) {
                         Icon(
