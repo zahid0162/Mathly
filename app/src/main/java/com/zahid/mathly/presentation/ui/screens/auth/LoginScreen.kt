@@ -47,8 +47,8 @@ fun LoginScreen(
     languageViewModel: LanguageViewModel
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var email by remember { mutableStateOf("zaidmuneer25@gmail.com") }
-    var password by remember { mutableStateOf("12345678") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 

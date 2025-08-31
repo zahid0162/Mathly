@@ -14,7 +14,7 @@ android {
         applicationId = "com.zahid.mathly"
         minSdk = 24
         targetSdk = 36
-        versionCode = 8
+        versionCode = 17
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -128,4 +128,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    implementation(libs.app.update)
+    implementation(libs.app.update.ktx)
 }
