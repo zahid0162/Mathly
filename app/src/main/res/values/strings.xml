@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">CalcSmart</string>
+    <string name="app_name">MathMind</string>
     <string name="smart_solutions_powered_by_ai">Smart Solutions Powered by AI</string>
     <string name="calculate_your_body_mass_index">Calculate your Body Mass Index</string>
     <string name="enter_your_details">Enter Your Details</string>
@@ -32,7 +32,7 @@
     <string name="cal_burn">-%1$d cal</string>
     <string name="exercise_recommendations">Exercise Recommendations</string>
     <string name="analyze_calories">Analyze Calories</string>
-    <string name="speak">Speak</string>
+    <string name="speak" translatable="false">Speak</string>
     <string name="scan_equation">Scan Equation</string>
     <string name="capture">Capture</string>
     <string name="recognized_text">Recognized Text:</string>
@@ -127,7 +127,6 @@
     <string name="unable_to_plot_function">Unable to plot function</string>
     <string name="math_input">Math Input</string>
     <string name="use_these_arrows_to_move_cursor_position">💡 Use these arrows to move cursor position</string>
-    <string name="calcsmart">CALCSMART</string>
     <string name="equations">Equations</string>
     <string name="word_problems">Word Problems</string>
     <string name="graphs">Graphs</string>
@@ -147,7 +146,7 @@
     <string name="no_word_problems_yet">No Word Problems Yet</string>
     <string name="solve_word_problems_with_detailed_explanations">Solve word problems with detailed explanations</string>
     <string name="create_account">Create Account</string>
-    <string name="join_calcsmart_and_start_your_journey">Join CalcSmart and start your journey</string>
+    <string name="join_calcsmart_and_start_your_journey">Join MathMind and start your journey</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="confirm_password">Confirm Password</string>
@@ -161,7 +160,7 @@
     <string name="occupation">Occupation</string>
     <string name="save_continue"><![CDATA[Save & Continue]]></string>
     <string name="welcome_back">Welcome Back!</string>
-    <string name="sign_in_to_continue_using_calcsmart">Sign in to continue using CalcSmart</string>
+    <string name="sign_in_to_continue_using_calcsmart">Sign in to continue using MathMind</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="register_here">Register Here</string>
     <string name="value_cal">%1$d cal</string>

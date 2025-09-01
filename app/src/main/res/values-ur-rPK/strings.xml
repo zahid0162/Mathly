@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">کالک اسمارٹ</string>
+    <string name="app_name">MathMind</string>
     <string name="smart_solutions_powered_by_ai">مصنوعی ذہانت سے چلنے والے سمارٹ حل</string>
     <string name="calculate_your_body_mass_index">اپنا باڈی ماس انڈیکس معلوم کریں</string>
     <string name="enter_your_details">اپنی تفصیلات درج کریں</string>
@@ -127,7 +127,6 @@
     <string name="unable_to_plot_function">فنکشن کا گراف بنانے سے قاصر</string>
     <string name="math_input">ریاضی کا اندراج</string>
     <string name="use_these_arrows_to_move_cursor_position">💡 کرسر کو حرکت دینے کے لیے یہ تیر استعمال کریں</string>
-    <string name="calcsmart">کالک اسمارٹ</string>
     <string name="equations">مساوات</string>
     <string name="word_problems">لفظی مسائل</string>
     <string name="graphs">گراف</string>
@@ -147,7 +146,7 @@
     <string name="no_word_problems_yet">ابھی تک کوئی لفظی سوال نہیں ہے</string>
     <string name="solve_word_problems_with_detailed_explanations">لفظی سوالات کو تفصیلی وضاحت کے ساتھ حل کریں</string>
     <string name="create_account">اکاؤنٹ بنائیں</string>
-    <string name="join_calcsmart_and_start_your_journey">CalcSmart میں شامل ہوں اور اپنا سفر شروع کریں</string>
+    <string name="join_calcsmart_and_start_your_journey">MathMind میں شامل ہوں اور اپنا سفر شروع کریں</string>
     <string name="email">ای میل</string>
     <string name="password">پاس ورڈ</string>
     <string name="confirm_password">پاس ورڈ کی تصدیق کریں</string>
@@ -161,7 +160,7 @@
     <string name="occupation">پیشہ</string>
     <string name="save_continue"><![CDATA[محفوظ کریں اور جاری رکھیں]]></string>
     <string name="welcome_back">خوش آمدید!</string>
-    <string name="sign_in_to_continue_using_calcsmart">CalcSmart استعمال کرنے کے لیے سائن اِن کریں</string>
+    <string name="sign_in_to_continue_using_calcsmart">MathMind استعمال کرنے کے لیے سائن اِن کریں</string>
     <string name="don_t_have_an_account">کیا آپ کا اکاؤنٹ نہیں ہے؟</string>
     <string name="register_here">یہاں رجسٹر کریں</string>
     <string name="value_cal">%1$d کیلوری</string>

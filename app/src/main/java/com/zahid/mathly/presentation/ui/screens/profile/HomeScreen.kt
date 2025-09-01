@@ -115,7 +115,7 @@ fun HomeScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = stringResource(R.string.calcsmart),
+                        text = stringResource(R.string.app_name),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.W700,
                         fontFamily = PlayfairDisplay,
@@ -228,7 +228,7 @@ fun HomeScreen(
 
                             Column {
                                 Text(
-                                    text = stringResource(R.string.calcsmart),
+                                    text = stringResource(R.string.app_name),
                                     fontSize = 26.sp,
                                     fontWeight = FontWeight.Bold,
                                     color = Color.White

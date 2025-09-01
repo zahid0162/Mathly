@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">كالك سمارت</string>
+    <string name="app_name">MathMind</string>
     <string name="smart_solutions_powered_by_ai">حلول ذكية مدعومة بالذكاء الاصطناعي</string>
     <string name="calculate_your_body_mass_index">احسب مؤشر كتلة جسمك</string>
     <string name="enter_your_details">أدخل بياناتك</string>
@@ -127,7 +127,6 @@
     <string name="unable_to_plot_function">غير قادر على رسم الدالة</string>
     <string name="math_input">إدخال رياضي</string>
     <string name="use_these_arrows_to_move_cursor_position">💡 استخدم هذه الأسهم لتحريك موضع المؤشر</string>
-    <string name="calcsmart">كالك سمارت</string>
     <string name="equations">معادلات</string>
     <string name="word_problems">مسائل لفظية</string>
     <string name="graphs">مخططات</string>
@@ -146,7 +145,7 @@
     <string name="no_word_problems_yet">لا توجد مسائل لفظية بعد</string>
     <string name="solve_word_problems_with_detailed_explanations">حل المسائل اللفظية مع شروحات تفصيلية</string>
     <string name="create_account">إنشاء حساب</string>
-    <string name="join_calcsmart_and_start_your_journey">انضم إلى CalcSmart وابدأ رحلتك</string>
+    <string name="join_calcsmart_and_start_your_journey">انضم إلى MathMind وابدأ رحلتك</string>
     <string name="email">البريد الإلكتروني</string>
     <string name="password">كلمة المرور</string>
     <string name="confirm_password">تأكيد كلمة المرور</string>
@@ -160,7 +159,7 @@
     <string name="occupation">المهنة</string>
     <string name="save_continue"><![CDATA[حفظ ومتابعة]]></string>
     <string name="welcome_back">مرحباً بعودتك!</string>
-    <string name="sign_in_to_continue_using_calcsmart">سجل الدخول للمتابعة باستخدام CalcSmart</string>
+    <string name="sign_in_to_continue_using_calcsmart">سجل الدخول للمتابعة باستخدام MathMind</string>
     <string name="don_t_have_an_account">ليس لديك حساب؟</string>
     <string name="register_here">سجل هنا</string>
     <string name="value_cal">%1$d سعرة حرارية</string>

@@ -120,7 +120,7 @@ fun SplashScreen(
             
             // App Name with animations
             Text(
-                text = "CALCSMART",
+                text = stringResource(R.string.app_name),
                 fontSize = 36.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFFEBC7A4), // Light cream text

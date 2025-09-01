@@ -331,7 +331,7 @@ fun ProfileMainScreen(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween) {
                         Text(
-                            text = stringResource(R.string.calcsmart),
+                            text = stringResource(R.string.app_name),
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             fontFamily = PlayfairDisplay,
