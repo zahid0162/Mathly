@@ -20,10 +20,12 @@ import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zahid.mathly.R
@@ -39,6 +41,7 @@ fun EmptyStateView(
 ) {
     // Animation for the arrow
     val infiniteTransition = rememberInfiniteTransition(label = "arrowAnimation")
+    val layoutDirection = LocalLayoutDirection.current
     
     // Animate the arrow's progress along the path
     val arrowProgress by infiniteTransition.animateFloat(
@@ -139,7 +142,12 @@ fun EmptyStateView(
                     val startY = 0f
                     
                     // Calculate end point (FAB position, bottom right)
-                    val endX = width - 60f
+
+                    val endX = if (layoutDirection == LayoutDirection.Ltr) {
+                        width - 60f // bottom-right
+                    } else {
+                        60f // bottom-left
+                    }
                     val endY = height - 20f
                     
                     // Create a circular path from center to FAB

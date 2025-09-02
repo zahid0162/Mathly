@@ -37,278 +37,290 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.zahid.mathly.R
+import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.viewmodel.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileSetupScreen(
-	navController: NavController = rememberNavController(),
-	viewModel: ProfileViewModel = hiltViewModel()
+    navController: NavController = rememberNavController(),
+    viewModel: ProfileViewModel = hiltViewModel()
 ) {
-	val uiState by viewModel.uiState.collectAsState()
-	val context = LocalContext.current
+    val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
-	var fullName by remember { mutableStateOf("") }
-	var age by remember { mutableStateOf("") }
-	var gender by remember { mutableStateOf("") }
-	var occupation by remember { mutableStateOf("") }
-	var genderExpanded by remember { mutableStateOf(false) }
-	var occupationExpanded by remember { mutableStateOf(false) }
-	var pickedImageUri by remember { mutableStateOf<Uri?>(null) }
+    var fullName by remember { mutableStateOf("") }
+    var age by remember { mutableStateOf("") }
+    var gender by remember { mutableStateOf("") }
+    var occupation by remember { mutableStateOf("") }
+    var genderExpanded by remember { mutableStateOf(false) }
+    var occupationExpanded by remember { mutableStateOf(false) }
+    var pickedImageUri by remember { mutableStateOf<Uri?>(null) }
 
-	val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-		pickedImageUri = uri
-	}
+    val imagePicker =
+        rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            pickedImageUri = uri
+        }
 
-	LaunchedEffect(uiState.finished) {
-		if (uiState.finished) {
-			navController.navigate("main") {
-				popUpTo("profileSetup") { inclusive = true }
-			}
-			viewModel.onNavigationHandled()
-		}
-	}
+    LaunchedEffect(uiState.finished) {
+        if (uiState.finished) {
+            navController.navigate(AppRoutes.Home.route) {
+                popUpTo(AppRoutes.ProfileSetup.route) { inclusive = true }
+            }
+            viewModel.onNavigationHandled()
+        }
+    }
 
-	Column(
-		modifier = Modifier
-			.fillMaxSize()
-			.background(MaterialTheme.colorScheme.background)
-			.verticalScroll(rememberScrollState())
-	) {
-		// Top container with avatar hanging
-		Box(
-			modifier = Modifier
-				.fillMaxWidth()
-				.height(160.dp)
-				.background(MaterialTheme.colorScheme.primary)
-		) {
-			Text(
-				text = stringResource(R.string.complete_profile),
-				style = MaterialTheme.typography.headlineMedium.copy(color = MaterialTheme.colorScheme.onPrimary),
-				modifier = Modifier
-					.align(Alignment.Center)
-					.padding(top = 20.dp)
-			)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState())
+    ) {
+        // Top container with avatar hanging
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(160.dp)
+                .background(MaterialTheme.colorScheme.primary)
+        ) {
+            Text(
+                text = stringResource(R.string.complete_profile),
+                style = MaterialTheme.typography.headlineMedium.copy(color = MaterialTheme.colorScheme.onPrimary),
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(top = 20.dp)
+            )
 
-			// Avatar hanging bottom
-			Row(
-				modifier = Modifier
-					.align(Alignment.BottomStart)
-					.offset(x = 24.dp, y = 50.dp), // half outside container
-				verticalAlignment = Alignment.CenterVertically
-			) {
-				// Avatar Circle
-				Box(
-					modifier = Modifier
-						.size(100.dp)
-						.clip(CircleShape)
-						.background(MaterialTheme.colorScheme.surfaceVariant)
-						.border(BorderStroke(3.dp, MaterialTheme.colorScheme.primary), CircleShape)
-						.clickable { imagePicker.launch("image/*") }
-				) {
-					if (pickedImageUri != null) {
-						AsyncImage(
-							model = pickedImageUri,
-							contentDescription = "Profile Photo",
-							modifier = Modifier.fillMaxSize(),
-							contentScale = ContentScale.Crop
-						)
-					} else {
-						Icon(
-							imageVector = Icons.Default.Person,
-							contentDescription = null,
-							modifier = Modifier
-								.align(Alignment.Center)
-								.size(40.dp),
-							tint = MaterialTheme.colorScheme.primary
-						)
-					}
-				}
+            // Avatar hanging bottom
+            Row(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .offset(x = 24.dp, y = 50.dp), // half outside container
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                // Avatar Circle
+                Box(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant)
+                        .border(BorderStroke(3.dp, MaterialTheme.colorScheme.primary), CircleShape)
+                        .clickable { imagePicker.launch("image/*") }
+                ) {
+                    if (pickedImageUri != null) {
+                        AsyncImage(
+                            model = pickedImageUri,
+                            contentDescription = "Profile Photo",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .size(40.dp),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
 
-				Spacer(modifier = Modifier.width(12.dp))
+                Spacer(modifier = Modifier.width(12.dp))
 
-				// Edit Button (separate from avatar)
-				Button(
-					onClick = { imagePicker.launch("image/*") },
-					shape = RoundedCornerShape(12.dp),
-					contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
-					modifier = Modifier.height(36.dp)
-				) {
-					Icon(
-						imageVector = Icons.Default.Edit,
-						contentDescription = "Edit",
-						modifier = Modifier.size(16.dp)
-					)
-					Spacer(modifier = Modifier.width(6.dp))
-					Text("Edit")
-				}
-			}
-		}
+                // Edit Button (separate from avatar)
+                Button(
+                    onClick = { imagePicker.launch("image/*") },
+                    shape = RoundedCornerShape(12.dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
+                    modifier = Modifier.height(36.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit",
+                        modifier = Modifier.size(16.dp)
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Edit")
+                }
+            }
+        }
 
-		Spacer(modifier = Modifier.height(60.dp)) // space for avatar hanging
+        Spacer(modifier = Modifier.height(60.dp)) // space for avatar hanging
 
-		// Input Fields
-		Column(
-			modifier = Modifier
-				.fillMaxWidth()
-				.padding(horizontal = 20.dp),
-			verticalArrangement = Arrangement.spacedBy(16.dp)
-		) {
-			OutlinedTextField(
-				value = fullName,
-				onValueChange = { fullName = it },
-				modifier = Modifier.fillMaxWidth(),
-				shape = RoundedCornerShape(12.dp),
-				leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-				label = { Text(stringResource(R.string.full_name)) },
-				singleLine = true,
-				keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
-			)
+        // Input Fields
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            OutlinedTextField(
+                value = fullName,
+                onValueChange = { fullName = it },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                label = { Text(stringResource(R.string.full_name)) },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
+            )
 
-			OutlinedTextField(
-				value = age,
-				onValueChange = { age = it.filter { ch -> ch.isDigit() }.take(3) },
-				modifier = Modifier.fillMaxWidth(),
-				shape = RoundedCornerShape(12.dp),
-				leadingIcon = { Icon(Icons.Default.Numbers, contentDescription = null) },
-				label = { Text(stringResource(R.string.age)) },
-				singleLine = true,
-				keyboardOptions = KeyboardOptions(
-					keyboardType = KeyboardType.Number,
-					imeAction = ImeAction.Next
-				)
-			)
+            OutlinedTextField(
+                value = age,
+                onValueChange = { age = it.filter { ch -> ch.isDigit() }.take(3) },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(12.dp),
+                leadingIcon = { Icon(Icons.Default.Numbers, contentDescription = null) },
+                label = { Text(stringResource(R.string.age)) },
+                singleLine = true,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Next
+                )
+            )
 
-			// Gender dropdown
-			ExposedDropdownMenuBox(
-				expanded = genderExpanded,
-				onExpandedChange = { genderExpanded = !genderExpanded }
-			) {
-				OutlinedTextField(
-					value = gender,
-					onValueChange = { },
-					modifier = Modifier
-						.menuAnchor()
-						.fillMaxWidth(),
-					shape = RoundedCornerShape(12.dp),
-					readOnly = true,
-					leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-					label = { Text(stringResource(R.string.gender)) },
-					trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = genderExpanded) }
-				)
-				ExposedDropdownMenu(
-					expanded = genderExpanded,
-					onDismissRequest = { genderExpanded = false }
-				) {
-					listOf("Male", "Female", "Other", "Prefer not to say").forEach { option ->
-						DropdownMenuItem(
-							text = { Text(option) },
-							onClick = {
-								gender = option
-								genderExpanded = false
-							}
-						)
-					}
-				}
-			}
+            // Gender dropdown
+            ExposedDropdownMenuBox(
+                expanded = genderExpanded,
+                onExpandedChange = { genderExpanded = !genderExpanded }
+            ) {
+                OutlinedTextField(
+                    value = gender,
+                    onValueChange = { },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    readOnly = true,
+                    leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                    label = { Text(stringResource(R.string.gender)) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = genderExpanded) }
+                )
+                ExposedDropdownMenu(
+                    expanded = genderExpanded,
+                    onDismissRequest = { genderExpanded = false }
+                ) {
+                    listOf(
+                        stringResource(R.string.male),
+                        stringResource(R.string.female),
+                        stringResource(R.string.other),
+                        stringResource(R.string.prefer_not_to_say)
+                    ).forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option) },
+                            onClick = {
+                                gender = option
+                                genderExpanded = false
+                            }
+                        )
+                    }
+                }
+            }
 
-			// Occupation dropdown
-			ExposedDropdownMenuBox(
-				expanded = occupationExpanded,
-				onExpandedChange = { occupationExpanded = !occupationExpanded }
-			) {
-				OutlinedTextField(
-					value = occupation,
-					onValueChange = { },
-					modifier = Modifier
-						.menuAnchor()
-						.fillMaxWidth(),
-					shape = RoundedCornerShape(12.dp),
-					readOnly = true,
-					leadingIcon = { Icon(Icons.Default.Work, contentDescription = null) },
-					label = { Text(stringResource(R.string.occupation)) },
-					trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = occupationExpanded) }
-				)
-				ExposedDropdownMenu(
-					expanded = occupationExpanded,
-					onDismissRequest = { occupationExpanded = false }
-				) {
-					listOf("Student", "Teacher", "Professional", "Other").forEach { option ->
-						DropdownMenuItem(
-							text = { Text(option) },
-							onClick = {
-								occupation = option
-								occupationExpanded = false
-							}
-						)
-					}
-				}
-			}
+            // Occupation dropdown
+            ExposedDropdownMenuBox(
+                expanded = occupationExpanded,
+                onExpandedChange = { occupationExpanded = !occupationExpanded }
+            ) {
+                OutlinedTextField(
+                    value = occupation,
+                    onValueChange = { },
+                    modifier = Modifier
+                        .menuAnchor()
+                        .fillMaxWidth(),
+                    shape = RoundedCornerShape(12.dp),
+                    readOnly = true,
+                    leadingIcon = { Icon(Icons.Default.Work, contentDescription = null) },
+                    label = { Text(stringResource(R.string.occupation)) },
+                    trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = occupationExpanded) }
+                )
+                ExposedDropdownMenu(
+                    expanded = occupationExpanded,
+                    onDismissRequest = { occupationExpanded = false }
+                ) {
+                    listOf(
+                        stringResource(R.string.student),
+                        stringResource(R.string.teacher),
+                        stringResource(R.string.professional),
+                        stringResource(R.string.other)
+                    ).forEach { option ->
+                        DropdownMenuItem(
+                            text = { Text(option) },
+                            onClick = {
+                                occupation = option
+                                occupationExpanded = false
+                            }
+                        )
+                    }
+                }
+            }
 
-			Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-			Button(
-				onClick = {
-					val localUri = pickedImageUri
-					val ageVal = age.toIntOrNull()
-					if (localUri != null) {
-						val mime = context.contentResolver.getType(localUri) ?: "image/jpeg"
-						val ext = when {
-							mime.endsWith("png") -> "png"
-							mime.endsWith("webp") -> "webp"
-							else -> "jpg"
-						}
-						context.contentResolver.openInputStream(localUri)?.use { stream ->
-							val bytes = stream.readBytes()
-							viewModel.saveProfile(
-								fullName = fullName.takeIf { it.isNotBlank() },
-								occupation = occupation,
-								gender = gender,
-								age = ageVal,
-								imageBytes = bytes,
-								fileExtension = ext
-							)
-						}
-					} else {
-						viewModel.saveProfile(
-							fullName = fullName.takeIf { it.isNotBlank() },
-							occupation = occupation,
-							gender = gender,
-							age = ageVal
-						)
-					}
-				},
-				enabled = !uiState.loading && occupation.isNotBlank() && gender.isNotBlank() && age.toIntOrNull() != null,
-				modifier = Modifier
-					.fillMaxWidth()
-					.height(52.dp),
-				shape = RoundedCornerShape(16.dp)
-			) {
-				if (uiState.loading) {
-					CircularProgressIndicator(
-						modifier = Modifier.size(22.dp),
-						color = MaterialTheme.colorScheme.onPrimary
-					)
-				} else {
-					Text(stringResource(R.string.save_continue))
-				}
-			}
+            Button(
+                onClick = {
+                    val localUri = pickedImageUri
+                    val ageVal = age.toIntOrNull()
+                    if (localUri != null) {
+                        val mime = context.contentResolver.getType(localUri) ?: "image/jpeg"
+                        val ext = when {
+                            mime.endsWith("png") -> "png"
+                            mime.endsWith("webp") -> "webp"
+                            else -> "jpg"
+                        }
+                        context.contentResolver.openInputStream(localUri)?.use { stream ->
+                            val bytes = stream.readBytes()
+                            viewModel.saveProfile(
+                                fullName = fullName.takeIf { it.isNotBlank() },
+                                occupation = occupation,
+                                gender = gender,
+                                age = ageVal,
+                                imageBytes = bytes,
+                                fileExtension = ext
+                            )
+                        }
+                    } else {
+                        viewModel.saveProfile(
+                            fullName = fullName.takeIf { it.isNotBlank() },
+                            occupation = occupation,
+                            gender = gender,
+                            age = ageVal
+                        )
+                    }
+                },
+                enabled = !uiState.loading && occupation.isNotBlank() && gender.isNotBlank() && age.toIntOrNull() != null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(52.dp),
+                shape = RoundedCornerShape(16.dp)
+            ) {
+                if (uiState.loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(22.dp),
+                        color = MaterialTheme.colorScheme.onPrimary
+                    )
+                } else {
+                    Text(stringResource(R.string.save_continue))
+                }
+            }
 
-			AnimatedVisibility(
-				visible = uiState.errorMessage != null,
-				enter = fadeIn(),
-				exit = fadeOut()
-			) {
-				Text(
-					text = uiState.errorMessage ?: "",
-					color = MaterialTheme.colorScheme.error,
-					modifier = Modifier
-						.fillMaxWidth()
-						.padding(top = 8.dp)
-				)
-			}
-		}
-	}
+            AnimatedVisibility(
+                visible = uiState.errorMessage != null,
+                enter = fadeIn(),
+                exit = fadeOut()
+            ) {
+                Text(
+                    text = uiState.errorMessage ?: "",
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp)
+                )
+            }
+        }
+    }
 }
 
 

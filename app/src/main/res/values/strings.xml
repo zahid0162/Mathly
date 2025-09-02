@@ -168,4 +168,14 @@
     <string name="add_food_items_and_track_your_calorie_intake">Add food items and track your calorie intake</string>
     <string name="start_a_new_calculation_with_our_easy_to_use_calculator">Start a new calculation with our easy-to-use calculator</string>
     <string name="click_to_add_new">click \'+\' to add new</string>
+    <string name="profile_photo">Profile Photo</string>
+    <string name="edit">Edit</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+    <string name="prefer_not_to_say">Prefer not to say</string>
+    <string name="student">Student</string>
+    <string name="teacher">Teacher</string>
+    <string name="professional">Professional</string>
+    <string name="save_changes">Save Changes</string>
 </resources>

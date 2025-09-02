@@ -7,16 +7,20 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Language
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,7 +28,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.zahid.mathly.R
+import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
 import com.zahid.mathly.presentation.viewmodel.AuthViewModel
 import com.zahid.mathly.presentation.viewmodel.LanguageViewModel
@@ -52,8 +58,8 @@ fun ProfileMainScreen(
 
     LaunchedEffect(logout) {
         if(logout){
-            navController.navigate("login") {
-                popUpTo("home") {
+            navController.navigate(AppRoutes.Login.route) {
+                popUpTo(AppRoutes.Home.route) {
                     inclusive = true
                 }
             }
@@ -79,7 +85,7 @@ fun ProfileMainScreen(
                         }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back to Home",
                             tint = MaterialTheme.colorScheme.onPrimary
                         )
@@ -115,18 +121,28 @@ fun ProfileMainScreen(
                 ) {
                     // Profile Avatar
                     Surface(
-                        modifier = Modifier.size(100.dp),
+                        modifier = Modifier.size(100.dp).padding(7.dp),
                         shape = CircleShape,
                         color = MaterialTheme.colorScheme.primary
                     ) {
                         Box(contentAlignment = Alignment.Center) {
-                            Text(
-                                text = profileState.profileData.fullName.firstOrNull()?.toString()
-                                    ?: "U",
-                                fontSize = 36.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onPrimary
-                            )
+                            if (profileState.profileData.avatarUrl != null) {
+                                AsyncImage(
+                                    model = profileState.profileData.avatarUrl,
+                                    contentDescription = "Profile Photo",
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Text(
+                                    text = profileState.profileData.fullName.firstOrNull()?.toString()
+                                        ?: "U",
+                                    fontSize = 36.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
+
                         }
                     }
 
@@ -213,9 +229,9 @@ fun ProfileMainScreen(
                         )
                     }
 
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier.padding(vertical = 8.dp),
-                        color = MaterialTheme.colorScheme.outlineVariant
+                        thickness = DividerDefaults.Thickness, color = MaterialTheme.colorScheme.outlineVariant
                     )
 
                     // Language Selection
@@ -284,9 +300,9 @@ fun ProfileMainScreen(
                         }
                     }
 
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier.padding(vertical = 8.dp),
-                        color = MaterialTheme.colorScheme.outlineVariant
+                        thickness = DividerDefaults.Thickness, color = MaterialTheme.colorScheme.outlineVariant
                     )
 
                     // Logout Button

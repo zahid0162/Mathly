@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Numbers
@@ -29,12 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.zahid.mathly.R
 import com.zahid.mathly.presentation.viewmodel.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -81,11 +84,11 @@ fun EditProfileScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Edit Profile") },
+                title = { Text(stringResource(R.string.edit_profile)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back"
                         )
                     }
@@ -127,13 +130,16 @@ fun EditProfileScreen(
                             .size(100.dp)
                             .clip(CircleShape)
                             .background(MaterialTheme.colorScheme.surfaceVariant)
-                            .border(BorderStroke(3.dp, MaterialTheme.colorScheme.primary), CircleShape)
+                            .border(
+                                BorderStroke(3.dp, MaterialTheme.colorScheme.primary),
+                                CircleShape
+                            )
                             .clickable { imagePicker.launch("image/*") }
                     ) {
                         if (pickedImageUri != null) {
                             AsyncImage(
                                 model = pickedImageUri,
-                                contentDescription = "Profile Photo",
+                                contentDescription = stringResource(R.string.profile_photo),
                                 modifier = Modifier.fillMaxSize(),
                                 contentScale = ContentScale.Crop
                             )
@@ -171,7 +177,7 @@ fun EditProfileScreen(
                             modifier = Modifier.size(16.dp)
                         )
                         Spacer(modifier = Modifier.width(6.dp))
-                        Text("Edit")
+                        Text(stringResource(R.string.edit))
                     }
                 }
             }
@@ -192,7 +198,7 @@ fun EditProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                    label = { Text("Full name") },
+                    label = { Text(stringResource(R.string.full_name)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next)
                 )
@@ -203,7 +209,7 @@ fun EditProfileScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
                     leadingIcon = { Icon(Icons.Default.Numbers, contentDescription = null) },
-                    label = { Text("Age") },
+                    label = { Text(stringResource(R.string.age)) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -225,14 +231,18 @@ fun EditProfileScreen(
                         shape = RoundedCornerShape(12.dp),
                         readOnly = true,
                         leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
-                        label = { Text("Gender") },
+                        label = { Text(stringResource(R.string.gender)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = genderExpanded) }
                     )
                     ExposedDropdownMenu(
                         expanded = genderExpanded,
                         onDismissRequest = { genderExpanded = false }
                     ) {
-                        listOf("Male", "Female", "Other", "Prefer not to say").forEach { option ->
+                        listOf(stringResource(R.string.male),
+                            stringResource(R.string.female),
+                            stringResource(R.string.other),
+                            stringResource(R.string.prefer_not_to_say)
+                        ).forEach { option ->
                             DropdownMenuItem(
                                 text = { Text(option) },
                                 onClick = {
@@ -258,14 +268,16 @@ fun EditProfileScreen(
                         shape = RoundedCornerShape(12.dp),
                         readOnly = true,
                         leadingIcon = { Icon(Icons.Default.Work, contentDescription = null) },
-                        label = { Text("Occupation") },
+                        label = { Text(stringResource(R.string.occupation)) },
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = occupationExpanded) }
                     )
                     ExposedDropdownMenu(
                         expanded = occupationExpanded,
                         onDismissRequest = { occupationExpanded = false }
                     ) {
-                        listOf("Student", "Teacher", "Professional", "Other").forEach { option ->
+                        listOf(stringResource(R.string.student),
+                            stringResource(R.string.teacher),
+                            stringResource(R.string.professional), stringResource(R.string.other)).forEach { option ->
                             DropdownMenuItem(
                                 text = { Text(option) },
                                 onClick = {
@@ -323,7 +335,7 @@ fun EditProfileScreen(
                             color = MaterialTheme.colorScheme.onPrimary
                         )
                     } else {
-                        Text("Save Changes")
+                        Text(stringResource(R.string.save_changes))
                     }
                 }
 
