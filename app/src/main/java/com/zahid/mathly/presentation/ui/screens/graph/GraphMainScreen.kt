@@ -21,12 +21,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.domain.model.Graph
 import com.zahid.mathly.presentation.ui.components.EmptyStateView
+import com.zahid.mathly.presentation.ui.components.ProfileAvatar
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
 import com.zahid.mathly.presentation.viewmodel.GraphViewModel
+import com.zahid.mathly.presentation.viewmodel.profile.ProfileViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -36,8 +39,10 @@ import java.util.Locale
 fun GraphMainScreen(
     navController: NavController,
     onAddClick: () -> Unit,
-    graphViewModel: GraphViewModel = hiltViewModel()
+    graphViewModel: GraphViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val profileData by profileViewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -66,16 +71,13 @@ fun GraphMainScreen(
                     }
                 },
                 actions = {
+                    // Profile button
                     IconButton(
                         onClick = {
                             navController.navigate("profile_main")
                         }
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Profile",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        ProfileAvatar(profileData.profileData.avatarUrl)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

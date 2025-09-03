@@ -1,5 +1,6 @@
 package com.zahid.mathly.di
 
+import com.zahid.mathly.BuildConfig
 import com.zahid.mathly.data.remote.OpenAIApi
 import com.zahid.mathly.data.remote.Constants
 import dagger.Module
@@ -32,8 +33,8 @@ object NetworkModule {
             .addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
-            .connectTimeout(60, TimeUnit.SECONDS)
-            .readTimeout(60, TimeUnit.SECONDS)
+            .connectTimeout(90, TimeUnit.SECONDS)
+            .readTimeout(90, TimeUnit.SECONDS)
             .writeTimeout(60, TimeUnit.SECONDS)
             .build()
     }
@@ -65,7 +66,7 @@ object NetworkModule {
     fun provideSupabaseClient(): SupabaseClient {
         return createSupabaseClient(
             supabaseUrl = Constants.BASE_URL,
-            supabaseKey = Constants.API_KEY_SUPABASE
+            supabaseKey = BuildConfig.SUPABASE_KEY
         ) {
             install(io.github.jan.supabase.auth.Auth)
             install(io.github.jan.supabase.postgrest.Postgrest)

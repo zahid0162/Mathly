@@ -82,7 +82,7 @@ fun CameraScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
@@ -119,7 +119,7 @@ fun CameraScreen(
                                         "scanned_text",
                                         recognizedText
                                     )
-                                    navController.navigateUp()
+                                    navController.popBackStack()
                                 }
                             } catch (e: Exception) {
                                 // Handle error
@@ -161,7 +161,7 @@ fun CameraScreen(
                                                             "scanned_text",
                                                             recognizedText
                                                         )
-                                                        navController.navigateUp()
+                                                        navController.popBackStack()
                                                     }
                                                 } catch (e: Exception) {
                                                     // Handle error

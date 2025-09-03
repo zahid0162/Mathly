@@ -45,7 +45,7 @@ fun WordProblemResultScreen(
                 navigationIcon = {
                     IconButton(onClick = { 
                         viewModel.clearWordProblem()
-                        navController.navigateUp() 
+                        navController.popBackStack()
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,

@@ -25,6 +25,7 @@ import com.zahid.mathly.presentation.ui.screens.equation.EquationsInputScreen
 import com.zahid.mathly.presentation.ui.screens.equation.EquationsMainScreen
 import com.zahid.mathly.presentation.ui.screens.equation.ResultScreen
 import com.zahid.mathly.presentation.ui.screens.equation.ScanScreen
+import com.zahid.mathly.presentation.ui.screens.equation.TypeEquationScreen
 import com.zahid.mathly.presentation.ui.screens.graph.GraphDetailScreen
 import com.zahid.mathly.presentation.ui.screens.graph.GraphInputScreen
 import com.zahid.mathly.presentation.ui.screens.graph.GraphMainScreen
@@ -39,7 +40,7 @@ import com.zahid.mathly.presentation.ui.screens.wordProblem.WordProblemsInputScr
 import com.zahid.mathly.presentation.viewmodel.BMIViewModel
 import com.zahid.mathly.presentation.viewmodel.CaloriesCounterViewModel
 import com.zahid.mathly.presentation.viewmodel.GraphViewModel
-import com.zahid.mathly.presentation.viewmodel.ProfileViewModel
+import com.zahid.mathly.presentation.viewmodel.profile.ProfileViewModel
 import com.zahid.mathly.utils.horizontalAnimatedComposable
 import com.zahid.mathly.utils.verticalAnimatedComposable
 
@@ -56,6 +57,7 @@ enum class AppRoutes(val route: String){
     BMIMain("bmi_main"),
     ProfileMain("profile_main"),
     EquationsInput("equations_input"),
+    TypeEquation("type_equation"),
     WordProblemInput("word_problem_input"),
     GraphInput("graph_input"),
     CalculatorInput("calculator_input"),
@@ -119,7 +121,8 @@ fun MathlyNavigation(
 
         verticalAnimatedComposable(AppRoutes.Home.route) {
             HomeScreen(
-                navController = navController
+                navController = navController,
+                profileViewModel = profileViewModel
             )
         }
         
@@ -130,7 +133,8 @@ fun MathlyNavigation(
                 onAddClick = {
                     navController.navigate(AppRoutes.EquationsInput.route)
                 },
-                sharedViewModel
+                sharedViewModel,
+                profileViewModel
             )
         }
         
@@ -140,7 +144,8 @@ fun MathlyNavigation(
                 onAddClick = {
                     navController.navigate(AppRoutes.WordProblemInput.route)
                 },
-                sharedViewModel
+                sharedViewModel,
+                profileViewModel
             )
         }
         
@@ -150,7 +155,8 @@ fun MathlyNavigation(
                 onAddClick = {
                     navController.navigate(AppRoutes.GraphInput.route)
                 },
-                graphViewModel = graphViewModel
+                graphViewModel = graphViewModel,
+                profileViewModel
             )
         }
         
@@ -159,7 +165,8 @@ fun MathlyNavigation(
                 navController = navController,
                 onAddClick = {
                     navController.navigate(AppRoutes.CalculatorInput.route)
-                }
+                },
+                profileViewModel
             )
         }
         
@@ -169,7 +176,8 @@ fun MathlyNavigation(
                 onAddClick = {
                     navController.navigate(AppRoutes.CaloriesInput.route)
                 },
-                viewModel = caloriesViewModel
+                viewModel = caloriesViewModel,
+                profileViewModel = profileViewModel
             )
         }
         
@@ -179,7 +187,8 @@ fun MathlyNavigation(
                 onAddClick = {
                     navController.navigate(AppRoutes.BMIInput.route)
                 },
-                viewModel = bmiViewModel
+                viewModel = bmiViewModel,
+                profileViewModel
             )
         }
 
@@ -196,6 +205,13 @@ fun MathlyNavigation(
         // Input screens for each feature
         horizontalAnimatedComposable(AppRoutes.EquationsInput.route) {
             EquationsInputScreen(
+                navController = navController,
+                viewModel = sharedViewModel
+            )
+        }
+
+        horizontalAnimatedComposable(AppRoutes.TypeEquation.route) {
+            TypeEquationScreen(
                 navController = navController,
                 viewModel = sharedViewModel
             )

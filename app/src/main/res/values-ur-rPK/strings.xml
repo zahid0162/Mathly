@@ -168,15 +168,21 @@
     <string name="add_food_items_and_track_your_calorie_intake">کھانے کی اشیاء شامل کریں اور اپنی کیلوری انٹیک کا حساب رکھیں</string>
     <string name="start_a_new_calculation_with_our_easy_to_use_calculator">ہماری آسان کیلکولیٹر کے ساتھ نئی کیلکولیشن شروع کریں</string>
     <string name="click_to_add_new">نیا شامل کرنے کے لیے \'+\' پر کلک کریں</string>
-    <string name="profile_photo">Profile Photo</string>
-    <string name="edit">Edit</string>
-    <string name="male">Male</string>
-    <string name="female">Female</string>
-    <string name="other">Other</string>
-    <string name="prefer_not_to_say">Prefer not to say</string>
-    <string name="student">Student</string>
-    <string name="teacher">Teacher</string>
-    <string name="professional">Professional</string>
-    <string name="save_changes">Save Changes</string>
+    <string name="profile_photo">پروفائل تصویر</string>
+    <string name="edit">ترمیم کریں</string>
+    <string name="male">مرد</string>
+    <string name="female">عورت</string>
+    <string name="other">دیگر</string>
+    <string name="prefer_not_to_say">کہنا نہیں چاہتے</string>
+    <string name="student">طالب علم</string>
+    <string name="teacher">استاد</string>
+    <string name="professional">پیشہ ور</string>
+    <string name="save_changes">تبدیلیاں محفوظ کریں</string>
+    <string name="good_morning">صبح بخیر،</string>
+    <string name="good_afternoon">دوپہر بخیر،</string>
+    <string name="good_evening">شام بخیر،</string>
+    <string name="good_night">شب بخیر،</string>
+    <string name="no_equations_yet">No Equations Yet</string>
+    <string name="solve_equations_with_step_by_step_solutions">Solve equations with step-by-step solutions</string>
 </resources>
 

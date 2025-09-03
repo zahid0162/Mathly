@@ -9,12 +9,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Logout
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.*
@@ -23,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,10 +31,11 @@ import coil.compose.AsyncImage
 import com.zahid.mathly.R
 import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
-import com.zahid.mathly.presentation.viewmodel.AuthViewModel
+import com.zahid.mathly.presentation.viewmodel.auth.AuthViewModel
 import com.zahid.mathly.presentation.viewmodel.LanguageViewModel
-import com.zahid.mathly.presentation.viewmodel.ProfileViewModel
+import com.zahid.mathly.presentation.viewmodel.profile.ProfileViewModel
 import com.zahid.mathly.presentation.viewmodel.ThemeViewModel
+import java.util.Locale
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,7 +57,7 @@ fun ProfileMainScreen(
     ).versionName
 
     LaunchedEffect(logout) {
-        if(logout){
+        if (logout) {
             navController.navigate(AppRoutes.Login.route) {
                 popUpTo(AppRoutes.Home.route) {
                     inclusive = true
@@ -121,7 +121,9 @@ fun ProfileMainScreen(
                 ) {
                     // Profile Avatar
                     Surface(
-                        modifier = Modifier.size(100.dp).padding(7.dp),
+                        modifier = Modifier
+                            .size(100.dp)
+                            .padding(7.dp),
                         shape = CircleShape,
                         color = MaterialTheme.colorScheme.primary
                     ) {
@@ -135,7 +137,8 @@ fun ProfileMainScreen(
                                 )
                             } else {
                                 Text(
-                                    text = profileState.profileData.fullName.firstOrNull()?.toString()
+                                    text = profileState.profileData.fullName.firstOrNull()
+                                        ?.toString()
                                         ?: "U",
                                     fontSize = 36.sp,
                                     fontWeight = FontWeight.Bold,
@@ -150,17 +153,14 @@ fun ProfileMainScreen(
 
                     // User Name
                     Text(
-                        text = profileState.profileData.fullName,
-                        fontSize = 24.sp,
+                        text = profileViewModel.getTimeBasedGreeting(LocalContext.current) +"\n"+ profileState.profileData.fullName.replaceFirstChar {
+                            if (it.isLowerCase()) it.titlecase(
+                                Locale.ROOT
+                            ) else it.toString()
+                        },
+                        fontSize = 21.sp,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(
-                        text = authViewModel.getCurrentUserEmail(),
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -231,7 +231,8 @@ fun ProfileMainScreen(
 
                     HorizontalDivider(
                         modifier = Modifier.padding(vertical = 8.dp),
-                        thickness = DividerDefaults.Thickness, color = MaterialTheme.colorScheme.outlineVariant
+                        thickness = DividerDefaults.Thickness,
+                        color = MaterialTheme.colorScheme.outlineVariant
                     )
 
                     // Language Selection
@@ -253,11 +254,11 @@ fun ProfileMainScreen(
                             color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.weight(1f)
                         )
-                        
+
                         // Current language display with dropdown
                         Box {
                             var showLanguageDropdown by remember { mutableStateOf(false) }
-                            
+
                             OutlinedButton(
                                 onClick = { showLanguageDropdown = true },
                                 colors = ButtonDefaults.outlinedButtonColors(
@@ -271,7 +272,7 @@ fun ProfileMainScreen(
                                     contentDescription = "Select Language"
                                 )
                             }
-                            
+
                             DropdownMenu(
                                 expanded = showLanguageDropdown,
                                 onDismissRequest = { showLanguageDropdown = false }
@@ -302,7 +303,8 @@ fun ProfileMainScreen(
 
                     HorizontalDivider(
                         modifier = Modifier.padding(vertical = 8.dp),
-                        thickness = DividerDefaults.Thickness, color = MaterialTheme.colorScheme.outlineVariant
+                        thickness = DividerDefaults.Thickness,
+                        color = MaterialTheme.colorScheme.outlineVariant
                     )
 
                     // Logout Button
@@ -340,12 +342,15 @@ fun ProfileMainScreen(
                 )
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.Start
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween) {
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         Text(
                             text = stringResource(R.string.app_name),
                             fontSize = 20.sp,

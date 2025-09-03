@@ -1,36 +1,24 @@
-package com.zahid.mathly.presentation.viewmodel
+package com.zahid.mathly.presentation.viewmodel.profile
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zahid.mathly.R
 import com.zahid.mathly.data.local.SessionManager
+import com.zahid.mathly.domain.model.ProfileData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.jan.supabase.SupabaseClient
 import io.github.jan.supabase.auth.auth
-import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.postgrest
-import io.github.jan.supabase.storage.UploadStatus
 import io.github.jan.supabase.storage.storage
-import io.github.jan.supabase.storage.uploadAsFlow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import java.time.LocalTime
+import java.util.Calendar
 import javax.inject.Inject
 
-data class ProfileData(
-    val fullName: String = "",
-    val age: Int? = null,
-    val gender: String = "",
-    val occupation: String = "",
-    val avatarUrl: String? = null
-)
-
-data class ProfileUiState(
-    val errorMessage: String? = null,
-    val finished: Boolean = false,
-    val loading: Boolean = false,
-    val profileData: ProfileData = ProfileData()
-)
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
@@ -136,6 +124,18 @@ class ProfileViewModel @Inject constructor(
         }
         return supabaseClient.storage.from("avatars").publicUrl(path)
 
+    }
+
+    fun getTimeBasedGreeting(context: Context): String {
+        val calendar = Calendar.getInstance()
+        val hour = calendar.get(Calendar.HOUR_OF_DAY)
+
+        return when (hour) {
+            in 5..11 -> context.getString(R.string.good_morning)
+            in 12..16 -> context.getString(R.string.good_afternoon)
+            in 17..20 -> context.getString(R.string.good_evening)
+            else -> context.getString(R.string.good_night)
+        }
     }
 
 

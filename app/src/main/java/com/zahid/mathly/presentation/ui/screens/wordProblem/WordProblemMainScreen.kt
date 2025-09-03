@@ -18,23 +18,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.domain.model.SolutionType
 import com.zahid.mathly.presentation.ui.components.EmptyStateView
+import com.zahid.mathly.presentation.ui.components.ProfileAvatar
 import com.zahid.mathly.presentation.ui.screens.profile.HistorySolutionCard
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
+import com.zahid.mathly.presentation.viewmodel.profile.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun WordProblemMainScreen(
     navController: NavController,
     onAddClick: () -> Unit,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
     val state by sharedViewModel.history.collectAsStateWithLifecycle()
+    val profileData by profileViewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -63,16 +68,13 @@ fun WordProblemMainScreen(
                     }
                 },
                 actions = {
+                    // Profile button
                     IconButton(
                         onClick = {
                             navController.navigate("profile_main")
                         }
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Profile",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        ProfileAvatar(profileData.profileData.avatarUrl)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

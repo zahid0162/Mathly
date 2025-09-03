@@ -36,8 +36,8 @@ import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.components.LanguageDropdown
-import com.zahid.mathly.presentation.viewmodel.AuthDestination
-import com.zahid.mathly.presentation.viewmodel.AuthViewModel
+import com.zahid.mathly.presentation.viewmodel.auth.AuthDestination
+import com.zahid.mathly.presentation.viewmodel.auth.AuthViewModel
 import com.zahid.mathly.presentation.viewmodel.LanguageViewModel
 
 @Composable
@@ -84,7 +84,7 @@ fun LoginScreen(
         Column(modifier = Modifier.fillMaxWidth()) {
             PrimaryBanner(
                 modifier = Modifier,
-                image = painterResource(R.drawable.calcsmart_tech_app_logo_with_brain_design),
+                image = painterResource(R.drawable.app_logo),
                 contentDescription = "CalcSmart Logo",
                 languageViewModel = languageViewModel,
                 snackbarHostState = snackbarHostState

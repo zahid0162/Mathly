@@ -16,7 +16,9 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowLeft
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
@@ -60,19 +62,19 @@ fun MathInputBottomSheet(
     onTextSubmit: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
-    var inputValue by remember { 
+    var inputValue by remember {
         mutableStateOf(TextFieldValue(initialText, TextRange(initialText.length)))
     }
     val focusRequester = remember { FocusRequester() }
     val context = LocalContext.current
     var showTooltip by remember { mutableStateOf(true) }
-    
+
     // Create a custom sheet state that prevents drag-to-dismiss
     val sheetState = rememberModalBottomSheetState(
         skipPartiallyExpanded = true,
         confirmValueChange = { false } // This prevents drag-to-dismiss
     )
-    
+
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = { /* Do nothing - only allow dismissal via X button */ },
@@ -99,18 +101,22 @@ fun MathInputBottomSheet(
                     fontWeight = FontWeight.Bold,
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                
+
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     // Paste Button
                     IconButton(
                         onClick = {
-                            val clipboard = context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                            val clipboard =
+                                context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                             val clipData = clipboard.primaryClip
                             if (clipData != null && clipData.itemCount > 0) {
                                 val pasteData = clipData.getItemAt(0).text.toString()
-                                inputValue = TextFieldValue(inputValue.text + pasteData, TextRange(inputValue.text.length + pasteData.length))
+                                inputValue = TextFieldValue(
+                                    inputValue.text + pasteData,
+                                    TextRange(inputValue.text.length + pasteData.length)
+                                )
                             }
                         }
                     ) {
@@ -119,7 +125,7 @@ fun MathInputBottomSheet(
                             contentDescription = "Paste from clipboard"
                         )
                     }
-                    
+
                     // Close Button
                     IconButton(onClick = onDismiss) {
                         Icon(
@@ -127,7 +133,7 @@ fun MathInputBottomSheet(
                             contentDescription = "Close without saving"
                         )
                     }
-                    
+
                     // Done Button
                     IconButton(
                         onClick = {
@@ -145,7 +151,7 @@ fun MathInputBottomSheet(
                     }
                 }
             }
-            
+
             // Input Field
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -169,7 +175,7 @@ fun MathInputBottomSheet(
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-                        
+
                         // Cursor movement buttons
                         Row(
                             horizontalArrangement = Arrangement.spacedBy(4.dp)
@@ -180,7 +186,10 @@ fun MathInputBottomSheet(
                                     val currentSelection = inputValue.selection
                                     if (currentSelection.start > 0) {
                                         val newCursorPosition = currentSelection.start - 1
-                                        inputValue = TextFieldValue(inputValue.text, TextRange(newCursorPosition))
+                                        inputValue = TextFieldValue(
+                                            inputValue.text,
+                                            TextRange(newCursorPosition)
+                                        )
                                     }
                                 },
                                 modifier = Modifier.size(32.dp)
@@ -192,14 +201,17 @@ fun MathInputBottomSheet(
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-                            
+
                             // Right arrow
                             IconButton(
                                 onClick = {
                                     val currentSelection = inputValue.selection
                                     if (currentSelection.start < inputValue.text.length) {
                                         val newCursorPosition = currentSelection.start + 1
-                                        inputValue = TextFieldValue(inputValue.text, TextRange(newCursorPosition))
+                                        inputValue = TextFieldValue(
+                                            inputValue.text,
+                                            TextRange(newCursorPosition)
+                                        )
                                     }
                                 },
                                 modifier = Modifier.size(32.dp)
@@ -213,7 +225,7 @@ fun MathInputBottomSheet(
                             }
                         }
                     }
-                    
+
                     // Floating Tooltip for cursor guidance
                     if (showTooltip) {
                         Card(
@@ -238,7 +250,7 @@ fun MathInputBottomSheet(
                                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                                     modifier = Modifier.weight(1f)
                                 )
-                                
+
                                 IconButton(
                                     onClick = { showTooltip = false },
                                     modifier = Modifier.size(24.dp)
@@ -253,7 +265,7 @@ fun MathInputBottomSheet(
                             }
                         }
                     }
-                    
+
                     // Custom Text Field with Visible Cursor
                     Box(
                         modifier = Modifier
@@ -273,7 +285,7 @@ fun MathInputBottomSheet(
                     ) {
                         val text = inputValue.text
                         val cursorPosition = inputValue.selection.start
-                        
+
                         Text(
                             text = text,
                             fontSize = 16.sp,
@@ -281,17 +293,17 @@ fun MathInputBottomSheet(
                             color = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.fillMaxWidth()
                         )
-                        
+
                         // Simple blinking cursor at the current position
                         var showCursor by remember { mutableStateOf(true) }
-                        
+
                         LaunchedEffect(Unit) {
                             while (true) {
                                 delay(500)
                                 showCursor = !showCursor
                             }
                         }
-                        
+
                         if (showCursor) {
                             // Calculate cursor position based on text length
                             val cursorOffset = if (cursorPosition <= text.length) {
@@ -299,7 +311,7 @@ fun MathInputBottomSheet(
                             } else {
                                 text.length * 10
                             }
-                            
+
                             Box(
                                 modifier = Modifier
                                     .offset(x = cursorOffset.dp)
@@ -315,26 +327,30 @@ fun MathInputBottomSheet(
                     }
                 }
             }
-            
+
             // Math Keyboard
             Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
+                    .fillMaxWidth(),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surface
                 )
             ) {
                 Column(
-                    modifier = Modifier.padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
+                    modifier = Modifier
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+
+                    ) {
 
                     MathKeyboard(
                         onKeyPress = { key ->
                             val currentText = inputValue.text
                             val currentSelection = inputValue.selection
-                            val newText = currentText.substring(0, currentSelection.start) + key + currentText.substring(currentSelection.end)
+                            val newText = currentText.substring(
+                                0,
+                                currentSelection.start
+                            ) + key + currentText.substring(currentSelection.end)
                             val newCursorPosition = currentSelection.start + key.length
                             inputValue = TextFieldValue(newText, TextRange(newCursorPosition))
                         },
@@ -342,7 +358,10 @@ fun MathInputBottomSheet(
                             val currentText = inputValue.text
                             val currentSelection = inputValue.selection
                             if (currentText.isNotEmpty() && currentSelection.start > 0) {
-                                val newText = currentText.substring(0, currentSelection.start - 1) + currentText.substring(currentSelection.end)
+                                val newText = currentText.substring(
+                                    0,
+                                    currentSelection.start - 1
+                                ) + currentText.substring(currentSelection.end)
                                 val newCursorPosition = currentSelection.start - 1
                                 inputValue = TextFieldValue(newText, TextRange(newCursorPosition))
                             }

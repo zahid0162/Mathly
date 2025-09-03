@@ -38,7 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.zahid.mathly.R
 import com.zahid.mathly.presentation.navigation.AppRoutes
-import com.zahid.mathly.presentation.viewmodel.ProfileViewModel
+import com.zahid.mathly.presentation.viewmodel.profile.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

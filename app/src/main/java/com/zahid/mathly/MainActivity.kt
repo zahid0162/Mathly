@@ -54,9 +54,8 @@ class MainActivity : ComponentActivity() {
     
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(
-                md_theme_light_onPrimary.hashCode(),      // background color of status bar
-                md_theme_light_primary.hashCode()      // icon color (dark icons)
+            statusBarStyle = SystemBarStyle.dark(
+                md_theme_light_primary.hashCode(),    // icon color (dark icons)
             ),
             navigationBarStyle = SystemBarStyle.dark(
                 md_theme_light_primary.hashCode(), // background color of nav bar

@@ -178,4 +178,10 @@
     <string name="teacher">Teacher</string>
     <string name="professional">Professional</string>
     <string name="save_changes">Save Changes</string>
+    <string name="good_morning">Good Morning,</string>
+    <string name="good_afternoon">Good Afternoon,</string>
+    <string name="good_evening">Good Evening,</string>
+    <string name="good_night">Good Night,</string>
+    <string name="no_equations_yet">No Equations Yet</string>
+    <string name="solve_equations_with_step_by_step_solutions">Solve equations with step-by-step solutions</string>
 </resources>

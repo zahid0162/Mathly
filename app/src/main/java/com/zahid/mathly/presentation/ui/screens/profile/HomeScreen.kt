@@ -22,7 +22,6 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -30,27 +29,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.zahid.mathly.R
+import com.zahid.mathly.domain.model.HomeMenuItem
+import com.zahid.mathly.presentation.ui.components.ProfileAvatar
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
-
-data class HomeMenuItem(
-    val title: String,
-    val icon: ImageVector,
-    val route: String,
-    val startColor: Color,
-    val endColor: Color,
-    val contentColor: Color,
-    val description: String
-)
+import com.zahid.mathly.presentation.viewmodel.profile.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
-    paddingValues: PaddingValues = PaddingValues(0.dp)
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
+    profileViewModel.fetchProfile()
+    val profileData by profileViewModel.uiState.collectAsStateWithLifecycle()
 
     // Define menu items with vibrant gradient colors for visual appeal
     val menuItems = listOf(
@@ -61,7 +57,6 @@ fun HomeScreen(
             startColor = Color(0xFF1B4C5B),  // Dark teal
             endColor = Color(0xFF0BD3C7),    // Bright cyan
             contentColor = Color.White,
-            description = "Solve math equations with step-by-step solutions"
         ),
         HomeMenuItem(
             title = stringResource(R.string.word_problems),
@@ -70,7 +65,6 @@ fun HomeScreen(
             startColor = Color(0xFF51B659),  // Green
             endColor = Color(0xFF308E5B),    // Dark green
             contentColor = Color.White,
-            description = "Convert text problems into mathematical solutions"
         ),
         HomeMenuItem(
             title = stringResource(R.string.graphs),
@@ -79,7 +73,6 @@ fun HomeScreen(
             startColor = Color(0xFF0BD3C7),  // Bright cyan
             endColor = Color(0xFF229793),    // Teal
             contentColor = Color.White,
-            description = "Visualize equations with interactive graphs"
         ),
         HomeMenuItem(
             title = stringResource(R.string.basic_calculator),
@@ -88,7 +81,6 @@ fun HomeScreen(
             startColor = Color(0xFF466465),  // Gray teal
             endColor = Color(0xFF1B4C5B),    // Dark teal
             contentColor = Color.White,
-            description = "Perform quick calculations"
         ),
         HomeMenuItem(
             title = stringResource(R.string.calories_counter),
@@ -97,7 +89,6 @@ fun HomeScreen(
             startColor = Color(0xFF678668),  // Sage green
             endColor = Color(0xFF51B659),    // Green
             contentColor = Color.White,
-            description = "Track your daily caloric intake"
         ),
         HomeMenuItem(
             title = stringResource(R.string.bmi_calculator),
@@ -106,7 +97,6 @@ fun HomeScreen(
             startColor = Color(0xFF229793),  // Teal
             endColor = Color(0xFF0BD3C7),    // Bright cyan
             contentColor = Color.White,
-            description = "Calculate and track your BMI"
         )
     )
 
@@ -129,13 +119,7 @@ fun HomeScreen(
                             navController.navigate("profile_main")
                         }
                     ) {
-                        Box {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = "Profile",
-                                tint = MaterialTheme.colorScheme.onPrimary
-                            )
-                        }
+                        ProfileAvatar(profileData.profileData.avatarUrl)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -143,7 +127,6 @@ fun HomeScreen(
                 )
             )
         },
-        modifier = Modifier.padding(paddingValues)
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -216,7 +199,7 @@ fun HomeScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.calcsmart_tech_app_logo_with_brain_design),
+                                painter = painterResource(id = R.drawable.app_logo),
                                 contentDescription = "App Logo",
                                 modifier = Modifier
                                     .size(90.dp)

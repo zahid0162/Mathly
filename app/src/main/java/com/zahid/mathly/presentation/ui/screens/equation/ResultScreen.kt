@@ -50,9 +50,9 @@ fun ResultScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { 
+                    IconButton(onClick = {
                         viewModel.clearSolution()
-                        navController.navigateUp() 
+                        navController.popBackStack()
                     }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,

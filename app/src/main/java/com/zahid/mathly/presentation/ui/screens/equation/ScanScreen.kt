@@ -1,5 +1,7 @@
 package com.zahid.mathly.presentation.ui.screens.equation
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,6 +44,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -50,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.zahid.mathly.R
+import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.components.MathInputBottomSheet
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 
@@ -80,7 +84,7 @@ fun ScanScreen(
     // Navigate to result screen when solution is received
     LaunchedEffect(currentSolution) {
         currentSolution?.let {
-            navController.navigate("result")
+            navController.navigate(AppRoutes.Result.route)
         }
     }
     
@@ -96,7 +100,7 @@ fun ScanScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigateUp() }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
@@ -200,7 +204,11 @@ fun ScanScreen(
                         OutlinedTextField(
                             value = scannedText,
                             onValueChange = { /* Read-only, only editable via bottom sheet */ },
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth().pointerInput(Unit) {
+                                detectTapGestures {
+                                    showMathInputSheet = true
+                                }
+                            },
                             placeholder = {
                                 Text(stringResource(R.string.tap_to_edit_scanned_text))
                             },
@@ -241,7 +249,7 @@ fun ScanScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Button(
-                    onClick = { navController.navigate("camera") },
+                    onClick = { navController.navigate(AppRoutes.Camera.route) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
@@ -262,45 +270,6 @@ fun ScanScreen(
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Medium
                         )
-                    }
-                }
-                
-                // Manual input option
-                OutlinedButton(
-                    onClick = {
-                        // For testing, you can manually enter text
-                        scannedText = "2x + 5 = 13"
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(stringResource(R.string.enter_text_manually_test))
-                }
-                
-                // Edit button for scanned text
-                if (scannedText.isNotBlank()) {
-                    Button(
-                        onClick = { showMathInputSheet = true },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(56.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.secondary
-                        )
-                    ) {
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Edit,
-                                contentDescription = "Edit"
-                            )
-                            Text(
-                                text = stringResource(R.string.edit_with_math_keyboard),
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Medium
-                            )
-                        }
                     }
                 }
                 

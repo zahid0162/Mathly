@@ -177,9 +177,9 @@ fun EmptyStateView(
                     // For cubic Bezier: P = (1-t)³P₀ + 3(1-t)²tP₁ + 3(1-t)t²P₂ + t³P₃
                     val p0x = centerX
                     val p0y = startY
-                    val p1x = centerX + width * 0.4f
+                    val p1x = if (layoutDirection == LayoutDirection.Ltr) centerX + width * 0.4f else centerX - width * 0.4f
+                    val p2x = if (layoutDirection == LayoutDirection.Ltr) endX - width * 0.3f else endX + width * 0.3f
                     val p1y = startY + height * 0.3f
-                    val p2x = endX - width * 0.3f
                     val p2y = endY - height * 0.3f
                     val p3x = endX
                     val p3y = endY

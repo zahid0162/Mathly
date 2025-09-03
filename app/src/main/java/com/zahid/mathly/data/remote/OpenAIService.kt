@@ -2,6 +2,7 @@ package com.zahid.mathly.data.remote
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.zahid.mathly.BuildConfig
 import com.zahid.mathly.domain.model.Solution
 import com.zahid.mathly.domain.model.SolutionStep
 import com.zahid.mathly.domain.model.SolutionType
@@ -13,16 +14,16 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 class OpenAIService @Inject constructor(
-    private val api: OpenAIApi,
-    @ApplicationContext private val context: Context
+    private val api: OpenAIApi, @ApplicationContext private val context: Context
 ) {
-    
+
     companion object {
-        private const val API_KEY = "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" // Replace with your actual API key
+        private const val API_KEY = BuildConfig.OPEN_AI_API_KEY
     }
-    
+
     private fun getCurrentLanguage(): String {
-        val prefs: SharedPreferences = context.getSharedPreferences("language_prefs", Context.MODE_PRIVATE)
+        val prefs: SharedPreferences =
+            context.getSharedPreferences("language_prefs", Context.MODE_PRIVATE)
         return prefs.getString("selected_language", "en") ?: "en"
     }
 
@@ -33,7 +34,7 @@ class OpenAIService @Inject constructor(
             "ur" -> "Please provide your response in Urdu."
             else -> "Please provide your response in English."
         }
-        
+
         val prompt = """
             You are a nutritionist and fitness expert. Analyze the following food description and provide detailed calorie information and exercise recommendations.
             
@@ -84,28 +85,22 @@ class OpenAIService @Inject constructor(
             val response = api.createChatCompletion("Bearer $API_KEY", request)
             val content = response.choices.firstOrNull()?.message?.content
                 ?: throw Exception("No response content")
-            
+
             parseCaloriesAnalysisFromResponse(content, foodDescription)
         } catch (e: Exception) {
             // Fallback: create a basic analysis
             CaloriesAnalysis(
-                foodDescription = foodDescription,
-                breakdown = listOf(
+                foodDescription = foodDescription, breakdown = listOf(
                     FoodItem(
-                        name = "Food items",
-                        calories = 500,
-                        serving = "estimated"
+                        name = "Food items", calories = 500, serving = "estimated"
                     )
-                ),
-                totalCalories = 500,
-                suggestedExercises = listOf(
+                ), totalCalories = 500, suggestedExercises = listOf(
                     Exercise(
                         name = "Walking",
                         duration = "45 minutes",
                         caloriesBurned = 250,
                         intensity = "moderate"
-                    ),
-                    Exercise(
+                    ), Exercise(
                         name = "Cycling",
                         duration = "20 minutes",
                         caloriesBurned = 250,
@@ -123,32 +118,34 @@ class OpenAIService @Inject constructor(
             "ur" -> "Please provide your response in Urdu."
             else -> "Please provide your response in English."
         }
-        
+
         val prompt = """
-            You are a math tutor. Solve this equation step by step: $equation
-            
-            $languageInstruction
-            
-            Provide your response in this exact JSON format:
+    Solve mathematical equations step by step, clearly explaining each reasoning step before presenting the final answer. For each equation provided:
+    - Analyze the equation and determine the most appropriate method for solving it (e.g., isolating variables, factoring, substitution).
+    - Show and explain each step in detail, including any simplifications or transformations made.
+    - Only after the full reasoning, clearly state the final solution at the end.
+    Persist in breaking down complex equations into manageable steps until a full solution is reached. Use a chain-of-thought approach to ensure clarity and correctness.
+    $equation
+    $languageInstruction
+    Provide your response in this exact JSON format:
+    {
+        "equationId": "$equation",
+        "steps": [
             {
-                "equationId": "$equation",
-                "steps": [
-                    {
-                        "stepNumber": 1,
-                        "description": "Description of what we're doing",
-                        "calculation": "The actual calculation",
-                        "result": "The result of this step"
-                    }
-                ],
-                "finalAnswer": "The final answer"
+                "stepNumber": 1,
+                "description": "Description of what we're doing",
+                "calculation": "The actual calculation",
+                "result": "The result of this step"
             }
-            
-            Make sure to:
-            1. Show each step clearly
-            2. Include the calculation for each step
-            3. Provide the final answer
-            4. Use proper mathematical notation
-        """.trimIndent()
+        ],
+        "finalAnswer": "The final answer"
+    }
+    Make sure to:
+    1. Show each step clearly
+    2. Include the calculation for each step
+    3. Provide the final answer
+    4. Use proper mathematical notation
+""".trimIndent()
 
         val request = ChatCompletionRequest(
             model = "gpt-4.1-mini",
@@ -162,7 +159,7 @@ class OpenAIService @Inject constructor(
             val response = api.createChatCompletion("Bearer $API_KEY", request)
             val content = response.choices.firstOrNull()?.message?.content
                 ?: throw Exception("No response content")
-            
+
             parseSolutionFromResponse(content, equation)
         } catch (e: Exception) {
             // Fallback: create a basic solution
@@ -190,15 +187,19 @@ class OpenAIService @Inject constructor(
             "ur" -> "Please provide your response in Urdu."
             else -> "Please provide your response in English."
         }
-        
+
         val prompt = """
             You are a math tutor helping students convert word problems into equations and solve them.
-            
+            After converting to equation Solve it step by step, clearly explaining each reasoning step before presenting the final answer. For each equation provided:
+            - Analyze the equation and determine the most appropriate method for solving it (e.g., isolating variables, factoring, substitution).
+            - Show and explain each step in detail, including any simplifications or transformations made.
+            - Only after the full reasoning, clearly state the final solution at the end.
+            Persist in breaking down complex equations into manageable steps until a full solution is reached. Use a chain-of-thought approach to ensure clarity and correctness.
             $languageInstruction
             
             Word Problem: ${wordProblem.problem}
             
-            Your task is to:
+            Your task is to:ll
             1. Extract the relevant numbers and variables from the word problem
             2. Convert the word problem into a mathematical equation
             3. Solve the equation step by step
@@ -241,7 +242,7 @@ class OpenAIService @Inject constructor(
             val response = api.createChatCompletion("Bearer $API_KEY", request)
             val content = response.choices.firstOrNull()?.message?.content
                 ?: throw Exception("No response content")
-            
+
             parseWordProblemResponse(content, wordProblem.problem)
         } catch (e: Exception) {
             // Return the original word problem with error information
@@ -265,16 +266,15 @@ class OpenAIService @Inject constructor(
         return try {
             val gson = com.google.gson.Gson()
             val solutionResponse = gson.fromJson(jsonString, SolutionResponse::class.java)
-            
-            Solution(
-                equationId = solutionResponse.equationId?.takeIf { it.isNotBlank() } ?: originalEquation,
+
+            Solution(equationId = solutionResponse.equationId?.takeIf { it.isNotBlank() }
+                ?: originalEquation,
                 originalProblem = originalEquation,
-                type = SolutionType.WORD_PROBLEM,
+                type = SolutionType.EQUATION,
                 steps = solutionResponse.steps?.filter { step ->
                     step.description.isNotBlank() || step.calculation.isNotBlank() || step.result.isNotBlank()
                 } ?: emptyList(),
-                finalAnswer = solutionResponse.finalAnswer?.takeIf { it.isNotBlank() } ?: ""
-            )
+                finalAnswer = solutionResponse.finalAnswer?.takeIf { it.isNotBlank() } ?: "")
         } catch (e: Exception) {
             // Fallback: create a basic solution
             Solution(
@@ -307,18 +307,18 @@ class OpenAIService @Inject constructor(
         return try {
             val gson = com.google.gson.Gson()
             val wordProblemResponse = gson.fromJson(jsonString, WordProblemResponse::class.java)
-            
-            val extractedEquation = wordProblemResponse.extractedEquation?.takeIf { it.isNotBlank() }
+
+            val extractedEquation =
+                wordProblemResponse.extractedEquation?.takeIf { it.isNotBlank() }
             val solution = wordProblemResponse.solution?.let { sol ->
                 // Ensure solution has valid data and set the correct type and original problem
                 if (sol.equationId.isNotBlank() || sol.steps.isNotEmpty() || sol.finalAnswer.isNotBlank()) {
                     sol.copy(
-                        originalProblem = originalProblem,
-                        type = SolutionType.WORD_PROBLEM
+                        originalProblem = originalProblem, type = SolutionType.WORD_PROBLEM
                     )
                 } else null
             }
-            
+
             WordProblem(
                 problem = originalProblem,
                 extractedEquation = extractedEquation,
@@ -334,7 +334,9 @@ class OpenAIService @Inject constructor(
         }
     }
 
-    private fun parseCaloriesAnalysisFromResponse(response: String, foodDescription: String): CaloriesAnalysis {
+    private fun parseCaloriesAnalysisFromResponse(
+        response: String, foodDescription: String
+    ): CaloriesAnalysis {
         // Extract JSON from response
         val jsonStart = response.indexOf('{')
         val jsonEnd = response.lastIndexOf('}') + 1
@@ -346,13 +348,12 @@ class OpenAIService @Inject constructor(
 
         return try {
             val gson = com.google.gson.Gson()
-            val caloriesAnalysisResponse = gson.fromJson(jsonString, CaloriesAnalysisResponse::class.java)
-            
+            val caloriesAnalysisResponse =
+                gson.fromJson(jsonString, CaloriesAnalysisResponse::class.java)
+
             val breakdown = caloriesAnalysisResponse.breakdown?.map { item ->
                 FoodItem(
-                    name = item.name,
-                    calories = item.calories,
-                    serving = item.serving
+                    name = item.name, calories = item.calories, serving = item.serving
                 )
             } ?: emptyList()
 
@@ -376,23 +377,17 @@ class OpenAIService @Inject constructor(
         } catch (e: Exception) {
             // Fallback: create a basic analysis
             CaloriesAnalysis(
-                foodDescription = foodDescription,
-                breakdown = listOf(
+                foodDescription = foodDescription, breakdown = listOf(
                     FoodItem(
-                        name = "Food items",
-                        calories = 500,
-                        serving = "estimated"
+                        name = "Food items", calories = 500, serving = "estimated"
                     )
-                ),
-                totalCalories = 500,
-                suggestedExercises = listOf(
+                ), totalCalories = 500, suggestedExercises = listOf(
                     Exercise(
                         name = "Walking",
                         duration = "45 minutes",
                         caloriesBurned = 250,
                         intensity = "moderate"
-                    ),
-                    Exercise(
+                    ), Exercise(
                         name = "Cycling",
                         duration = "20 minutes",
                         caloriesBurned = 250,
@@ -405,14 +400,11 @@ class OpenAIService @Inject constructor(
 
     // Data classes for JSON parsing
     private data class SolutionResponse(
-        val equationId: String?,
-        val steps: List<SolutionStep>?,
-        val finalAnswer: String?
+        val equationId: String?, val steps: List<SolutionStep>?, val finalAnswer: String?
     )
 
     private data class WordProblemResponse(
-        val extractedEquation: String?,
-        val solution: Solution?
+        val extractedEquation: String?, val solution: Solution?
     )
 
     private data class CaloriesAnalysisResponse(
@@ -423,15 +415,10 @@ class OpenAIService @Inject constructor(
     )
 
     private data class FoodItemResponse(
-        val name: String,
-        val calories: Int,
-        val serving: String
+        val name: String, val calories: Int, val serving: String
     )
 
     private data class ExerciseResponse(
-        val name: String,
-        val duration: String,
-        val caloriesBurned: Int,
-        val intensity: String
+        val name: String, val duration: String, val caloriesBurned: Int, val intensity: String
     )
 } 

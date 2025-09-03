@@ -10,22 +10,29 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.components.EmptyStateView
+import com.zahid.mathly.presentation.ui.components.ProfileAvatar
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
+import com.zahid.mathly.presentation.viewmodel.profile.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CalculatorMainScreen(
     navController: NavController,
-    onAddClick: () -> Unit
+    onAddClick: () -> Unit,
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val profileData by profileViewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -54,16 +61,13 @@ fun CalculatorMainScreen(
                     }
                 },
                 actions = {
+                    // Profile button
                     IconButton(
                         onClick = {
-                            navController.navigate(AppRoutes.ProfileMain.route)
+                            navController.navigate("profile_main")
                         }
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Profile",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        ProfileAvatar(profileData.profileData.avatarUrl)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

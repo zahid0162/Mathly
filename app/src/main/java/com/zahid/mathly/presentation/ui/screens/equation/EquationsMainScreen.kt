@@ -9,8 +9,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.GraphicEq
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -18,22 +25,28 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.domain.model.SolutionType
+import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.components.EmptyStateView
+import com.zahid.mathly.presentation.ui.components.ProfileAvatar
 import com.zahid.mathly.presentation.ui.screens.profile.HistorySolutionCard
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
+import com.zahid.mathly.presentation.viewmodel.profile.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EquationsMainScreen(
     navController: NavController,
     onAddClick: () -> Unit,
-    sharedViewModel: SharedViewModel
+    sharedViewModel: SharedViewModel,
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val profileData by profileViewModel.uiState.collectAsStateWithLifecycle()
     val state by sharedViewModel.history.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
@@ -50,8 +63,8 @@ fun EquationsMainScreen(
                 navigationIcon = {
                     IconButton(
                         onClick = {
-                            navController.navigate("home") {
-                                popUpTo("home") { inclusive = true }
+                            navController.navigate(AppRoutes.Home.route) {
+                                popUpTo(AppRoutes.Home.route) { inclusive = true }
                             }
                         }
                     ) {
@@ -63,16 +76,13 @@ fun EquationsMainScreen(
                     }
                 },
                 actions = {
+                    // Profile button
                     IconButton(
                         onClick = {
                             navController.navigate("profile_main")
                         }
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Profile",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        ProfileAvatar(profileData.profileData.avatarUrl)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -104,7 +114,7 @@ fun EquationsMainScreen(
                             solution = solution,
                             onClick = {
                                 sharedViewModel.setSolution(solution)
-                                navController.navigate("result")
+                                navController.navigate(AppRoutes.Result.route)
                             }
                         )
                     }
@@ -112,8 +122,8 @@ fun EquationsMainScreen(
             }
             else{
                 EmptyStateView(
-                    title = "No Equations Yet",
-                    message = "Solve equations with step-by-step solutions",
+                    title = stringResource(R.string.no_equations_yet),
+                    message = stringResource(R.string.solve_equations_with_step_by_step_solutions),
                     icon = Icons.Default.GraphicEq
                 )
             }

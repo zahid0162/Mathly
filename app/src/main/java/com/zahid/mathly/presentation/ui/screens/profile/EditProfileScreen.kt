@@ -18,7 +18,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Numbers
 import androidx.compose.material.icons.filled.Person
@@ -38,7 +37,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.zahid.mathly.R
-import com.zahid.mathly.presentation.viewmodel.ProfileViewModel
+import com.zahid.mathly.presentation.viewmodel.profile.ProfileViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -57,9 +56,6 @@ fun EditProfileScreen(
     var genderExpanded by remember { mutableStateOf(false) }
     var occupationExpanded by remember { mutableStateOf(false) }
     var pickedImageUri by remember { mutableStateOf<Uri?>(null) }
-    LaunchedEffect(true) {
-        viewModel.fetchProfile()
-    }
 
     // Refresh state when profile data changes
     LaunchedEffect(profileData) {
@@ -103,87 +99,48 @@ fun EditProfileScreen(
                 .background(MaterialTheme.colorScheme.background)
                 .verticalScroll(rememberScrollState())
         ) {
+
+            Spacer(modifier = Modifier.height(30.dp))
             Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(160.dp)
-                    .background(MaterialTheme.colorScheme.primary)
+                    .size(100.dp)
+                    .clip(CircleShape)
+                    .align(Alignment.CenterHorizontally)
+                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                    .border(
+                        BorderStroke(3.dp, MaterialTheme.colorScheme.primary),
+                        CircleShape
+                    )
+                    .clickable { imagePicker.launch("image/*") }
             ) {
-                Text(
-                    text = fullName,
-                    style = MaterialTheme.typography.headlineMedium.copy(color = MaterialTheme.colorScheme.onPrimary),
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(top = 20.dp)
-                )
-
-                // Avatar hanging bottom
-                Row(
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .offset(x = 24.dp, y = 50.dp), // half outside container
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    // Avatar Circle
-                    Box(
+                if (pickedImageUri != null) {
+                    AsyncImage(
+                        model = pickedImageUri,
+                        contentDescription = stringResource(R.string.profile_photo),
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else if (profileData.avatarUrl != null) {
+                    AsyncImage(
+                        model = profileData.avatarUrl,
+                        contentDescription = "Profile Photo",
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Person,
+                        contentDescription = null,
                         modifier = Modifier
-                            .size(100.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.surfaceVariant)
-                            .border(
-                                BorderStroke(3.dp, MaterialTheme.colorScheme.primary),
-                                CircleShape
-                            )
-                            .clickable { imagePicker.launch("image/*") }
-                    ) {
-                        if (pickedImageUri != null) {
-                            AsyncImage(
-                                model = pickedImageUri,
-                                contentDescription = stringResource(R.string.profile_photo),
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else if (profileData.avatarUrl != null) {
-                            AsyncImage(
-                                model = profileData.avatarUrl,
-                                contentDescription = "Profile Photo",
-                                modifier = Modifier.fillMaxSize(),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .align(Alignment.Center)
-                                    .size(40.dp),
-                                tint = MaterialTheme.colorScheme.primary
-                            )
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.width(12.dp))
-
-                    // Edit Button (separate from avatar)
-                    Button(
-                        onClick = { imagePicker.launch("image/*") },
-                        shape = RoundedCornerShape(12.dp),
-                        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 6.dp),
-                        modifier = Modifier.height(36.dp)
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Edit,
-                            contentDescription = "Edit",
-                            modifier = Modifier.size(16.dp)
-                        )
-                        Spacer(modifier = Modifier.width(6.dp))
-                        Text(stringResource(R.string.edit))
-                    }
+                            .align(Alignment.Center)
+                            .size(40.dp),
+                        tint = MaterialTheme.colorScheme.primary
+                    )
                 }
             }
 
 
-            Spacer(modifier = Modifier.height(60.dp)) // space for avatar hanging
+            Spacer(modifier = Modifier.height(30.dp)) // space for avatar hanging
 
             // Input Fields
             Column(
@@ -337,20 +294,6 @@ fun EditProfileScreen(
                     } else {
                         Text(stringResource(R.string.save_changes))
                     }
-                }
-
-                AnimatedVisibility(
-                    visible = uiState.errorMessage != null,
-                    enter = fadeIn(),
-                    exit = fadeOut()
-                ) {
-                    Text(
-                        text = uiState.errorMessage ?: "",
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 8.dp)
-                    )
                 }
             }
         }

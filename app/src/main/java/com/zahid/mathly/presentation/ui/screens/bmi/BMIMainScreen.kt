@@ -25,8 +25,10 @@ import com.zahid.mathly.R
 import com.zahid.mathly.domain.model.BMIRecord
 import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.components.EmptyStateView
+import com.zahid.mathly.presentation.ui.components.ProfileAvatar
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
 import com.zahid.mathly.presentation.viewmodel.BMIViewModel
+import com.zahid.mathly.presentation.viewmodel.profile.ProfileViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -36,10 +38,11 @@ import java.util.Locale
 fun BMIMainScreen(
     navController: NavController,
     onAddClick: () -> Unit,
-    viewModel: BMIViewModel = hiltViewModel()
+    viewModel: BMIViewModel = hiltViewModel(),
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
     val bmiRecords by viewModel.bmiRecords.collectAsState()
-    
+    val profileData by profileViewModel.uiState.collectAsState()
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -68,16 +71,13 @@ fun BMIMainScreen(
                     }
                 },
                 actions = {
+                    // Profile button
                     IconButton(
                         onClick = {
-                            navController.navigate(AppRoutes.ProfileMain.route)
+                            navController.navigate("profile_main")
                         }
                     ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Profile",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
+                        ProfileAvatar(profileData.profileData.avatarUrl)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(

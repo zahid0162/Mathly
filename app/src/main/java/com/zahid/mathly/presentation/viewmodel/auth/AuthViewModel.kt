@@ -1,4 +1,4 @@
-package com.zahid.mathly.presentation.viewmodel
+package com.zahid.mathly.presentation.viewmodel.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,17 +17,6 @@ import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.contentOrNull
 import javax.inject.Inject
-
-sealed class AuthDestination {
-    data object ProfileSetup: AuthDestination()
-    data object Main: AuthDestination()
-}
-
-data class AuthUiState(
-    val loading: Boolean = false,
-    val errorMessage: String? = null,
-    val navigateTo: AuthDestination? = null
-)
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(

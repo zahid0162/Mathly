@@ -1,14 +1,28 @@
 package com.zahid.mathly.presentation.ui.screens.equation
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -17,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.zahid.mathly.R
-import com.zahid.mathly.presentation.ui.screens.profile.RecentSolutionCard
+import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 
@@ -51,19 +65,6 @@ fun EquationsInputScreen(
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
                             contentDescription = "Back",
-                            tint = MaterialTheme.colorScheme.onPrimary
-                        )
-                    }
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            navController.navigate("profile_main")
-                        }
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Person,
-                            contentDescription = "Profile",
                             tint = MaterialTheme.colorScheme.onPrimary
                         )
                     }
@@ -111,7 +112,7 @@ fun EquationsInputScreen(
                 ) {
                     // Scan Equation Button
                     Card(
-                        onClick = { navController.navigate("scan") },
+                        onClick = { navController.navigate(AppRoutes.Scan.route) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight(),
@@ -147,7 +148,7 @@ fun EquationsInputScreen(
 
                     // Type Equation Button
                     Card(
-                        onClick = { navController.navigate("input") },
+                        onClick = { navController.navigate(AppRoutes.TypeEquation.route) },
                         modifier = Modifier
                             .fillMaxWidth()
                             .wrapContentHeight(),
@@ -182,43 +183,6 @@ fun EquationsInputScreen(
                                 fontSize = 14.sp,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
-                        }
-                    }
-                }
-            }
-
-            // Recent Solutions
-            if (history.isNotEmpty()) {
-                item {
-                    Text(
-                        text = stringResource(R.string.recent_solutions),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                }
-
-                items(history.take(3)) { solution ->
-                    RecentSolutionCard(
-                        solution = solution,
-                        onClick = {
-                            viewModel.setSolution(solution)
-                            navController.navigate("result")
-                        }
-                    )
-                }
-
-                if (history.size > 3) {
-                    item {
-                        Button(
-                            onClick = { navController.navigate("history") },
-                            modifier = Modifier.fillMaxWidth(),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.tertiary
-                            )
-                        ) {
-                            Text(stringResource(R.string.view_all_history))
                         }
                     }
                 }
