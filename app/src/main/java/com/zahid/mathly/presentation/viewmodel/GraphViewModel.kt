@@ -56,3 +56,4 @@ class GraphViewModel @Inject constructor(
         selectedGraph = graph
     }
 }
+

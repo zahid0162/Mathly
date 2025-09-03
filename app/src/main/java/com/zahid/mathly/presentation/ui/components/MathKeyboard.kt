@@ -67,7 +67,7 @@ fun NumbersKeyboard(
         columns = GridCells.Adaptive(minSize = 40.dp),
         horizontalArrangement = Arrangement.spacedBy(3.dp),
         verticalArrangement = Arrangement.spacedBy(3.dp),
-        modifier = Modifier.fillMaxHeight()
+        modifier = Modifier.padding(16.dp)
     ) {
         items(numbers) { number ->
             KeyboardKey(

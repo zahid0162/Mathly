@@ -2,9 +2,11 @@ package com.zahid.mathly.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.zahid.mathly.data.local.SessionManager
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
 import com.zahid.mathly.presentation.viewmodel.WordProblemViewModel
@@ -23,6 +25,7 @@ import com.zahid.mathly.presentation.ui.screens.calories.CaloriesMainScreen
 import com.zahid.mathly.presentation.ui.screens.equation.CameraScreen
 import com.zahid.mathly.presentation.ui.screens.equation.EquationsInputScreen
 import com.zahid.mathly.presentation.ui.screens.equation.EquationsMainScreen
+import com.zahid.mathly.presentation.ui.screens.equation.MathInputScreen
 import com.zahid.mathly.presentation.ui.screens.equation.ResultScreen
 import com.zahid.mathly.presentation.ui.screens.equation.ScanScreen
 import com.zahid.mathly.presentation.ui.screens.equation.TypeEquationScreen
@@ -71,6 +74,7 @@ enum class AppRoutes(val route: String){
     EditProfile("editProfile"),
     GraphDetail("graph_detail"),
     CaloriesDetail("calories_detail"),
+    MathInput("math_input/{initialText}"),
 }
 
 @Composable
@@ -307,6 +311,23 @@ fun MathlyNavigation(
             CaloriesDetailScreen(
                 navController = navController,
                 viewModel = caloriesViewModel
+            )
+        }
+        
+        // Math Input Screen route
+        verticalAnimatedComposable(
+            route = AppRoutes.MathInput.route,
+            arguments = listOf(
+                navArgument("initialText") {
+                    type = NavType.StringType
+                    defaultValue = ""
+                }
+            )
+        ) { backStackEntry ->
+            val initialText = backStackEntry.arguments?.getString("initialText") ?: ""
+            MathInputScreen(
+                navController = navController,
+                initialText = initialText
             )
         }
     }

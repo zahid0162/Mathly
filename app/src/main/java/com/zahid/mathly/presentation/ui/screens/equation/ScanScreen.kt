@@ -56,6 +56,7 @@ import com.zahid.mathly.R
 import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.components.MathInputBottomSheet
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
+import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,8 +67,6 @@ fun ScanScreen(
     val state by viewModel.state.collectAsState()
     val currentSolution by viewModel.currentSolution.collectAsState()
     var scannedText by remember { mutableStateOf("") }
-    var showMathInputSheet by remember { mutableStateOf(false) }
-    val context = LocalContext.current
     
     // Get scanned text from camera screen
     val scannedTextFromCamera = navController.currentBackStackEntry?.savedStateHandle?.get<String>("scanned_text")
@@ -206,7 +205,8 @@ fun ScanScreen(
                             onValueChange = { /* Read-only, only editable via bottom sheet */ },
                             modifier = Modifier.fillMaxWidth().pointerInput(Unit) {
                                 detectTapGestures {
-                                    showMathInputSheet = true
+                                    val encodedText = URLEncoder.encode(scannedText, "UTF-8")
+                                    navController.navigate("math_input/$encodedText")
                                 }
                             },
                             placeholder = {
@@ -224,7 +224,10 @@ fun ScanScreen(
                             maxLines = 4,
                             readOnly = true, // Make it read-only
                             trailingIcon = {
-                                IconButton(onClick = { showMathInputSheet = true }) {
+                                IconButton(onClick = {
+                                    val encodedText = URLEncoder.encode(scannedText, "UTF-8")
+                                    navController.navigate("math_input/$encodedText")
+                                }) {
                                     Icon(
                                         imageVector = Icons.Default.Edit,
                                         contentDescription = "Edit"
@@ -333,16 +336,10 @@ fun ScanScreen(
     }
     
     // Math Input Bottom Sheet
-    if (showMathInputSheet) {
-        MathInputBottomSheet(
-            initialText = scannedText,
-            onTextSubmit = { newText ->
-                scannedText = newText
-                showMathInputSheet = false
-            },
-            onDismiss = {
-                showMathInputSheet = false
-            }
-        )
+    LaunchedEffect(Unit) {
+        navController.currentBackStackEntry?.savedStateHandle?.get<String>("math_input_result")?.let { result ->
+            scannedText = result
+            navController.currentBackStackEntry?.savedStateHandle?.remove<String>("math_input_result")
+        }
     }
 }

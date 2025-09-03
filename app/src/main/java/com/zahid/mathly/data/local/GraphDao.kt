@@ -17,3 +17,4 @@ interface GraphDao {
     @Query("SELECT * FROM graphs WHERE id = :id")
     suspend fun getGraphById(id: String): GraphEntity?
 }
+

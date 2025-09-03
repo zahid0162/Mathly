@@ -47,8 +47,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.zahid.mathly.R
 import com.zahid.mathly.presentation.navigation.AppRoutes
-import com.zahid.mathly.presentation.ui.components.MathInputBottomSheet
 import com.zahid.mathly.presentation.viewmodel.SharedViewModel
+import java.net.URLEncoder
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,7 +59,7 @@ fun TypeEquationScreen(
     val state by viewModel.state.collectAsState()
     val currentSolution by viewModel.currentSolution.collectAsState()
     var scannedText by remember { mutableStateOf("") }
-    var showMathInputSheet by remember { mutableStateOf(false) }
+    // Removed showMathInputSheet variable as we're using navigation instead
 
 
     // Navigate to result screen when solution is received
@@ -129,7 +129,9 @@ fun TypeEquationScreen(
                             .fillMaxWidth()
                             .pointerInput(Unit) {
                                 detectTapGestures {
-                                    showMathInputSheet = true
+                                    // Navigate to MathInputScreen with current text
+                                    val encodedText = URLEncoder.encode(scannedText, "UTF-8")
+                                    navController.navigate("math_input/$encodedText")
                                 }
                             },
                         placeholder = {
@@ -147,7 +149,10 @@ fun TypeEquationScreen(
                         maxLines = 4,
                         readOnly = true, // Make it read-only
                         trailingIcon = {
-                            IconButton(onClick = { showMathInputSheet = true }) {
+                            IconButton(onClick = { 
+                                val encodedText = URLEncoder.encode(scannedText, "UTF-8")
+                                navController.navigate("math_input/$encodedText")
+                            }) {
                                 Icon(
                                     imageVector = Icons.Default.Edit,
                                     contentDescription = "Edit"
@@ -230,17 +235,11 @@ fun TypeEquationScreen(
         }
     }
 
-    // Math Input Bottom Sheet
-    if (showMathInputSheet) {
-        MathInputBottomSheet(
-            initialText = scannedText,
-            onTextSubmit = { newText ->
-                scannedText = newText
-                showMathInputSheet = false
-            },
-            onDismiss = {
-                showMathInputSheet = false
-            }
-        )
+    // Observe results from MathInputScreen
+    LaunchedEffect(Unit) {
+        navController.currentBackStackEntry?.savedStateHandle?.get<String>("math_input_result")?.let { result ->
+            scannedText = result
+            navController.currentBackStackEntry?.savedStateHandle?.remove<String>("math_input_result")
+        }
     }
 }

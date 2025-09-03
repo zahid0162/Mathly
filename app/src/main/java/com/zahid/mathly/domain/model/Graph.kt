@@ -7,3 +7,4 @@ data class Graph(
     val equation: String,
     val timestamp: Long = System.currentTimeMillis()
 )
+
