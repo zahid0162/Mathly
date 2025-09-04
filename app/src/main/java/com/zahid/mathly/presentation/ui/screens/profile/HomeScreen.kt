@@ -27,33 +27,38 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.zahid.mathly.R
 import com.zahid.mathly.domain.model.HomeMenuItem
+import com.zahid.mathly.presentation.navigation.AppRoutes
 import com.zahid.mathly.presentation.ui.components.ProfileAvatar
 import com.zahid.mathly.presentation.ui.theme.PlayfairDisplay
+import com.zahid.mathly.presentation.viewmodel.profile.ProfileUiState
 import com.zahid.mathly.presentation.viewmodel.profile.ProfileViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
+@Preview
 @Composable
 fun HomeScreen(
-    navController: NavController,
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    navController: NavController = rememberNavController(),
+    uiState: StateFlow<ProfileUiState> = MutableStateFlow(ProfileUiState()),
 ) {
-    val context = LocalContext.current
-    profileViewModel.fetchProfile()
-    val profileData by profileViewModel.uiState.collectAsStateWithLifecycle()
+    val profileData by uiState.collectAsStateWithLifecycle()
 
     // Define menu items with vibrant gradient colors for visual appeal
     val menuItems = listOf(
         HomeMenuItem(
             title = stringResource(R.string.equations),
             icon = Icons.Default.GraphicEq,
-            route = "equations_main",
+            route = AppRoutes.EquationsMain.route,
             startColor = Color(0xFF1B4C5B),  // Dark teal
             endColor = Color(0xFF0BD3C7),    // Bright cyan
             contentColor = Color.White,
@@ -61,7 +66,7 @@ fun HomeScreen(
         HomeMenuItem(
             title = stringResource(R.string.word_problems),
             icon = Icons.Default.TextFields,
-            route = "word_problem_main",
+            route = AppRoutes.WordProblemMain.route,
             startColor = Color(0xFF51B659),  // Green
             endColor = Color(0xFF308E5B),    // Dark green
             contentColor = Color.White,
@@ -69,7 +74,7 @@ fun HomeScreen(
         HomeMenuItem(
             title = stringResource(R.string.graphs),
             icon = Icons.Default.AutoGraph,
-            route = "graph_main",
+            route = AppRoutes.GraphMain.route,
             startColor = Color(0xFF0BD3C7),  // Bright cyan
             endColor = Color(0xFF229793),    // Teal
             contentColor = Color.White,
@@ -77,7 +82,7 @@ fun HomeScreen(
         HomeMenuItem(
             title = stringResource(R.string.basic_calculator),
             icon = Icons.Default.Calculate,
-            route = "calculator_main",
+            route = AppRoutes.CalculatorMain.route,
             startColor = Color(0xFF466465),  // Gray teal
             endColor = Color(0xFF1B4C5B),    // Dark teal
             contentColor = Color.White,
@@ -85,7 +90,7 @@ fun HomeScreen(
         HomeMenuItem(
             title = stringResource(R.string.calories_counter),
             icon = Icons.Default.HealthAndSafety,
-            route = "calories_main",
+            route = AppRoutes.CaloriesMain.route,
             startColor = Color(0xFF678668),  // Sage green
             endColor = Color(0xFF51B659),    // Green
             contentColor = Color.White,
@@ -93,7 +98,7 @@ fun HomeScreen(
         HomeMenuItem(
             title = stringResource(R.string.bmi_calculator),
             icon = Icons.Default.MonitorWeight,
-            route = "bmi_main",
+            route = AppRoutes.BMIMain.route,
             startColor = Color(0xFF229793),  // Teal
             endColor = Color(0xFF0BD3C7),    // Bright cyan
             contentColor = Color.White,
@@ -112,11 +117,24 @@ fun HomeScreen(
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 },
+                navigationIcon = {
+                    IconButton(
+                        onClick = {
+                            navController.navigate(AppRoutes.Scan.route)
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.DocumentScanner,
+                            contentDescription = "",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                },
                 actions = {
                     // Profile button
                     IconButton(
                         onClick = {
-                            navController.navigate("profile_main")
+                            navController.navigate(AppRoutes.ProfileMain.route)
                         }
                     ) {
                         ProfileAvatar(profileData.profileData.avatarUrl)

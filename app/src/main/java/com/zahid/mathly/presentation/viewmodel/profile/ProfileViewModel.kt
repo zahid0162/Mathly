@@ -14,6 +14,7 @@ import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.util.Calendar
@@ -27,18 +28,19 @@ class ProfileViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
-    val uiState: StateFlow<ProfileUiState> = _uiState
+    val uiState: StateFlow<ProfileUiState> = _uiState.asStateFlow()
 
     init {
         fetchProfile()
     }
+
     fun fetchProfile() {
         viewModelScope.launch(Dispatchers.IO) {
             _uiState.value = _uiState.value.copy(loading = true)
             try {
-                val userId = supabaseClient.auth.currentUserOrNull()?.id
+                val userId = sessionManager.userId
                     ?: throw IllegalStateException("Not authenticated")
-                
+
                 val response = supabaseClient.postgrest["profiles"]
                     .select {
                         filter {

@@ -86,7 +86,6 @@ fun MathlyNavigation(
     val navController = rememberNavController()
     val sharedViewModel = hiltViewModel<SharedViewModel>()
     val wordProblemViewModel = hiltViewModel<WordProblemViewModel>()
-    val profileViewModel = hiltViewModel<ProfileViewModel>()
     val graphViewModel = hiltViewModel<GraphViewModel>()
     val caloriesViewModel = hiltViewModel<CaloriesCounterViewModel>()
     val bmiViewModel = hiltViewModel<BMIViewModel>()
@@ -123,15 +122,20 @@ fun MathlyNavigation(
             )
         }
 
-        verticalAnimatedComposable(AppRoutes.Home.route) {
+        verticalAnimatedComposable(AppRoutes.Home.route) { backStack->
+            val profileViewModel = hiltViewModel<ProfileViewModel>()
             HomeScreen(
                 navController = navController,
-                profileViewModel = profileViewModel
+                profileViewModel.uiState
             )
         }
         
         // New main screens for each feature
-        horizontalAnimatedComposable(AppRoutes.EquationsMain.route) {
+        horizontalAnimatedComposable(AppRoutes.EquationsMain.route) {backStack ->
+            val parentEntry = remember(backStack) {
+                navController.getBackStackEntry(AppRoutes.Home.route)
+            }
+            val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
             EquationsMainScreen(
                 navController = navController,
                 onAddClick = {
@@ -142,7 +146,11 @@ fun MathlyNavigation(
             )
         }
         
-        horizontalAnimatedComposable(AppRoutes.WordProblemMain.route) {
+        horizontalAnimatedComposable(AppRoutes.WordProblemMain.route) {backStack ->
+            val parentEntry = remember(backStack) {
+                navController.getBackStackEntry(AppRoutes.Home.route)
+            }
+            val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
             WordProblemMainScreen(
                 navController = navController,
                 onAddClick = {
@@ -153,7 +161,11 @@ fun MathlyNavigation(
             )
         }
         
-        horizontalAnimatedComposable(AppRoutes.GraphMain.route) {
+        horizontalAnimatedComposable(AppRoutes.GraphMain.route) {backStack ->
+            val parentEntry = remember(backStack) {
+                navController.getBackStackEntry(AppRoutes.Home.route)
+            }
+            val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
             GraphMainScreen(
                 navController = navController,
                 onAddClick = {
@@ -164,7 +176,11 @@ fun MathlyNavigation(
             )
         }
         
-        horizontalAnimatedComposable(AppRoutes.CalculatorMain.route) {
+        horizontalAnimatedComposable(AppRoutes.CalculatorMain.route) {backStack ->
+            val parentEntry = remember(backStack) {
+                navController.getBackStackEntry(AppRoutes.Home.route)
+            }
+            val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
             CalculatorMainScreen(
                 navController = navController,
                 onAddClick = {
@@ -174,7 +190,11 @@ fun MathlyNavigation(
             )
         }
         
-        horizontalAnimatedComposable(AppRoutes.CaloriesMain.route) {
+        horizontalAnimatedComposable(AppRoutes.CaloriesMain.route) {backStack ->
+            val parentEntry = remember(backStack) {
+                navController.getBackStackEntry(AppRoutes.Home.route)
+            }
+            val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
             CaloriesMainScreen(
                 navController = navController,
                 onAddClick = {
@@ -185,7 +205,11 @@ fun MathlyNavigation(
             )
         }
         
-        horizontalAnimatedComposable(AppRoutes.BMIMain.route) {
+        horizontalAnimatedComposable(AppRoutes.BMIMain.route) {backStack ->
+            val parentEntry = remember(backStack) {
+                navController.getBackStackEntry(AppRoutes.Home.route)
+            }
+            val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
             BMIMainScreen(
                 navController = navController,
                 onAddClick = {
@@ -197,7 +221,11 @@ fun MathlyNavigation(
         }
 
         // Profile screen route
-        verticalAnimatedComposable(AppRoutes.ProfileMain.route) {
+        verticalAnimatedComposable(AppRoutes.ProfileMain.route) {backStack ->
+            val parentEntry = remember(backStack) {
+                navController.getBackStackEntry(AppRoutes.Home.route)
+            }
+            val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
             ProfileMainScreen(
                 navController = navController,
                 themeViewModel = themeViewModel,
@@ -291,7 +319,11 @@ fun MathlyNavigation(
         }
         
         // Edit Profile route
-        horizontalAnimatedComposable(AppRoutes.EditProfile.route) {
+        horizontalAnimatedComposable(AppRoutes.EditProfile.route) {backStack ->
+            val parentEntry = remember(backStack) {
+                navController.getBackStackEntry(AppRoutes.Home.route)
+            }
+            val profileViewModel = hiltViewModel<ProfileViewModel>(parentEntry)
             EditProfileScreen(
                 navController = navController,
                 viewModel = profileViewModel
